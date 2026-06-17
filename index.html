@@ -4,7 +4,21 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>MOFO ZERO - Página MVT</title>
+  <script>
+    (function() {
+      var variant = localStorage.getItem('ab_test_variant');
+      if (!variant) {
+        variant = (Math.random() < 0.40) ? 'copy1' : 'copy2';
+        localStorage.setItem('ab_test_variant', variant);
+      }
+      document.documentElement.setAttribute('data-ab-variant', variant);
+    })();
+  </script>
   <style>
+    /* Regras de visibilidade do Teste A/B */
+    html[data-ab-variant="copy1"] .variant-b { display: none !important; }
+    html[data-ab-variant="copy2"] .variant-a { display: none !important; }
+
     :root {
       --coral: #ee6352;
       --coral-dark: #cf4f42;
@@ -1124,7 +1138,8 @@
 <body>
   <div class="page-progress" aria-hidden="true"><span data-page-progress></span></div>
   <div class="topbar" aria-label="Oferta especial disponível apenas hoje">
-    <div class="topbar-track" aria-hidden="true">
+    <!-- VARIACAO A (CONTROLE) -->
+    <div class="topbar-track variant-a" aria-hidden="true">
       <div class="topbar-group">
         <span>MOFO ZERO POR R$37 HOJE</span>
         <span>PARE DE LIMPAR O MESMO MOFO TODA SEMANA</span>
@@ -1136,13 +1151,32 @@
         <span>ACESSO IMEDIATO E GARANTIA DE 7 DIAS</span>
       </div>
     </div>
+    <!-- VARIACAO B (VARIANTE) -->
+    <div class="topbar-track variant-b" aria-hidden="true">
+      <div class="topbar-group">
+        <span>CASA LIVRE DE MOFO EM 7 DIAS OU SEU DINHEIRO DE VOLTA</span>
+        <span>ACESSO IMEDIATO AO GUIA COMPLETO</span>
+        <span>APENAS R$37 HOJE</span>
+      </div>
+      <div class="topbar-group">
+        <span>CASA LIVRE DE MOFO EM 7 DIAS OU SEU DINHEIRO DE VOLTA</span>
+        <span>ACESSO IMEDIATO AO GUIA COMPLETO</span>
+        <span>APENAS R$37 HOJE</span>
+      </div>
+    </div>
   </div>
 
   <main>
     <section class="hero">
       <div class="wrap hero-mvt">
-        <span class="eyebrow">MOFO ZERO | Guia 3F Anti-Mofo</span>
-        <h1>Pare de limpar o mesmo mofo toda semana.</h1>
+        <!-- VARIACAO A (CONTROLE) -->
+        <span class="eyebrow variant-a">MOFO ZERO | Guia 3F Anti-Mofo</span>
+        <h1 class="variant-a">Pare de limpar o mesmo mofo toda semana.</h1>
+        
+        <!-- VARIACAO B (VARIANTE) -->
+        <span class="eyebrow variant-b">MOFO ZERO | Casa sem Mofo em 7 Dias</span>
+        <h1 class="variant-b">Casa livre do cheiro de guardado e do mofo em 7 dias.</h1>
+
         <div class="hero-visual" aria-label="Mockup visual do produto MOFO ZERO">
           <div class="image-placeholder">
             <div>
@@ -1151,8 +1185,14 @@
             </div>
           </div>
         </div>
-        <p class="hero-sub">Descubra o foco, a fonte e a rotina certa para reduzir o retorno do mofo sem tentativa no escuro.</p>
-        <p class="hero-copy">Você consulta o diagnóstico, confere o material afetado e evita misturas que podem manchar, ressecar ou piorar o problema. Por apenas R$37, com acesso imediato.</p>
+
+        <!-- VARIACAO A (CONTROLE) -->
+        <p class="hero-sub variant-a">Descubra o foco, a fonte e a rotina certa para reduzir o retorno do mofo sem tentativa no escuro.</p>
+        <p class="hero-copy variant-a">Você consulta o diagnóstico, confere o material afetado e evita misturas que podem manchar, ressecar ou piorar o problema. Por apenas R$37, com acesso imediato.</p>
+
+        <!-- VARIACAO B (VARIANTE) -->
+        <p class="hero-sub variant-b">O método de 3 etapas para eliminar o mofo pela raiz em roupas, sapatos e paredes sem estragar seus bens ou gastar com receitas que não funcionam.</p>
+        <p class="hero-copy variant-b">O guia prático para diagnosticar o foco, eliminar a fonte de umidade e criar um escudo protetor em cada cômodo. Casa limpa e protegida ou seu dinheiro de volta.</p>
         <div class="decision-game" aria-label="Diagnóstico rápido por tipo de caso">
           <div class="decision-game-head">
             <span>Qual foco de mofo parece com o seu?</span>
@@ -1438,6 +1478,30 @@
 
       window.setTimeout(showPurchaseToast, 3600);
       window.setInterval(showPurchaseToast, 14500);
+
+      // Propaga a variante A/B para os botões de checkout (caso existam links externos de pagamento)
+      const propagateVariant = () => {
+        const variant = localStorage.getItem('ab_test_variant') || 'copy1';
+        document.querySelectorAll('a').forEach(link => {
+          const href = link.getAttribute('href');
+          if (href && (href.includes('pay.hotmart.com') || href.includes('checkout') || href.includes('kiwify') || href.includes('hotmart.com'))) {
+            try {
+              const url = new URL(link.href);
+              url.searchParams.set('src', `ab_${variant}`);
+              url.searchParams.set('utm_content', variant);
+              link.href = url.toString();
+            } catch (e) {
+              if (link.href.indexOf('?') !== -1) {
+                link.href += `&src=ab_${variant}&utm_content=${variant}`;
+              } else {
+                link.href += `?src=ab_${variant}&utm_content=${variant}`;
+              }
+            }
+          }
+        });
+      };
+      propagateVariant();
+      document.addEventListener('DOMContentLoaded', propagateVariant);
 
       const revealTargets = document.querySelectorAll('.hero, .section');
       revealTargets.forEach((target) => target.classList.add('reveal'));
