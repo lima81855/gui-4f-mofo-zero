@@ -1,0 +1,1462 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MOFO ZERO - Página MVT</title>
+  <style>
+    :root {
+      --coral: #ee6352;
+      --coral-dark: #cf4f42;
+      --brown: #3a1b09;
+      --brown-2: #251106;
+      --sand: #f6dfb9;
+      --warm: #e6dccb;
+      --blush: #fdf6f7;
+      --cream: #fff8eb;
+      --white: #ffffff;
+      --ink: #1a1a1a;
+      --text: #363636;
+      --muted: #6d6259;
+      --cta: #39b574;
+      --cta-dark: #248b56;
+      --line: rgba(58, 27, 9, .15);
+      --shadow: 0 22px 48px rgba(58, 27, 9, .14);
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    .page-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 50;
+      width: 100%;
+      height: 5px;
+      background: rgba(58, 27, 9, .12);
+    }
+
+    .page-progress span {
+      display: block;
+      width: 0%;
+      height: 100%;
+      border-radius: 0 999px 999px 0;
+      background: linear-gradient(90deg, var(--cta), var(--sand), var(--coral));
+      transition: width .18s ease;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, Arial, Helvetica, sans-serif;
+      background: var(--blush);
+      color: var(--ink);
+      line-height: 1.5;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    h1, h2, h3, p { margin-top: 0; }
+
+    .topbar {
+      overflow: hidden;
+      background: var(--coral);
+      color: var(--white);
+      font-weight: 900;
+      font-size: 16px;
+      letter-spacing: 0;
+      white-space: nowrap;
+    }
+
+    .topbar-track {
+      display: flex;
+      width: max-content;
+      animation: topbarTicker 18s linear infinite;
+    }
+
+    .topbar-group {
+      display: flex;
+      align-items: center;
+      flex: 0 0 auto;
+    }
+
+    .topbar span {
+      display: inline-flex;
+      align-items: center;
+      min-height: 54px;
+      padding: 0 38px;
+    }
+
+    .topbar span::after {
+      content: "";
+      width: 7px;
+      height: 7px;
+      margin-left: 38px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .88);
+      box-shadow: 0 0 0 5px rgba(255, 255, 255, .14);
+    }
+
+    @keyframes topbarTicker {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity .7s ease, transform .7s ease;
+    }
+
+    .reveal.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .section { padding: 78px 24px; }
+    .wrap { width: min(1140px, 100%); margin: 0 auto; }
+    .center { text-align: center; }
+
+    .hero {
+      background: var(--brown);
+      color: var(--white);
+      padding: 50px 24px 62px;
+      border-bottom: 12px solid var(--sand);
+    }
+
+    .hero-mvt {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      padding: 0 12px;
+      border: 1px solid rgba(255, 255, 255, .26);
+      border-radius: 8px;
+      color: #ffe1d8;
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .eyebrow.dark {
+      color: var(--coral-dark);
+      border-color: rgba(238, 99, 82, .35);
+      background: rgba(238, 99, 82, .08);
+    }
+
+    h1 {
+      max-width: 880px;
+      margin: 22px auto 20px;
+      font-size: clamp(38px, 5.4vw, 68px);
+      line-height: 1;
+      font-weight: 950;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      margin-bottom: 16px;
+      font-size: clamp(30px, 4vw, 50px);
+      line-height: 1.04;
+      font-weight: 950;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin-bottom: 10px;
+      font-size: 21px;
+      line-height: 1.18;
+      font-weight: 900;
+      letter-spacing: 0;
+    }
+
+    .hero-sub {
+      max-width: 720px;
+      color: #ffe8dd;
+      font-size: 24px;
+      line-height: 1.25;
+      font-weight: 800;
+      margin: 18px auto 0;
+    }
+
+    .copy {
+      max-width: 760px;
+      color: var(--text);
+      font-size: 18px;
+    }
+
+    .hero-copy {
+      max-width: 740px;
+      color: rgba(255, 255, 255, .78);
+      font-size: 18px;
+      margin: 16px auto 0;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 58px;
+      padding: 0 30px;
+      border: 0;
+      border-radius: 8px;
+      background: var(--cta);
+      color: var(--white);
+      box-shadow: 0 16px 34px rgba(57, 181, 116, .24);
+      font-size: 16px;
+      font-weight: 950;
+      text-transform: uppercase;
+      transition: transform .2s ease, background .2s ease, box-shadow .2s ease;
+    }
+
+    .btn:hover {
+      background: var(--cta-dark);
+      box-shadow: 0 20px 42px rgba(57, 181, 116, .3);
+      transform: translateY(-2px);
+    }
+
+    .btn.coral {
+      background: var(--coral);
+      box-shadow: 0 16px 34px rgba(238, 99, 82, .24);
+    }
+
+    .btn.coral:hover { background: var(--coral-dark); }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: center;
+      justify-content: center;
+      margin-top: 26px;
+    }
+
+    .decision-game {
+      width: min(720px, 100%);
+      margin: 26px auto 0;
+      padding: 18px;
+      border: 1px solid rgba(255, 255, 255, .18);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .08);
+      box-shadow: 0 20px 46px rgba(0, 0, 0, .18);
+      text-align: left;
+    }
+
+    .decision-game-head {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+      color: var(--sand);
+      font-weight: 950;
+    }
+
+    .decision-score {
+      display: inline-flex;
+      align-items: center;
+      min-height: 30px;
+      padding: 0 11px;
+      border-radius: 999px;
+      background: rgba(246, 223, 185, .14);
+      color: var(--white);
+      font-size: 12px;
+      font-weight: 950;
+      text-transform: uppercase;
+    }
+
+    .case-picker {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .case-chip {
+      min-height: 48px;
+      padding: 0 12px;
+      border: 1px solid rgba(255, 255, 255, .18);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .08);
+      color: rgba(255, 255, 255, .86);
+      font: inherit;
+      font-size: 13px;
+      font-weight: 950;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: transform .18s ease, background .18s ease, border-color .18s ease;
+    }
+
+    .case-chip:hover,
+    .case-chip.is-active {
+      border-color: rgba(57, 181, 116, .86);
+      background: rgba(57, 181, 116, .18);
+      color: var(--white);
+      transform: translateY(-2px);
+    }
+
+    .case-chip:focus-visible,
+    .benefit-item:focus-visible,
+    .btn:focus-visible {
+      outline: 3px solid rgba(246, 223, 185, .92);
+      outline-offset: 3px;
+    }
+
+    .case-result {
+      padding: 16px;
+      border-radius: 8px;
+      background: var(--cream);
+      color: var(--brown);
+    }
+
+    .case-result strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 18px;
+      font-weight: 950;
+    }
+
+    .case-result p {
+      margin-bottom: 12px;
+      color: #6b4b35;
+      font-weight: 800;
+    }
+
+    .case-meter {
+      height: 10px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: rgba(58, 27, 9, .12);
+    }
+
+    .case-meter span {
+      display: block;
+      width: 52%;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--cta), var(--sand));
+      transition: width .28s ease;
+    }
+
+    .case-note {
+      display: block;
+      margin-top: 10px;
+      color: var(--muted);
+      font-weight: 900;
+    }
+
+    .access-note {
+      color: rgba(255, 255, 255, .8);
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .hero-visual {
+      position: relative;
+      width: 100%;
+      min-height: 0;
+    }
+
+    .product-cover {
+      width: min(386px, 100%);
+      min-height: 520px;
+      margin-left: auto;
+      padding: 28px;
+      border: 1px solid rgba(255, 255, 255, .48);
+      border-radius: 8px;
+      background: var(--cream);
+      box-shadow: 0 28px 70px rgba(0, 0, 0, .28);
+      color: var(--brown);
+      transform: rotate(-2deg);
+    }
+
+    .guide-image-frame {
+      width: min(640px, 100%);
+      margin: 10px auto 0;
+      padding: 0;
+      border: 1px solid rgba(255, 255, 255, .18);
+      border-radius: 8px;
+      background: transparent;
+      box-shadow: 0 28px 70px rgba(0, 0, 0, .32);
+      overflow: hidden;
+    }
+
+    .guide-image-frame img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+    }
+
+    .cover-label {
+      display: inline-flex;
+      min-height: 34px;
+      align-items: center;
+      padding: 0 11px;
+      border-radius: 8px;
+      background: var(--coral);
+      color: var(--white);
+      font-size: 12px;
+      font-weight: 950;
+      text-transform: uppercase;
+    }
+
+    .cover-title {
+      margin: 28px 0 14px;
+      font-size: 56px;
+      line-height: .9;
+      font-weight: 950;
+      letter-spacing: 0;
+    }
+
+    .cover-sub {
+      margin-bottom: 24px;
+      color: #6b4b35;
+      font-weight: 850;
+      font-size: 17px;
+    }
+
+    .path-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 26px;
+    }
+
+    .path-item {
+      display: grid;
+      grid-template-columns: 34px 1fr;
+      gap: 12px;
+      align-items: center;
+      padding: 12px;
+      border: 1px solid rgba(58, 27, 9, .16);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .74);
+      font-weight: 900;
+    }
+
+    .path-number {
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      background: var(--brown);
+      color: var(--sand);
+      font-size: 14px;
+    }
+
+    .floating-card {
+      position: absolute;
+      left: 0;
+      bottom: 34px;
+      width: min(270px, 58%);
+      padding: 18px;
+      border: 1px solid rgba(238, 99, 82, .28);
+      border-radius: 8px;
+      background: var(--white);
+      box-shadow: var(--shadow);
+      color: var(--ink);
+    }
+
+    .floating-card strong {
+      display: block;
+      margin-bottom: 7px;
+      color: var(--coral-dark);
+      font-size: 13px;
+      text-transform: uppercase;
+    }
+
+    .floating-card span {
+      color: var(--text);
+      font-size: 15px;
+      font-weight: 750;
+    }
+
+    .gallery {
+      background: var(--sand);
+    }
+
+    .section-head {
+      max-width: 810px;
+      margin: 0 auto 38px;
+      text-align: center;
+    }
+
+    .section-head .copy { margin: 0 auto; }
+
+    .inside-preview {
+      padding: 22px;
+      border-radius: 8px;
+      background: #111820;
+      box-shadow: var(--shadow);
+    }
+
+    .inside-title {
+      margin: 0 0 18px;
+      color: var(--white);
+      text-align: center;
+      font-size: 24px;
+      font-weight: 950;
+      text-transform: uppercase;
+    }
+
+    .inside-stack {
+      display: grid;
+      gap: 34px;
+    }
+
+    .inside-image {
+      width: min(760px, 100%);
+      margin: 0 auto;
+      overflow: hidden;
+      border: 4px solid rgba(255, 255, 255, .9);
+      border-radius: 8px;
+      background: var(--white);
+      box-shadow: 0 20px 46px rgba(0, 0, 0, .24);
+      transition: transform .24s ease, box-shadow .24s ease;
+    }
+
+    .inside-image:hover {
+      transform: translateY(-5px) scale(1.01);
+      box-shadow: 0 28px 60px rgba(0, 0, 0, .28);
+    }
+
+    .inside-image img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .line {
+      height: 12px;
+      margin-bottom: 10px;
+      border-radius: 8px;
+      background: var(--warm);
+    }
+
+    .line.short { width: 62%; }
+    .line.coral { background: rgba(238, 99, 82, .34); }
+    .line.brown { background: rgba(58, 27, 9, .22); }
+    .line.green { background: rgba(57, 181, 116, .32); }
+
+    .check-row {
+      display: grid;
+      grid-template-columns: 24px 1fr;
+      gap: 10px;
+      align-items: center;
+      margin: 12px 0;
+      color: var(--text);
+      font-weight: 800;
+    }
+
+    .check {
+      display: grid;
+      place-items: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      background: var(--cta);
+      color: white;
+      font-weight: 950;
+    }
+
+    .benefits-mvt {
+      background: var(--white);
+    }
+
+    .benefits-layout {
+      display: grid;
+      grid-template-columns: minmax(0, .95fr) minmax(320px, .78fr);
+      gap: 34px;
+      align-items: center;
+    }
+
+    .benefit-list {
+      display: grid;
+      gap: 14px;
+      margin-top: 24px;
+    }
+
+    .benefit-item {
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      gap: 14px;
+      align-items: start;
+      padding: 17px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--blush);
+      box-shadow: 0 14px 30px rgba(58, 27, 9, .08);
+      color: inherit;
+      font: inherit;
+      text-align: left;
+      cursor: pointer;
+      transition: transform .2s ease, border-color .2s ease, background .2s ease, box-shadow .2s ease;
+    }
+
+    .benefit-item:hover,
+    .benefit-item.is-active {
+      border-color: rgba(57, 181, 116, .64);
+      background: #f3fff7;
+      box-shadow: 0 18px 40px rgba(57, 181, 116, .14);
+      transform: translateX(5px);
+    }
+
+    .benefit-number {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 999px;
+      background: var(--brown);
+      color: var(--white);
+      font-size: 18px;
+      font-weight: 950;
+    }
+
+    .benefit-item strong {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--brown);
+      font-weight: 950;
+    }
+
+    .benefit-item p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .image-placeholder {
+      display: grid;
+      place-items: center;
+      min-height: 410px;
+      padding: 28px;
+      border: 2px dashed rgba(58, 27, 9, .35);
+      border-radius: 8px;
+      background: var(--cream);
+      color: var(--brown);
+      text-align: center;
+      transition: transform .24s ease, border-color .24s ease, box-shadow .24s ease;
+    }
+
+    .image-placeholder:hover {
+      border-color: rgba(57, 181, 116, .58);
+      box-shadow: 0 18px 40px rgba(57, 181, 116, .14);
+      transform: translateY(-4px);
+    }
+
+    .image-placeholder strong {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 22px;
+      font-weight: 950;
+    }
+
+    .image-placeholder p {
+      max-width: 330px;
+      margin: 0;
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    .feature p,
+    .audience-card p,
+    .bonus p,
+    .faq-item p {
+      margin-bottom: 0;
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    .split {
+      background: var(--blush);
+    }
+
+    .split-grid {
+      display: grid;
+      grid-template-columns: minmax(0, .92fr) minmax(340px, .78fr);
+      gap: 44px;
+      align-items: center;
+    }
+
+    .danger-list {
+      display: grid;
+      gap: 13px;
+      margin-top: 24px;
+    }
+
+    .danger-item {
+      padding: 17px 18px;
+      border-left: 5px solid var(--coral);
+      border-radius: 8px;
+      background: var(--white);
+      box-shadow: 0 12px 26px rgba(58, 27, 9, .08);
+      font-weight: 850;
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+
+    .danger-item:hover {
+      box-shadow: 0 18px 38px rgba(58, 27, 9, .12);
+      transform: translateX(5px);
+    }
+
+    .contrast-box {
+      padding: 28px;
+      border: 1px solid rgba(58, 27, 9, .15);
+      border-radius: 8px;
+      background: var(--cream);
+      box-shadow: var(--shadow);
+    }
+
+    .contrast-row {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .contrast-row div {
+      padding: 15px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .78);
+      font-weight: 850;
+    }
+
+    .contrast-row .wrong {
+      border-left: 5px solid var(--coral);
+    }
+
+    .contrast-row .right {
+      border-left: 5px solid var(--cta);
+    }
+
+    .coral-band {
+      background: var(--coral);
+      color: var(--white);
+    }
+
+    .coral-box {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 28px;
+      align-items: center;
+    }
+
+    .coral-box p {
+      max-width: 760px;
+      color: rgba(255, 255, 255, .86);
+      font-size: 20px;
+      margin-bottom: 0;
+    }
+
+    .audience {
+      background: var(--cream);
+    }
+
+    .audience-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .audience-card {
+      min-height: 190px;
+      padding: 23px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--white);
+      transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+    }
+
+    .audience-card:hover {
+      border-color: rgba(57, 181, 116, .45);
+      box-shadow: 0 18px 40px rgba(58, 27, 9, .1);
+      transform: translateY(-5px);
+    }
+
+    .audience-card strong {
+      display: block;
+      margin-bottom: 9px;
+      color: var(--brown);
+      font-size: 19px;
+      font-weight: 950;
+    }
+
+    .stack {
+      background: var(--white);
+    }
+
+    .stack-grid {
+      display: grid;
+      grid-template-columns: minmax(320px, .72fr) minmax(0, 1fr);
+      gap: 34px;
+      align-items: start;
+    }
+
+    .stack-main {
+      padding: 28px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--brown);
+      color: var(--white);
+      box-shadow: var(--shadow);
+    }
+
+    .stack-main .product-cover {
+      width: 100%;
+      min-height: 390px;
+      margin: 0;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .bonus-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .bonus {
+      min-height: 208px;
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--cream);
+      transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+    }
+
+    .bonus:hover {
+      border-color: rgba(238, 99, 82, .35);
+      box-shadow: 0 18px 40px rgba(238, 99, 82, .12);
+      transform: translateY(-5px);
+    }
+
+    .bonus-value {
+      display: inline-flex;
+      margin-bottom: 16px;
+      padding: 7px 10px;
+      border-radius: 8px;
+      background: var(--coral);
+      color: var(--white);
+      font-size: 12px;
+      font-weight: 950;
+      text-transform: uppercase;
+    }
+
+    .offer {
+      background: var(--blush);
+    }
+
+    .offer-card {
+      width: min(760px, 100%);
+      margin: 0 auto;
+      padding: 34px;
+      border: 2px solid var(--coral);
+      border-radius: 8px;
+      background: var(--white);
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+
+    .price {
+      display: flex;
+      justify-content: center;
+      align-items: baseline;
+      gap: 8px;
+      margin: 18px 0 20px;
+      color: var(--brown);
+    }
+
+    .price span:first-child {
+      font-size: 20px;
+      font-weight: 900;
+    }
+
+    .price strong {
+      font-size: clamp(54px, 8vw, 86px);
+      line-height: .9;
+      font-weight: 950;
+    }
+
+    .offer-bullets {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin: 26px 0;
+      text-align: left;
+    }
+
+    .offer-bullets div {
+      padding: 13px 14px;
+      border-radius: 8px;
+      background: var(--cream);
+      font-weight: 850;
+    }
+
+    .guarantee {
+      background: var(--sand);
+    }
+
+    .guarantee-grid {
+      display: grid;
+      grid-template-columns: minmax(0, .8fr) minmax(0, 1fr);
+      gap: 36px;
+      align-items: center;
+    }
+
+    .seal {
+      display: grid;
+      place-items: center;
+      min-height: 260px;
+      border: 2px solid var(--brown);
+      border-radius: 8px;
+      background: var(--white);
+      color: var(--brown);
+      text-align: center;
+      font-weight: 950;
+      font-size: 42px;
+      line-height: 1;
+    }
+
+    .faq {
+      background: var(--white);
+    }
+
+    .faq-list {
+      display: grid;
+      gap: 14px;
+      width: min(870px, 100%);
+      margin: 34px auto 0;
+    }
+
+    .faq-item {
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--cream);
+      transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+    }
+
+    .faq-item:hover {
+      border-color: rgba(57, 181, 116, .38);
+      box-shadow: 0 14px 32px rgba(58, 27, 9, .08);
+      transform: translateY(-3px);
+    }
+
+    .steps {
+      background: var(--brown);
+      color: var(--white);
+    }
+
+    .step-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 32px;
+    }
+
+    .step {
+      min-height: 170px;
+      padding: 22px;
+      border: 1px solid rgba(255, 255, 255, .2);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .07);
+      transition: transform .2s ease, border-color .2s ease, background .2s ease;
+    }
+
+    .step:hover {
+      border-color: rgba(246, 223, 185, .55);
+      background: rgba(255, 255, 255, .11);
+      transform: translateY(-5px);
+    }
+
+    .step strong {
+      display: block;
+      margin-bottom: 10px;
+      color: var(--sand);
+      font-size: 28px;
+      font-weight: 950;
+    }
+
+    .step p { color: rgba(255, 255, 255, .8); margin-bottom: 0; }
+
+    .footer {
+      padding: 34px 24px;
+      background: #0f0f0f;
+      color: rgba(255, 255, 255, .72);
+      font-size: 13px;
+      text-align: center;
+    }
+
+    .purchase-toast {
+      position: fixed;
+      left: 18px;
+      bottom: 18px;
+      z-index: 60;
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      gap: 12px;
+      align-items: center;
+      width: min(360px, calc(100vw - 36px));
+      padding: 14px;
+      border: 1px solid rgba(57, 181, 116, .35);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .96);
+      box-shadow: 0 22px 54px rgba(58, 27, 9, .22);
+      color: var(--ink);
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(18px) scale(.98);
+      transition: opacity .28s ease, transform .28s ease;
+    }
+
+    .purchase-toast.is-visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .purchase-icon {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 999px;
+      background: var(--cta);
+      color: var(--white);
+      font-weight: 950;
+      box-shadow: 0 10px 24px rgba(57, 181, 116, .24);
+    }
+
+    .purchase-toast strong {
+      display: block;
+      margin-bottom: 2px;
+      color: var(--brown);
+      font-size: 14px;
+      font-weight: 950;
+    }
+
+    .purchase-toast span {
+      display: block;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .purchase-toast b {
+      color: var(--cta-dark);
+      font-weight: 950;
+    }
+
+    @media (max-width: 900px) {
+      .section { padding: 58px 18px; }
+      .hero { padding: 42px 18px 52px; }
+      .split-grid,
+      .stack-grid,
+      .guarantee-grid,
+      .coral-box {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-visual { min-height: auto; }
+      .product-cover { margin: 28px auto 0; transform: none; }
+      .guide-image-frame { margin: 6px auto 0; padding: 8px; }
+      .floating-card { position: static; width: 100%; margin-top: 16px; }
+      .mockup-row,
+      .benefits-layout,
+      .audience-grid,
+      .bonus-grid,
+      .offer-bullets,
+      .step-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .coral-box .btn { width: 100%; }
+      .hero-actions .btn { width: 100%; }
+      .access-note { width: 100%; text-align: center; }
+      .case-picker { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 520px) {
+      .topbar { font-size: 14px; }
+      h1 { font-size: 38px; }
+      .hero-sub { font-size: 20px; }
+      .cover-title { font-size: 44px; }
+      .product-cover { min-height: 460px; padding: 22px; }
+      .offer-card { padding: 24px; }
+      .btn { width: 100%; padding: 0 18px; }
+      .decision-game { padding: 14px; }
+      .case-picker { grid-template-columns: 1fr; }
+      .purchase-toast {
+        left: 12px;
+        right: 12px;
+        bottom: 12px;
+        width: auto;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        transition-duration: .01ms !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+      }
+
+      .reveal {
+        opacity: 1;
+        transform: none;
+      }
+
+      .topbar-track {
+        animation: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-progress" aria-hidden="true"><span data-page-progress></span></div>
+  <div class="topbar" aria-label="Oferta especial disponível apenas hoje">
+    <div class="topbar-track" aria-hidden="true">
+      <div class="topbar-group">
+        <span>MOFO ZERO POR R$37 HOJE</span>
+        <span>PARE DE LIMPAR O MESMO MOFO TODA SEMANA</span>
+        <span>ACESSO IMEDIATO E GARANTIA DE 7 DIAS</span>
+      </div>
+      <div class="topbar-group">
+        <span>MOFO ZERO POR R$37 HOJE</span>
+        <span>PARE DE LIMPAR O MESMO MOFO TODA SEMANA</span>
+        <span>ACESSO IMEDIATO E GARANTIA DE 7 DIAS</span>
+      </div>
+    </div>
+  </div>
+
+  <main>
+    <section class="hero">
+      <div class="wrap hero-mvt">
+        <span class="eyebrow">MOFO ZERO | Guia 3F Anti-Mofo</span>
+        <h1>Pare de limpar o mesmo mofo toda semana.</h1>
+        <div class="hero-visual" aria-label="Mockup visual do produto MOFO ZERO">
+          <div class="image-placeholder">
+            <div>
+              <strong>Guia 3F Anti-Mofo</strong>
+              <p>Foco, fonte e frequência para agir em roupas, sapatos, armários, paredes e ambientes úmidos.</p>
+            </div>
+          </div>
+        </div>
+        <p class="hero-sub">Descubra o foco, a fonte e a rotina certa para reduzir o retorno do mofo sem tentativa no escuro.</p>
+        <p class="hero-copy">Você consulta o diagnóstico, confere o material afetado e evita misturas que podem manchar, ressecar ou piorar o problema. Por apenas R$37, com acesso imediato.</p>
+        <div class="decision-game" aria-label="Diagnóstico rápido por tipo de caso">
+          <div class="decision-game-head">
+            <span>Qual foco de mofo parece com o seu?</span>
+            <span class="decision-score" data-decision-score>1 caminho selecionado</span>
+          </div>
+          <div class="case-picker" aria-label="Tipos de problema com mofo">
+            <button class="case-chip is-active" type="button" aria-pressed="true" data-case="roupa" data-title="Roupa com mofo" data-copy="Antes de lavar ou passar mistura, veja tecido, cor, intensidade da mancha e risco de desbotamento." data-note="Primeira decisão: testar em área pequena e evitar excesso de produto." data-meter="54">Roupa</button>
+            <button class="case-chip" type="button" aria-pressed="false" data-case="sapato" data-title="Sapato, bolsa ou couro" data-copy="Materiais sensíveis podem deformar, manchar ou soltar cola quando recebem líquido demais." data-note="Primeira decisão: identificar material e secar antes de aplicar qualquer solução." data-meter="68">Sapato</button>
+            <button class="case-chip" type="button" aria-pressed="false" data-case="armario" data-title="Armário com cheiro forte" data-copy="Cheiro de guardado pode ser ventilação ruim, umidade presa ou item contaminando o espaço." data-note="Primeira decisão: separar origem, ambiente e peças antes de limpar tudo junto." data-meter="62">Armário</button>
+            <button class="case-chip" type="button" aria-pressed="false" data-case="parede" data-title="Parede, banheiro ou canto úmido" data-copy="Quando há infiltração, área grande ou retorno constante, insistir sozinho pode piorar." data-note="Primeira decisão: avaliar tamanho, recorrência e sinais de umidade ativa." data-meter="82">Parede</button>
+          </div>
+          <div class="case-result" aria-live="polite">
+            <strong data-case-title>Roupa com mofo</strong>
+            <p data-case-copy>Antes de lavar ou passar mistura, veja tecido, cor, intensidade da mancha e risco de desbotamento.</p>
+            <div class="case-meter" aria-hidden="true"><span data-case-meter></span></div>
+            <span class="case-note" data-case-note>Primeira decisão: testar em área pequena e evitar excesso de produto.</span>
+          </div>
+        </div>
+        <div class="hero-actions">
+          <a class="btn" href="#oferta">Quero o Guia MOFO ZERO</a>
+          <span class="access-note">Oferta e garantia abaixo • Acesso imediato</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section gallery">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="eyebrow dark">Veja por dentro</span>
+          <h2>MOFO ZERO por dentro</h2>
+          <p class="copy">Veja o guia, as páginas de consulta e os materiais de apoio para entender exatamente como você vai diagnosticar e agir antes de aplicar qualquer produto.</p>
+        </div>
+
+        <div class="inside-preview">
+          <div class="inside-title">Veja alguns materiais que você recebe na prática</div>
+
+          <div class="inside-stack">
+            <div class="inside-image">
+              <img src="mofo-zero-diagnostico-preview.png" alt="Prévia interna do guia MOFO ZERO com diagnóstico de 2 minutos e alerta rápido">
+            </div>
+            <div class="inside-image">
+              <img src="mofo-zero-guia-4-caminhos-preview.png" alt="Prévia interna do guia MOFO ZERO com erro comum, guia de ação e chamada para acessar o guia">
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section benefits-mvt">
+      <div class="wrap benefits-layout">
+        <div>
+          <span class="eyebrow dark">Benefícios na prática</span>
+          <h2>O que muda quando você para de agir no escuro</h2>
+          <p class="copy">O MOFO ZERO transforma a decisão em uma consulta simples: você identifica o foco, entende a fonte do problema e segue uma frequência de cuidado para reduzir o retorno.</p>
+
+          <div class="benefit-list">
+            <button class="benefit-item is-active" type="button">
+              <span class="benefit-number">1</span>
+              <div><strong>Identifica o foco antes da limpeza</strong><p>Você confere local, material, sinal de umidade e tamanho do risco antes de limpar.</p></div>
+            </button>
+            <button class="benefit-item" type="button">
+              <span class="benefit-number">2</span>
+              <div><strong>Encontra a fonte do retorno</strong><p>Ajuda a diferenciar umidade presa, pouca ventilação, infiltração, peça úmida ou material contaminado.</p></div>
+            </button>
+            <button class="benefit-item" type="button">
+              <span class="benefit-number">3</span>
+              <div><strong>Usa o cuidado certo por superfície</strong><p>Reduz chance de mancha permanente, desbotamento, cola solta, cheiro pior ou mofo retornando.</p></div>
+            </button>
+            <button class="benefit-item" type="button">
+              <span class="benefit-number">4</span>
+              <div><strong>Cria rotina anti-retorno</strong><p>Material rápido para abrir antes de mexer em roupa, calçado, armário, estofado ou parede.</p></div>
+            </button>
+          </div>
+        </div>
+
+        <div class="image-placeholder" aria-label="Imagem de apoio dos benefícios do guia">
+          <div>
+            <strong>Foco + fonte + frequência</strong>
+            <p>Use o guia antes de limpar para proteger peças, ambientes e dinheiro.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section coral-band">
+      <div class="wrap coral-box">
+        <div>
+          <h2>Mofo que volta toda semana não é só sujeira. É sinal sem diagnóstico.</h2>
+          <p>Antes de comprar mais produto ou repetir a mesma mistura, entenda o que está alimentando o problema.</p>
+        </div>
+        <a class="btn" href="#oferta">Acessar o MOFO ZERO</a>
+      </div>
+    </section>
+
+    <section class="section audience">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="eyebrow dark">Ideal para quem</span>
+          <h2>Quer parar de improvisar contra o mofo</h2>
+        </div>
+
+        <div class="audience-grid">
+          <div class="audience-card"><strong>Viu mofo em roupa</strong><p>Principalmente quando a peça estava guardada, úmida ou com cheiro forte.</p></div>
+          <div class="audience-card"><strong>Tem armário com cheiro</strong><p>Precisa entender se o problema é ventilação, umidade ou item contaminado.</p></div>
+          <div class="audience-card"><strong>Quer salvar sapato ou bolsa</strong><p>Materiais sensíveis não aceitam qualquer produto ou esfregação.</p></div>
+          <div class="audience-card"><strong>Tem parede ou banheiro com bolor</strong><p>Quer saber quando é limpeza simples e quando pode existir infiltração.</p></div>
+          <div class="audience-card"><strong>Tem medo de misturar produto</strong><p>Precisa de um checklist claro antes de usar qualquer solução caseira.</p></div>
+          <div class="audience-card"><strong>Quer prevenir a volta</strong><p>Depois de limpar, precisa de rotina simples para reduzir recorrência.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section stack">
+      <div class="wrap stack-grid">
+        <div class="stack-main">
+          <div class="product-cover">
+            <span class="cover-label">Acesso completo</span>
+            <div class="cover-title">MOFO<br>ZERO</div>
+            <p class="cover-sub">Guia 3F + checklist + tabela + plano de 7 dias.</p>
+            <div class="path-list">
+              <div class="path-item"><span class="path-number">✓</span><span>Foco do problema</span></div>
+              <div class="path-item"><span class="path-number">✓</span><span>Fonte da umidade</span></div>
+              <div class="path-item"><span class="path-number">✓</span><span>Frequência de prevenção</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <span class="eyebrow dark">Tudo o que você recebe</span>
+          <h2>O pacote foi montado para agir sem tentativa no escuro</h2>
+          <p class="copy">Você não compra uma promessa. Você recebe uma estrutura para identificar, tratar com cuidado e acompanhar o resultado nos dias seguintes.</p>
+
+          <div class="bonus-grid">
+            <div class="bonus"><span class="bonus-value">Bônus grátis hoje</span><h3>Checklist Anti-Mofo por Cômodo</h3><p>Quarto, banheiro, cozinha, armário, sapateira, lavanderia e pontos onde o cheiro costuma voltar.</p></div>
+            <div class="bonus"><span class="bonus-value">Bônus grátis hoje</span><h3>Tabela Produto Certo x Superfície</h3><p>Quando usar vinagre, água sanitária, álcool, bicarbonato ou antimofo sem estragar material sensível.</p></div>
+            <div class="bonus"><span class="bonus-value">Bônus grátis hoje</span><h3>Plano 7 Dias Casa Sem Cheiro de Mofo</h3><p>Rotina curta para ventilar, secar, reorganizar e acompanhar pontos críticos por uma semana.</p></div>
+            <div class="bonus"><span class="bonus-value">Bônus grátis hoje</span><h3>Lista Simples de Compras Anti-Mofo</h3><p>O que comprar antes de começar, sem gastar com itens desnecessários.</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section offer" id="oferta">
+      <div class="wrap">
+        <div class="offer-card">
+          <span class="eyebrow dark">Oferta especial</span>
+          <h2>Acesse o Guia MOFO ZERO 3F hoje</h2>
+          <p class="copy" style="margin-left:auto;margin-right:auto;">Guia 3F, checklist por cômodo, tabela produto x superfície, plano de 7 dias e lista simples de compras.</p>
+          <div class="price"><span>por</span><strong>R$ 37</strong></div>
+          <div class="offer-bullets">
+            <div>Guia 3F Anti-Mofo</div>
+            <div>Checkout seguro</div>
+            <div>Garantia de 7 dias</div>
+            <div>Material de consulta rápida</div>
+          </div>
+          <a class="btn coral" href="#oferta">Quero o Guia MOFO ZERO</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section guarantee">
+      <div class="wrap guarantee-grid">
+        <div class="seal">7<br>DIAS</div>
+        <div>
+          <span class="eyebrow dark">Garantia de 7 dias</span>
+          <h2>Você pode acessar, conferir e decidir com calma</h2>
+          <p class="copy">Se o material não fizer sentido para você, a compra tem garantia de 7 dias. O objetivo é clareza: mostrar o que fazer primeiro sem exagerar promessa.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section steps">
+      <div class="wrap">
+        <span class="eyebrow">Como funciona</span>
+        <h2>Da compra ao primeiro diagnóstico em poucos minutos</h2>
+        <div class="step-grid">
+          <div class="step"><strong>01</strong><p>Você confirma o acesso no checkout seguro.</p></div>
+          <div class="step"><strong>02</strong><p>Recebe o material digital na hora.</p></div>
+          <div class="step"><strong>03</strong><p>Identifica foco, fonte e frequência.</p></div>
+          <div class="step"><strong>04</strong><p>Segue a primeira ação com mais segurança.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section faq">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="eyebrow dark">Dúvidas frequentes</span>
+          <h2>Antes de acessar</h2>
+        </div>
+        <div class="faq-list">
+          <div class="faq-item"><h3>Isso remove qualquer mofo?</h3><p>Não. O guia ajuda a identificar o tipo de situação e escolher a primeira ação. Casos severos, recorrentes ou com infiltração podem exigir ajuda profissional.</p></div>
+          <div class="faq-item"><h3>Serve para roupa colorida?</h3><p>Sim, como orientação de cuidado. O material mostra por que a decisão muda conforme tecido, cor e intensidade da mancha.</p></div>
+          <div class="faq-item"><h3>É curso em vídeo?</h3><p>Não. É um material digital de consulta rápida, feito para abrir quando o problema aparece.</p></div>
+          <div class="faq-item"><h3>Como recebo o acesso?</h3><p>Após a compra aprovada, o acesso é enviado para o e-mail usado no checkout.</p></div>
+          <div class="faq-item"><h3>Tem garantia?</h3><p>Sim. A compra tem garantia de 7 dias.</p></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    MOFO ZERO é um material educativo de apoio doméstico. Não substitui avaliação técnica em casos severos, infiltração, risco estrutural, alergias fortes ou contaminação extensa.
+  </footer>
+  <div class="purchase-toast" data-purchase-toast aria-live="polite" aria-atomic="true">
+    <div class="purchase-icon">✓</div>
+    <div>
+      <strong data-purchase-person>Camila de Curitiba/PR</strong>
+      <span>acabou de comprar <b>MOFO ZERO</b></span>
+    </div>
+  </div>
+  <script>
+    (() => {
+      const progressBar = document.querySelector('[data-page-progress]');
+      const updateProgress = () => {
+        const scrollTop = window.scrollY || document.documentElement.scrollTop;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = docHeight > 0 ? Math.min(100, Math.max(0, (scrollTop / docHeight) * 100)) : 0;
+        if (progressBar) progressBar.style.width = `${progress}%`;
+      };
+
+      updateProgress();
+      window.addEventListener('scroll', updateProgress, { passive: true });
+      window.addEventListener('resize', updateProgress);
+
+      const chips = [...document.querySelectorAll('[data-case]')];
+      const title = document.querySelector('[data-case-title]');
+      const copy = document.querySelector('[data-case-copy]');
+      const note = document.querySelector('[data-case-note]');
+      const meter = document.querySelector('[data-case-meter]');
+      const score = document.querySelector('[data-decision-score]');
+
+      const selectCase = (selectedChip) => {
+        chips.forEach((chip) => {
+          const isSelected = chip === selectedChip;
+          chip.classList.toggle('is-active', isSelected);
+          chip.setAttribute('aria-pressed', String(isSelected));
+        });
+
+        if (title) title.textContent = selectedChip.dataset.title || '';
+        if (copy) copy.textContent = selectedChip.dataset.copy || '';
+        if (note) note.textContent = selectedChip.dataset.note || '';
+        if (meter) meter.style.width = `${selectedChip.dataset.meter || 50}%`;
+        if (score) score.textContent = `${selectedChip.textContent.trim()} selecionado`;
+      };
+
+      chips.forEach((chip) => {
+        chip.addEventListener('click', () => selectCase(chip));
+      });
+
+      document.querySelectorAll('.benefit-item').forEach((item) => {
+        item.addEventListener('click', () => {
+          document.querySelectorAll('.benefit-item').forEach((card) => card.classList.remove('is-active'));
+          item.classList.add('is-active');
+        });
+      });
+
+      const purchaseToast = document.querySelector('[data-purchase-toast]');
+      const purchasePerson = document.querySelector('[data-purchase-person]');
+      const purchaseEvents = [
+        'Camila de Curitiba/PR',
+        'Juliana de São Paulo/SP',
+        'Marina de Belo Horizonte/MG',
+        'Renata de Recife/PE',
+        'Patrícia de Goiânia/GO',
+        'Fernanda de Florianópolis/SC',
+        'Aline de Salvador/BA',
+        'Luciana de Campinas/SP'
+      ];
+      let purchaseIndex = 0;
+      let purchaseTimer;
+
+      const showPurchaseToast = () => {
+        if (!purchaseToast || !purchasePerson) return;
+        purchasePerson.textContent = purchaseEvents[purchaseIndex % purchaseEvents.length];
+        purchaseIndex += 1;
+        purchaseToast.classList.add('is-visible');
+        window.clearTimeout(purchaseTimer);
+        purchaseTimer = window.setTimeout(() => {
+          purchaseToast.classList.remove('is-visible');
+        }, 5200);
+      };
+
+      window.setTimeout(showPurchaseToast, 3600);
+      window.setInterval(showPurchaseToast, 14500);
+
+      const revealTargets = document.querySelectorAll('.hero, .section');
+      revealTargets.forEach((target) => target.classList.add('reveal'));
+
+      if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('is-visible');
+              observer.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.12 });
+
+        revealTargets.forEach((target) => observer.observe(target));
+      } else {
+        revealTargets.forEach((target) => target.classList.add('is-visible'));
+      }
+    })();
+  </script>
+</body>
+</html>
