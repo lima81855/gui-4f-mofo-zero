@@ -1,0 +1,20 @@
+.env
+.codex_tmp/
+upload-fixes/
+Agent Skills/
+Agent Skills - Copy/
+node_modules/
+dist/
+memory/knowledge.db
+memory/knowledge.db-*
+memory/buffer.json
+pdf_text*.txt
+pdf_utf8.txt
+data/**
+!data/
+!data/**/
+!data/**/.gitkeep
+!data/offers/active-offer.json
+data/checkout/hotmart/*.json
+.DS_Store
+Thumbs.db

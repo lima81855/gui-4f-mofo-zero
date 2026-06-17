@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CEO Cockpit | Low Ticket Ops</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; }
+    :root {
+      --bg: #080d0c;
+      --rail: #0b1110;
+      --panel: #111817;
+      --panel-2: #151f1d;
+      --panel-3: #1a2522;
+      --line: #25332f;
+      --line-soft: rgba(255, 255, 255, .07);
+      --text: #f3f8f5;
+      --muted: #8d9a95;
+      --soft: #c0cac5;
+      --green: #a8ff3e;
+      --green-2: #3ddc84;
+      --cyan: #48c7ff;
+      --amber: #f8c25c;
+      --rose: #ff6d8f;
+      --violet: #a78bfa;
+      --shadow: 0 18px 50px rgba(0, 0, 0, .34);
+    }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 28% -12%, rgba(168, 255, 62, .12), transparent 31%),
+        linear-gradient(145deg, #07100e 0%, #080d0c 45%, #050807 100%);
+    }
+    a { color: inherit; text-decoration: none; }
+    button, select, input {
+      font: inherit;
+      color: var(--text);
+      border: 1px solid var(--line);
+      background: var(--panel-2);
+      border-radius: 7px;
+    }
+    button {
+      height: 38px;
+      padding: 0 13px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 700;
+    }
+    button:hover { border-color: rgba(168, 255, 62, .7); }
+    select, input {
+      height: 38px;
+      padding: 0 11px;
+      font-size: 13px;
+    }
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 228px minmax(0, 1fr) 318px;
+    }
+    .sidebar {
+      border-right: 1px solid var(--line-soft);
+      background: rgba(8, 13, 12, .88);
+      padding: 18px 14px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 6px 18px;
+    }
+    .brand-mark {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      color: #08100d;
+      background: linear-gradient(135deg, var(--green), var(--green-2));
+      font-weight: 900;
+    }
+    .brand h1 {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.2;
+    }
+    .brand p {
+      margin: 2px 0 0;
+      font-size: 11px;
+      color: var(--muted);
+    }
+    .search {
+      width: 100%;
+      margin: 2px 0 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--line-soft);
+      background: #0c1311;
+      border-radius: 8px;
+      padding: 9px 10px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .nav-title {
+      margin: 18px 8px 8px;
+      color: #68756f;
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+    .nav-item {
+      height: 34px;
+      border-radius: 7px;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 0 10px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .nav-item.active {
+      color: #0a100d;
+      background: var(--green);
+    }
+    .nav-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+    .sidebar-footer {
+      position: absolute;
+      left: 14px;
+      right: 14px;
+      bottom: 18px;
+      border: 1px solid var(--line-soft);
+      border-radius: 8px;
+      padding: 12px;
+      background: #0c1311;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+    .main {
+      min-width: 0;
+      padding: 18px 18px 34px;
+    }
+    .topbar {
+      height: 42px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      border-bottom: 1px solid var(--line-soft);
+      margin: -18px -18px 18px;
+      padding: 0 18px;
+      background: rgba(8, 13, 12, .45);
+    }
+    .crumbs {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+    .ghost-btn {
+      width: 34px;
+      padding: 0;
+      display: grid;
+      place-items: center;
+      color: var(--soft);
+    }
+    .page-head {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 14px;
+    }
+    .page-head h2 {
+      margin: 0;
+      font-size: 22px;
+      line-height: 1.1;
+    }
+    .page-head p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .filters {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+    .kpis {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .kpi, .card, .side-card {
+      border: 1px solid var(--line-soft);
+      background: linear-gradient(180deg, rgba(21, 31, 29, .96), rgba(14, 21, 19, .96));
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+    .kpi {
+      min-height: 104px;
+      padding: 14px;
+      position: relative;
+      overflow: hidden;
+    }
+    .kpi::after {
+      content: "";
+      position: absolute;
+      right: -24px;
+      bottom: -34px;
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      border: 18px solid rgba(168, 255, 62, .09);
+    }
+    .kpi label {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    .kpi strong {
+      display: block;
+      font-size: 26px;
+      line-height: 1;
+    }
+    .trend {
+      margin-top: 11px;
+      color: var(--green);
+      font-size: 11px;
+      font-weight: 800;
+    }
+    .content-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(330px, .9fr);
+      gap: 12px;
+      align-items: start;
+    }
+    .card {
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+    .card-head {
+      min-height: 50px;
+      padding: 14px 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid var(--line-soft);
+    }
+    .card-head h3 {
+      margin: 0;
+      font-size: 15px;
+    }
+    .card-head small {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 800;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 24px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 900;
+      white-space: nowrap;
+      border: 1px solid transparent;
+    }
+    .ok { color: #0c1b12; background: var(--green); }
+    .info { color: #d8f2ff; background: rgba(72, 199, 255, .15); border-color: rgba(72, 199, 255, .25); }
+    .warn { color: #ffe4af; background: rgba(248, 194, 92, .15); border-color: rgba(248, 194, 92, .25); }
+    .bad { color: #ffd7df; background: rgba(255, 109, 143, .15); border-color: rgba(255, 109, 143, .25); }
+    .muted-badge { color: var(--muted); background: rgba(255,255,255,.05); border-color: var(--line-soft); }
+    .sales-panel {
+      display: grid;
+      grid-template-columns: 190px minmax(0, 1fr);
+      gap: 18px;
+      padding: 16px;
+    }
+    .ring {
+      width: 154px;
+      height: 154px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      margin: 4px auto;
+      background: conic-gradient(var(--green) var(--ring-value, 10%), #26302c 0);
+      position: relative;
+    }
+    .ring::before {
+      content: "";
+      position: absolute;
+      inset: 18px;
+      border-radius: 50%;
+      background: var(--panel);
+    }
+    .ring-inner {
+      position: relative;
+      text-align: center;
+    }
+    .ring-inner strong {
+      display: block;
+      font-size: 25px;
+    }
+    .ring-inner span {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 800;
+    }
+    .legend-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      align-content: center;
+      min-width: 0;
+    }
+    .mini-stat {
+      border: 1px solid var(--line-soft);
+      background: rgba(255,255,255,.03);
+      border-radius: 7px;
+      padding: 11px;
+      min-width: 0;
+    }
+    .mini-stat label {
+      color: var(--muted);
+      display: block;
+      font-size: 11px;
+      margin-bottom: 8px;
+      font-weight: 800;
+    }
+    .mini-stat strong { font-size: 18px; }
+    .mini-stat label,
+    .mini-stat strong {
+      overflow-wrap: anywhere;
+    }
+    .sparkline {
+      height: 148px;
+      padding: 12px;
+    }
+    .sparkline svg {
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+    .offer-panel {
+      padding: 16px;
+      display: grid;
+      gap: 14px;
+    }
+    .offer-title {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      align-items: flex-start;
+    }
+    .offer-title h3 {
+      margin: 0;
+      font-size: 24px;
+      line-height: 1.08;
+    }
+    .offer-title p {
+      margin: 7px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+    .offer-links {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .offer-links a {
+      display: inline-flex;
+      align-items: center;
+      height: 34px;
+      padding: 0 11px;
+      border-radius: 7px;
+      background: var(--panel-3);
+      border: 1px solid var(--line-soft);
+      color: var(--soft);
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .offer-links a.primary {
+      color: #0c1b12;
+      background: var(--green);
+      border-color: var(--green);
+    }
+    .pipeline {
+      padding: 12px 15px 15px;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 9px;
+    }
+    .stage {
+      min-height: 92px;
+      border: 1px solid var(--line-soft);
+      border-radius: 7px;
+      background: rgba(255,255,255,.03);
+      padding: 10px;
+    }
+    .stage-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      align-items: flex-start;
+      margin-bottom: 8px;
+    }
+    .stage h4 {
+      margin: 0;
+      font-size: 12px;
+      line-height: 1.25;
+    }
+    .stage p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.4;
+    }
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .table th, .table td {
+      padding: 12px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--line-soft);
+      font-size: 12px;
+    }
+    .table th {
+      color: var(--muted);
+      font-size: 11px;
+      text-transform: uppercase;
+    }
+    .table td { color: var(--soft); }
+    .table strong { color: var(--text); }
+    .decision-bar {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+      padding: 14px 15px;
+      border-top: 1px solid var(--line-soft);
+    }
+    .decision-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+    .rightbar {
+      border-left: 1px solid var(--line-soft);
+      background: rgba(8, 13, 12, .8);
+      padding: 18px 14px 28px;
+      height: 100vh;
+      position: sticky;
+      top: 0;
+      overflow: auto;
+    }
+    .side-card {
+      padding: 15px;
+      margin-bottom: 12px;
+    }
+    .side-card h3 {
+      margin: 0 0 13px;
+      font-size: 14px;
+    }
+    .feed {
+      display: grid;
+      gap: 10px;
+    }
+    .feed-item {
+      display: grid;
+      grid-template-columns: 22px minmax(0, 1fr);
+      gap: 9px;
+      align-items: start;
+    }
+    .feed-dot {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: rgba(168, 255, 62, .14);
+      color: var(--green);
+      font-size: 12px;
+      font-weight: 900;
+    }
+    .feed-item strong {
+      display: block;
+      font-size: 12px;
+      line-height: 1.3;
+    }
+    .feed-item span {
+      display: block;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.4;
+      margin-top: 2px;
+    }
+    .health-list {
+      display: grid;
+      gap: 8px;
+    }
+    .health {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      border: 1px solid var(--line-soft);
+      background: rgba(255,255,255,.03);
+      border-radius: 7px;
+      padding: 9px 10px;
+      color: var(--soft);
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .empty {
+      padding: 28px;
+      text-align: center;
+      color: var(--muted);
+      border: 1px dashed var(--line);
+      border-radius: 8px;
+      background: rgba(255,255,255,.02);
+    }
+    @media (max-width: 1220px) {
+      .app { grid-template-columns: 208px minmax(0, 1fr); }
+      .rightbar { grid-column: 2; height: auto; position: static; border-left: 0; border-top: 1px solid var(--line-soft); display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+      .side-card { margin-bottom: 0; }
+      .content-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 1380px) and (min-width: 1221px) {
+      .sales-panel {
+        grid-template-columns: 1fr;
+      }
+      .legend-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+    @media (max-width: 860px) {
+      .app { display: block; }
+      .sidebar { position: static; height: auto; border-right: 0; border-bottom: 1px solid var(--line-soft); }
+      .sidebar-footer { position: static; margin-top: 14px; }
+      .kpis, .pipeline, .rightbar { grid-template-columns: 1fr; }
+      .sales-panel { grid-template-columns: 1fr; }
+      .page-head, .topbar { align-items: flex-start; flex-direction: column; height: auto; padding-top: 12px; padding-bottom: 12px; }
+      .decision-bar { grid-template-columns: 1fr; }
+      .decision-actions { justify-content: stretch; }
+      .decision-actions button { flex: 1; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">LT</div>
+        <div>
+          <h1>Low Ticket Ops</h1>
+          <p>CEO command center</p>
+        </div>
+      </div>
+      <div class="search">Buscar oferta, agente ou bloqueio</div>
+      <div class="nav-title">Dashboard</div>
+      <a class="nav-item active" href="#overview"><span class="nav-dot"></span>Overview</a>
+      <a class="nav-item" href="#pipeline"><span class="nav-dot"></span>Esteira</a>
+      <a class="nav-item" href="#performance"><span class="nav-dot"></span>Performance</a>
+      <a class="nav-item" href="#decisions"><span class="nav-dot"></span>Decisoes CEO</a>
+      <div class="nav-title">Operacao</div>
+      <a class="nav-item" href="#tracking"><span class="nav-dot"></span>Tracking</a>
+      <a class="nav-item" href="#finance"><span class="nav-dot"></span>Financeiro</a>
+      <a class="nav-item" href="#infra"><span class="nav-dot"></span>Infra</a>
+      <div class="sidebar-footer">
+        <strong id="sidebar-status">Carregando</strong><br />
+        <span id="last-updated">Sincronizando dados da maquina.</span>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="topbar">
+        <div class="crumbs">Dashboard <span>/</span> Overview</div>
+        <div class="top-actions">
+          <button class="ghost-btn" onclick="loadDashboard()" title="Atualizar">R</button>
+          <button class="ghost-btn" title="Tema">D</button>
+          <button class="ghost-btn" title="CEO">C</button>
+        </div>
+      </div>
+
+      <section class="page-head" id="overview">
+        <div>
+          <h2>Overview</h2>
+          <p>Cockpit executivo da empresa agenticia low-ticket.</p>
+        </div>
+        <div class="filters">
+          <select id="status-filter" onchange="render()">
+            <option value="all">Todas as ofertas</option>
+            <option value="blocked">Com bloqueio</option>
+            <option value="review">Em revisao</option>
+            <option value="ready">Prontas</option>
+          </select>
+          <button onclick="loadDashboard()">Atualizar</button>
+        </div>
+      </section>
+
+      <section class="kpis" id="stats"></section>
+
+      <section class="content-grid">
+        <div>
+          <section class="card" id="performance">
+            <div class="card-head">
+              <h3>Sales Overview</h3>
+              <small id="period-label">Ultimos 7 dias</small>
+            </div>
+            <div class="sales-panel">
+              <div>
+                <div class="ring" id="sales-ring"><div class="ring-inner"><strong id="ring-value">0%</strong><span>saude do funil</span></div></div>
+              </div>
+              <div class="legend-grid" id="sales-metrics"></div>
+            </div>
+          </section>
+
+          <section class="card" id="pipeline-card">
+            <div class="card-head">
+              <h3>Operational Pipeline</h3>
+              <small id="pipeline-summary">Agentes e setores</small>
+            </div>
+            <div class="pipeline" id="pipeline"></div>
+          </section>
+
+          <section class="card" id="decisions">
+            <div class="card-head">
+              <h3>Offer List</h3>
+              <small>Decisao do CEO</small>
+            </div>
+            <div id="offers-table"></div>
+          </section>
+        </div>
+
+        <div>
+          <section class="card">
+            <div class="card-head">
+              <h3>Total Profit</h3>
+              <span class="badge info" id="decision-badge">Aguardando</span>
+            </div>
+            <div class="sparkline">
+              <svg viewBox="0 0 360 135" role="img" aria-label="Curva de performance">
+                <defs>
+                  <linearGradient id="areaFill" x1="0" x2="0" y1="0" y2="1">
+                    <stop offset="0%" stop-color="#a8ff3e" stop-opacity=".32" />
+                    <stop offset="100%" stop-color="#a8ff3e" stop-opacity="0" />
+                  </linearGradient>
+                </defs>
+                <path d="M4 118 C45 116 42 88 84 92 C122 96 112 54 154 58 C192 62 184 24 226 28 C268 31 252 80 294 64 C326 52 328 36 356 44 L356 135 L4 135 Z" fill="url(#areaFill)" />
+                <path d="M4 118 C45 116 42 88 84 92 C122 96 112 54 154 58 C192 62 184 24 226 28 C268 31 252 80 294 64 C326 52 328 36 356 44" fill="none" stroke="#a8ff3e" stroke-width="4" stroke-linecap="round" />
+              </svg>
+            </div>
+          </section>
+
+          <section class="card" id="active-offer-card">
+            <div class="card-head">
+              <h3>Active Offer</h3>
+              <span class="badge ok">Teste controlado</span>
+            </div>
+            <div class="offer-panel" id="active-offer"></div>
+          </section>
+        </div>
+      </section>
+    </main>
+
+    <aside class="rightbar">
+      <section class="side-card">
+        <h3>Notifications</h3>
+        <div class="feed" id="notifications"></div>
+      </section>
+      <section class="side-card">
+        <h3>Activities</h3>
+        <div class="feed" id="activities"></div>
+      </section>
+      <section class="side-card" id="infra">
+        <h3>Connector Health</h3>
+        <div class="health-list" id="health"></div>
+      </section>
+    </aside>
+  </div>
+
+  <script>
+    const OPS = [
+      { key: 'offer', group: 'Oferta', label: 'Arquitetura', url: id => `../data/offers/${id}/offer-brief.json`, pick: x => x.offer, status: x => x ? 'ok' : 'pending', note: x => x ? x.productName : 'Oferta ainda nao gerada' },
+      { key: 'product', group: 'Produto', label: 'Produto', url: id => `../data/products/${id}/product-content.md`, text: true, status: x => x ? 'ok' : 'pending', note: x => x ? 'Conteudo base criado' : 'Produto pendente' },
+      { key: 'quality', group: 'Produto', label: 'QA', url: id => `../data/products/${id}/quality-review.json`, pick: x => x.qualityReview, status: x => x?.qualityStatus === 'aprovado' ? 'ok' : x?.qualityStatus === 'bloqueado' ? 'bad' : x ? 'warn' : 'pending', note: x => x ? `Status: ${x.qualityStatus}` : 'Review pendente' },
+      { key: 'funnel', group: 'Funil', label: 'Estrategia', url: id => `../data/funnels/${id}/funnel-strategy.json`, pick: x => x.strategy, status: x => x ? 'ok' : 'pending', note: x => x ? x.recommendedFunnel : 'Estrategia pendente' },
+      { key: 'copy', group: 'Funil', label: 'Copy', url: id => `../data/funnels/${id}/sales-page.md`, text: true, status: x => x ? 'ok' : 'pending', note: x => x ? 'Pagina escrita' : 'Copy pendente' },
+      { key: 'creatives', group: 'Criativos', label: 'Ads', url: id => `../data/creatives/${id}/ad-copies.json`, pick: x => x.creativePack, status: x => x ? 'ok' : 'pending', note: x => x ? `${x.creativeAngles?.length || 0} angulos` : 'Criativos pendentes' },
+      { key: 'videos', group: 'Criativos', label: 'Videos', url: id => `../data/creatives/${id}/video-scripts.json`, pick: x => x.videoScriptPack || x.scriptPack, status: x => x ? 'ok' : 'pending', note: x => x ? `${x.scripts?.length || 0} roteiros` : 'Roteiros pendentes' },
+      { key: 'organic', group: 'Criativos', label: 'Organico', url: id => `../data/organic/${id}/content-calendar.json`, pick: x => x.contentPlan, status: x => x ? 'ok' : 'pending', note: x => x ? `${x.weeklyCalendar?.length || 0} posts` : 'Calendario pendente' },
+      { key: 'design', group: 'Build', label: 'Design', url: id => `../data/design/${id}/design-brief.json`, pick: x => x.designBrief, status: x => x ? 'ok' : 'pending', note: x => x ? x.brandDirection?.visualMood : 'Brief pendente' },
+      { key: 'builder', group: 'Build', label: 'Pagina', url: id => `../data/implementation/${id}/page-checklist.json`, pick: x => x.funnelBuilderPlan, status: x => x?.buildStatus === 'pronto' ? 'ok' : x?.buildStatus === 'bloqueado' ? 'bad' : x ? 'warn' : 'pending', note: x => x ? `Status: ${x.buildStatus}` : 'Checklist pendente' },
+      { key: 'checkout', group: 'Tracking', label: 'Checkout', url: id => `../data/implementation/${id}/checkout-checklist.json`, pick: x => x.checkoutOpsPlan, status: x => x?.readiness === 'pronto' ? 'ok' : x?.readiness === 'bloqueado' ? 'bad' : x ? 'warn' : 'pending', note: x => x ? `Status: ${x.readiness}` : 'Checklist pendente' },
+      { key: 'tracking', group: 'Tracking', label: 'Pixel/CAPI', url: id => `../data/tracking/${id}/tracking-plan.json`, pick: x => x.trackingPlan, status: x => x?.readyForTraffic ? 'ok' : x ? 'bad' : 'pending', note: x => x ? (x.readyForTraffic ? 'Pronto para trafego' : 'Nao validado') : 'Plano pendente' },
+      { key: 'media', group: 'Midia', label: 'Meta Ads', url: id => `../data/media/${id}/launch-plan.json`, pick: x => x.mediaPlan, status: x => x?.launchStatus === 'liberado' ? 'ok' : x?.launchStatus === 'bloqueado' ? 'bad' : x ? 'warn' : 'pending', note: x => x ? `Status: ${x.launchStatus}` : 'Plano pendente' },
+      { key: 'metrics', group: 'Midia', label: 'Metricas', url: id => `../data/optimization/${id}/decision-log.json`, pick: x => x.decision, status: x => x?.metricsAvailable ? 'ok' : x ? 'warn' : 'pending', note: x => x ? `Decisao: ${x.decision}` : 'Sem decisao' },
+      { key: 'finance', group: 'Financeiro', label: 'Caixa', url: id => `../data/finance/${id}/budget-rules.json`, pick: x => x.budgetRules, status: x => x?.cashStatus === 'escala-permitida' ? 'ok' : x?.cashStatus === 'bloqueado' ? 'bad' : x ? 'warn' : 'pending', note: x => x ? `Caixa: ${x.cashStatus}` : 'Regras pendentes' },
+      { key: 'cro', group: 'Otimizar', label: 'CRO', url: id => `../data/cro/${id}/cro-plan.json`, pick: x => x.croPlan, status: x => x ? 'ok' : 'pending', note: x => x ? `Modo: ${x.mode}` : 'Plano pendente' },
+      { key: 'creativeAnalysis', group: 'Otimizar', label: 'Analise ads', url: id => `../data/creatives/${id}/creative-analysis.json`, pick: x => x.analysis, status: x => x?.metricsAvailable ? 'ok' : x ? 'warn' : 'pending', note: x => x ? `Decisao: ${x.decision}` : 'Analise pendente' },
+    ]
+
+    let offers = []
+    let localDecisions = loadLocalDecisions()
+    let checkoutSummary = null
+    let performanceSummary = null
+    let actionPlan = null
+    let goLiveReport = null
+    let activeOffer = null
+
+    function loadLocalDecisions() {
+      try { return JSON.parse(localStorage.getItem('lowTicketOpsDecisions') || '{}') } catch (_) { return {} }
+    }
+
+    function saveLocalDecisions() {
+      localStorage.setItem('lowTicketOpsDecisions', JSON.stringify(localDecisions))
+    }
+
+    async function fetchMaybe(url, asText = false) {
+      try {
+        const res = await fetch(url + (url.includes('?') ? '&' : '?') + '_t=' + Date.now())
+        if (!res.ok) return null
+        return asText ? await res.text() : await res.json()
+      } catch (_) {
+        return null
+      }
+    }
+
+    async function loadDashboard() {
+      const ideas = await fetchMaybe('../data/validated-ideas/index.json') || []
+      const checkoutResponse = await fetchMaybe('/api/checkout/summary')
+      const performanceResponse = await fetchMaybe('/api/performance/summary')
+      const actionResponse = await fetchMaybe('/api/performance/action-plan')
+      const goLiveResponse = await fetchMaybe('/api/go-live/checklist')
+      activeOffer = await fetchMaybe('../data/offers/active-offer.json')
+      checkoutSummary = checkoutResponse?.summary || null
+      performanceSummary = performanceResponse?.summary || null
+      actionPlan = actionResponse?.plan || null
+      goLiveReport = goLiveResponse?.report || null
+      offers = await Promise.all((Array.isArray(ideas) ? ideas : []).map(loadOffer))
+      render()
+      document.getElementById('last-updated').textContent = `Atualizado ${new Date().toLocaleTimeString('pt-BR')}`
+    }
+
+    async function loadOffer(idea) {
+      const storedDecision = localDecisions[idea.id]
+      const effectiveIdea = storedDecision ? { ...idea, ...storedDecision } : idea
+      const sectors = {}
+      for (const op of OPS) {
+        const raw = await fetchMaybe(op.url(effectiveIdea.id), op.text)
+        const data = raw && !op.text && op.pick ? op.pick(raw) : raw
+        sectors[op.key] = { ...op, data, raw, status: op.status(data), note: op.note(data), href: op.url(effectiveIdea.id).replace('../', '') }
+      }
+      const offerData = sectors.offer.data
+      const blockers = collectBlockers(sectors)
+      return {
+        idea: effectiveIdea,
+        id: effectiveIdea.id,
+        name: offerData?.productName || effectiveIdea.name || effectiveIdea.id,
+        audience: offerData?.targetAudience || effectiveIdea.targetAudience || '',
+        price: offerData?.price || effectiveIdea.pricingModel || '',
+        marketScore: effectiveIdea.marketScore || 0,
+        sectors,
+        blockers,
+        overall: blockers.length ? 'blocked' : hasReview(sectors) ? 'review' : 'ready',
+      }
+    }
+
+    function hasReview(sectors) {
+      return Object.values(sectors).some(s => s.status === 'warn' || s.status === 'pending')
+    }
+
+    function collectBlockers(sectors) {
+      const blockers = []
+      const pushMany = (items, source) => (items || []).forEach(item => blockers.push({ source, text: item }))
+      pushMany(sectors.checkout.data?.goLiveBlockers, 'Checkout')
+      pushMany(sectors.builder.data?.goLiveBlockers, 'Build pagina')
+      pushMany(sectors.finance.data?.cashProtectionActions?.filter(x => /R\$0|bloqueado|nao|pendente/i.test(x)), 'Financeiro')
+      pushMany(sectors.media.data?.readinessNotes?.filter(x => /bloquead|nao|pendente/i.test(x)), 'Midia paga')
+      pushMany(sectors.tracking.data?.riskNotes, 'Tracking')
+      pushMany(sectors.quality.data?.requiredFixesBeforeTraffic, 'Produto')
+      return blockers
+    }
+
+    function render() {
+      const filter = document.getElementById('status-filter').value
+      const filtered = offers.filter(o => filter === 'all' || o.overall === filter)
+      renderStats()
+      renderSalesOverview()
+      renderPipeline(filtered)
+      renderOffersTable(filtered)
+      renderActiveOffer()
+      renderRightbar(filtered)
+    }
+
+    function renderStats() {
+      const revenue = performanceSummary?.revenue ?? checkoutSummary?.revenue ?? 0
+      const spend = performanceSummary?.spend ?? 0
+      const purchases = performanceSummary?.purchases ?? checkoutSummary?.approvedPurchases ?? 0
+      const net = performanceSummary?.netRevenue ?? (revenue - spend)
+      const cpa = performanceSummary?.cpa ?? 0
+      const cards = [
+        ['Net revenue', formatMoney(net), net >= 0 ? '+ caixa monitorado' : 'atenção ao prejuizo', net >= 0 ? 'ok' : 'bad'],
+        ['ARR potencial', activeOffer?.economics?.frontEndPrice || 'R$47', activeOffer?.status || 'oferta ativa', 'info'],
+        ['CPA atual', cpa ? formatMoney(cpa) : formatMoney(0), 'limite sob controle', cpa ? 'warn' : 'info'],
+        ['New orders', purchases, `${checkoutSummary?.totalEvents || 0} eventos checkout`, purchases ? 'ok' : 'warn'],
+      ]
+      document.getElementById('stats').innerHTML = cards.map(([label, value, trend, cls]) => `
+        <article class="kpi">
+          <label>${label}</label>
+          <strong>${value}</strong>
+          <div class="trend ${cls === 'bad' ? 'bad-text' : ''}">${trend}</div>
+        </article>
+      `).join('')
+    }
+
+    function renderSalesOverview() {
+      const purchases = performanceSummary?.purchases ?? checkoutSummary?.approvedPurchases ?? 0
+      const refunds = performanceSummary?.refunds ?? checkoutSummary?.refunds ?? 0
+      const revenue = performanceSummary?.revenue ?? checkoutSummary?.revenue ?? 0
+      const spend = performanceSummary?.spend ?? 0
+      const health = Math.max(8, Math.min(100, Math.round((purchases ? 68 : 28) + (performanceSummary?.metaReadOk ? 18 : 0) - (refunds * 9))))
+      document.getElementById('sales-ring').style.setProperty('--ring-value', `${health}%`)
+      document.getElementById('ring-value').textContent = `${health}%`
+      document.getElementById('sales-metrics').innerHTML = [
+        ['Receita', formatMoney(revenue)],
+        ['Gasto Meta', formatMoney(spend)],
+        ['Compras', purchases],
+        ['Reembolsos', refunds],
+        ['CPA', performanceSummary?.cpa ? formatMoney(performanceSummary.cpa) : formatMoney(0)],
+        ['Fonte', performanceSummary?.source || checkoutSummary?.source || 'local'],
+      ].map(([label, value]) => `<div class="mini-stat"><label>${label}</label><strong>${value}</strong></div>`).join('')
+      document.getElementById('decision-badge').className = `badge ${decisionClass(performanceSummary?.decision)}`
+      document.getElementById('decision-badge').textContent = decisionText(performanceSummary?.decision)
+    }
+
+    function renderPipeline(list) {
+      const grouped = OPS.reduce((acc, op) => {
+        acc[op.group] ||= []
+        acc[op.group].push(op)
+        return acc
+      }, {})
+      const referenceOffer = list[0] || offers[0]
+      const html = Object.entries(grouped).map(([group, ops]) => {
+        const statuses = referenceOffer ? ops.map(op => referenceOffer.sectors[op.key]?.status || 'pending') : ['pending']
+        const status = statuses.includes('bad') ? 'bad' : statuses.includes('warn') || statuses.includes('pending') ? 'warn' : 'ok'
+        const ready = statuses.filter(s => s === 'ok').length
+        return `<article class="stage" id="${group.toLowerCase()}">
+          <div class="stage-top">
+            <h4>${group}</h4>
+            <span class="badge ${statusClass(status)}">${statusLabel(status)}</span>
+          </div>
+          <p>${ready}/${statuses.length} itens prontos nesta etapa operacional.</p>
+        </article>`
+      }).join('')
+      document.getElementById('pipeline').innerHTML = html
+      document.getElementById('pipeline-summary').textContent = `${Object.keys(grouped).length} blocos operacionais`
+    }
+
+    function renderOffersTable(list) {
+      if (!list.length) {
+        document.getElementById('offers-table').innerHTML = '<div class="empty">Nenhuma oferta encontrada neste filtro.</div>'
+        return
+      }
+      document.getElementById('offers-table').innerHTML = `
+        <table class="table">
+          <thead><tr><th>Oferta</th><th>Status</th><th>Score</th><th>CEO</th></tr></thead>
+          <tbody>
+            ${list.map(offer => `
+              <tr>
+                <td><strong>${escapeHtml(offer.name)}</strong><br><span>${escapeHtml(offer.price || offer.audience)}</span></td>
+                <td><span class="badge ${overallClass(offer.overall)}">${overallText(offer.overall)}</span></td>
+                <td>${offer.marketScore}</td>
+                <td><span class="badge ${ceoClass(offer.idea.ceoDecision)}">${escapeHtml(offer.idea.ceoDecision || 'pendente')}</span></td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+        ${renderDecisionControls(list[0])}
+      `
+    }
+
+    function renderDecisionControls(offer) {
+      if (!offer) return ''
+      return `<div class="decision-bar">
+        <input id="notes-${offer.id}" value="${escapeAttr(offer.idea.ceoNotes || '')}" placeholder="Notas do CEO para a oferta selecionada" />
+        <div class="decision-actions">
+          <button onclick="setDecision('${offer.id}', 'aprovado')">Aprovar</button>
+          <button onclick="setDecision('${offer.id}', 'mais-pesquisa')">Mais pesquisa</button>
+          <button onclick="setDecision('${offer.id}', 'rejeitado')">Rejeitar</button>
+        </div>
+      </div>`
+    }
+
+    function renderActiveOffer() {
+      if (!activeOffer) {
+        document.getElementById('active-offer').innerHTML = '<div class="empty">Oferta ativa nao cadastrada.</div>'
+        return
+      }
+      document.getElementById('active-offer').innerHTML = `
+        <div class="offer-title">
+          <div>
+            <h3>${escapeHtml(activeOffer.name)}</h3>
+            <p>${escapeHtml(activeOffer.notes?.[0] || 'Oferta ativa para validacao.')}</p>
+          </div>
+          <span class="badge ok">${escapeHtml(activeOffer.status)}</span>
+        </div>
+        <div class="legend-grid">
+          <div class="mini-stat"><label>Preco</label><strong>${escapeHtml(activeOffer.economics?.frontEndPrice || '-')}</strong></div>
+          <div class="mini-stat"><label>Funil</label><strong>${escapeHtml(activeOffer.funnel?.type || '-')}</strong></div>
+          <div class="mini-stat"><label>Pixel/CAPI</label><strong>${activeOffer.tracking?.purchaseValidated ? 'Ativo' : 'Pendente'}</strong></div>
+          <div class="mini-stat"><label>Criativos</label><strong>${activeOffer.creatives?.ready ? 'Prontos' : 'Pendente'}</strong></div>
+        </div>
+        <div class="offer-links">
+          ${activeOffer.publicUrl ? `<a class="primary" href="${activeOffer.publicUrl}" target="_blank">Abrir pagina</a>` : ''}
+          ${activeOffer.funnel?.checkoutUrl ? `<a href="${activeOffer.funnel.checkoutUrl}" target="_blank">Checkout</a>` : ''}
+          ${activeOffer.repositoryUrl ? `<a href="${activeOffer.repositoryUrl}" target="_blank">GitHub</a>` : ''}
+        </div>
+      `
+      document.getElementById('sidebar-status').textContent = `${activeOffer.name} em operacao`
+    }
+
+    function renderRightbar(list) {
+      const blockers = list.flatMap(o => o.blockers.map(b => ({ offer: o.name, ...b }))).slice(0, 5)
+      const notifications = [
+        goLiveReport?.summary,
+        actionPlan?.operationalStatus ? `Plano: ${actionPlan.operationalStatus}` : '',
+        checkoutSummary ? `${checkoutSummary.approvedPurchases || 0} compra(s) aprovada(s)` : '',
+        performanceSummary ? `Decisao: ${decisionText(performanceSummary.decision)}` : '',
+      ].filter(Boolean)
+      document.getElementById('notifications').innerHTML = notifications.length
+        ? notifications.map(text => feedItem('+', text, 'Sistema operacional')).join('')
+        : feedItem('i', 'Sem notificacoes novas.', 'Aguardando dados')
+      document.getElementById('activities').innerHTML = blockers.length
+        ? blockers.map(b => feedItem('!', `${b.source}: ${b.text}`, b.offer)).join('')
+        : [
+          feedItem('+', 'Dominio oficial conectado ao registro da oferta.', activeOffer?.publicUrl || 'doutorplanta.com'),
+          feedItem('+', 'Pixel browser e CAPI compoem o tracking da oferta.', 'Tracking'),
+          feedItem('+', 'Checkout Hotmart conectado nos CTAs principais.', 'Checkout'),
+        ].join('')
+      renderHealth()
+    }
+
+    function renderHealth() {
+      const items = [
+        ['Hotmart', checkoutSummary?.totalEvents ? 'ok' : 'warn'],
+        ['Supabase', checkoutSummary?.source === 'supabase' || performanceSummary?.checkoutSource === 'supabase' ? 'ok' : 'warn'],
+        ['Meta Ads', performanceSummary?.metaReadOk ? 'ok' : 'warn'],
+        ['Pixel/CAPI', activeOffer?.tracking?.purchaseValidated ? 'ok' : 'warn'],
+        ['Dominio', activeOffer?.publicUrl ? 'ok' : 'bad'],
+      ]
+      document.getElementById('health').innerHTML = items.map(([name, status]) => `
+        <div class="health"><span>${name}</span><span class="badge ${statusClass(status)}">${statusLabel(status)}</span></div>
+      `).join('')
+    }
+
+    async function setDecision(id, ceoDecision) {
+      const notesInput = document.getElementById(`notes-${id}`)
+      const decisionPayload = { ceoDecision, ceoNotes: notesInput ? notesInput.value : '' }
+      try {
+        const res = await fetch(`/api/ideas/${id}/decision`, {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify(decisionPayload),
+        })
+        const data = await res.json()
+        if (!res.ok || !data.ok) throw new Error(data.error || 'Falha ao salvar decisao')
+        localDecisions[id] = { ceoDecision: data.idea.ceoDecision, ceoNotes: data.idea.ceoNotes || '' }
+      } catch (error) {
+        localDecisions[id] = decisionPayload
+        alert(`Decisao salva apenas neste navegador. Rode npm run dashboard para persistir em arquivo. Detalhe: ${error.message}`)
+      }
+      saveLocalDecisions()
+      const offer = offers.find(item => item.id === id)
+      if (offer) offer.idea = { ...offer.idea, ...localDecisions[id] }
+      render()
+    }
+
+    function feedItem(icon, title, detail) {
+      return `<div class="feed-item"><div class="feed-dot">${icon}</div><div><strong>${escapeHtml(title)}</strong><span>${escapeHtml(detail || '')}</span></div></div>`
+    }
+
+    function statusLabel(status) {
+      return { ok: 'ok', warn: 'atencao', bad: 'bloqueado', pending: 'pendente' }[status] || status
+    }
+    function statusClass(status) {
+      return { ok: 'ok', warn: 'warn', bad: 'bad', pending: 'muted-badge' }[status] || 'info'
+    }
+    function overallText(status) {
+      return { blocked: 'bloqueado', review: 'revisar', ready: 'pronto' }[status] || status
+    }
+    function overallClass(status) {
+      return { blocked: 'bad', review: 'warn', ready: 'ok' }[status] || 'info'
+    }
+    function ceoClass(status) {
+      return status === 'aprovado' ? 'ok' : status === 'rejeitado' ? 'bad' : status === 'mais-pesquisa' ? 'warn' : 'muted-badge'
+    }
+    function decisionClass(decision) {
+      if (decision === 'escalar') return 'ok'
+      if (decision === 'pausar') return 'bad'
+      if (decision === 'manter-teste' || decision === 'aguardando-trafego') return 'warn'
+      return 'info'
+    }
+    function decisionText(decision) {
+      return {
+        'escalar': 'Escalar',
+        'pausar': 'Pausar',
+        'manter-teste': 'Manter teste',
+        'aguardando-trafego': 'Aguardando trafego',
+      }[decision] || 'Teste controlado'
+    }
+    function escapeHtml(value) {
+      return String(value || '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[char]))
+    }
+    function escapeAttr(value) {
+      return escapeHtml(value).replace(/`/g, '&#096;')
+    }
+    function formatMoney(value, currency = 'BRL') {
+      return new Intl.NumberFormat('pt-BR', { style: 'currency', currency, maximumFractionDigits: 0 }).format(Number(value || 0))
+    }
+
+    loadDashboard()
+  </script>
+</body>
+</html>
