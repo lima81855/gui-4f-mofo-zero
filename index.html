@@ -526,39 +526,27 @@
       gap: 24px;
     }
 
-    .image-placeholder.small-placeholder {
-      min-height: 220px;
-      padding: 24px 18px;
-      border: 2px dashed rgba(255, 255, 255, .25);
+    .inside-preview-image {
+      width: 100%;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, .14);
       border-radius: 8px;
-      background: rgba(255, 255, 255, .04);
-      color: rgba(255, 255, 255, .7);
-      display: grid;
-      place-items: center;
-      text-align: center;
+      background: transparent;
+      box-shadow: 0 20px 46px rgba(0, 0, 0, .3);
       transition: transform .24s ease, border-color .24s ease, box-shadow .24s ease;
     }
 
-    .image-placeholder.small-placeholder:hover {
+    .inside-preview-image:hover {
       border-color: rgba(57, 181, 116, .58);
-      box-shadow: 0 18px 40px rgba(57, 181, 116, .14);
-      transform: translateY(-4px);
+      box-shadow: 0 20px 42px rgba(57, 181, 116, .16);
+      transform: translateY(-5px) scale(1.01);
     }
 
-    .image-placeholder.small-placeholder strong {
+    .inside-preview-image img {
       display: block;
-      color: var(--sand);
-      font-size: 18px;
-      font-weight: 950;
-      margin-bottom: 8px;
-    }
-
-    .image-placeholder.small-placeholder p {
-      margin: 0 auto;
-      max-width: 320px;
-      color: rgba(255, 255, 255, .5);
-      font-size: 14px;
-      font-weight: 800;
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
     }
 
     .line {
@@ -1242,17 +1230,11 @@
           <div class="inside-title">Veja alguns materiais que você recebe na prática</div>
 
           <div class="inside-stack">
-            <div class="image-placeholder small-placeholder">
-              <div>
-                <strong>[Prévia do Teste Rápido]</strong>
-                <p>Demonstração visual do teste rápido de 2 minutos para identificar o seu tipo de mofo.</p>
-              </div>
+            <div class="inside-preview-image">
+              <img src="mofo-zero-diagnostico-preview.jpg" alt="Prévia interna do teste rápido de 2 minutos do MOFO ZERO">
             </div>
-            <div class="image-placeholder small-placeholder">
-              <div>
-                <strong>[Prévia do Guia de Ação]</strong>
-                <p>Tabela prática de protocolos por superfície e rotinas para reduzir o retorno do mofo.</p>
-              </div>
+            <div class="inside-preview-image">
+              <img src="mofo-zero-guia-4-caminhos-preview.jpg" alt="Prévia interna da tabela prática de protocolos por superfície do MOFO ZERO">
             </div>
           </div>
         </div>
