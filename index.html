@@ -4,6 +4,43 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>MOFO ZERO - Página MVT</title>
+
+  <!-- CONFIGURAÇÕES DE RASTREAMENTO (Substitua pelos seus IDs) -->
+  <script>
+    window.TRACKING_CONFIG = {
+      metaPixelId: "YOUR_META_PIXEL_ID", // Insira seu ID do Pixel do Facebook aqui
+      gtmId: "YOUR_GTM_ID" // Insira seu ID do GTM aqui (ex: GTM-XXXXXXX)
+    };
+  </script>
+
+  <!-- Google Tag Manager -->
+  <script>
+    if (window.TRACKING_CONFIG && window.TRACKING_CONFIG.gtmId && window.TRACKING_CONFIG.gtmId !== "YOUR_GTM_ID") {
+      (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+      new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+      'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+      })(window,document,'script','dataLayer',window.TRACKING_CONFIG.gtmId);
+    }
+  </script>
+  <!-- End Google Tag Manager -->
+
+  <!-- Meta Pixel Code -->
+  <script>
+    if (window.TRACKING_CONFIG && window.TRACKING_CONFIG.metaPixelId && window.TRACKING_CONFIG.metaPixelId !== "YOUR_META_PIXEL_ID") {
+      !function(f,b,e,v,n,t,s)
+      {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+      n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+      if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+      n.queue=[];t=b.createElement(e);t.async=!0;
+      t.src=v;s=b.getElementsByTagName(e)[0];
+      s.parentNode.insertBefore(t,s)}(window, document,'script',
+      'https://connect.facebook.net/en_US/fbevents.js');
+      fbq('init', window.TRACKING_CONFIG.metaPixelId);
+      fbq('track', 'PageView');
+    }
+  </script>
+  <!-- End Meta Pixel Code -->
   <script>
     (function() {
       var variant = localStorage.getItem('ab_test_variant');
@@ -1150,6 +1187,28 @@
   </style>
 </head>
 <body>
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=YOUR_GTM_ID"
+  height="0" width="0" style="display:none;visibility:hidden" id="gtm-noscript"></iframe></noscript>
+  <script>
+    if (window.TRACKING_CONFIG && window.TRACKING_CONFIG.gtmId && window.TRACKING_CONFIG.gtmId !== "YOUR_GTM_ID") {
+      document.getElementById('gtm-noscript').src = "https://www.googletagmanager.com/ns.html?id=" + window.TRACKING_CONFIG.gtmId;
+    }
+  </script>
+  <!-- End Google Tag Manager (noscript) -->
+
+  <!-- Meta Pixel Code (noscript) -->
+  <noscript>
+    <img height="1" width="1" style="display:none" id="meta-pixel-noscript"
+         src="https://www.facebook.com/tr?id=YOUR_META_PIXEL_ID&ev=PageView&noscript=1"/>
+  </noscript>
+  <script>
+    if (window.TRACKING_CONFIG && window.TRACKING_CONFIG.metaPixelId && window.TRACKING_CONFIG.metaPixelId !== "YOUR_META_PIXEL_ID") {
+      document.getElementById('meta-pixel-noscript').src = "https://www.facebook.com/tr?id=" + window.TRACKING_CONFIG.metaPixelId + "&ev=PageView&noscript=1";
+    }
+  </script>
+  <!-- End Meta Pixel Code (noscript) -->
+
   <div class="page-progress" aria-hidden="true"><span data-page-progress></span></div>
   <div class="topbar" aria-label="Oferta especial disponível apenas hoje">
     <!-- VARIACAO A (CONTROLE) -->
@@ -1524,29 +1583,145 @@
       window.setTimeout(showPurchaseToast, 3600);
       window.setInterval(showPurchaseToast, 14500);
 
-      // Propaga a variante A/B para os botões de checkout (caso existam links externos de pagamento)
-      const propagateVariant = () => {
+      // Captura parâmetros de rastreamento da URL
+      const getUrlParams = () => {
+        const params = {};
+        const searchParams = new URLSearchParams(window.location.search);
+        for (const [key, value] of searchParams.entries()) {
+          if (key.startsWith('utm_') || key === 'fbclid' || key === 'src') {
+            params[key] = value;
+          }
+        }
+        return params;
+      };
+
+      // Captura cookies específicos do navegador
+      const getCookie = (name) => {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+        return null;
+      };
+
+      // Propaga parâmetros de rastreamento (UTMs, fbc, fbp) e intercepta cliques para InitiateCheckout
+      const setupTracking = () => {
+        const params = getUrlParams();
+        const fbp = getCookie('_fbp');
+        const fbc = getCookie('_fbc');
+
+        if (fbp) params['fbp'] = fbp;
+        if (fbc) params['fbc'] = fbc;
+
+        // Propaga a Variante A/B como fallback de UTMs
         const variant = localStorage.getItem('ab_test_variant') || 'copy1';
+        params['src'] = params['src'] || `ab_${variant}`;
+        params['utm_content'] = params['utm_content'] || variant;
+
         document.querySelectorAll('a').forEach(link => {
           const href = link.getAttribute('href');
           if (href && (href.includes('pay.hotmart.com') || href.includes('checkout') || href.includes('kiwify') || href.includes('hotmart.com'))) {
+            // 1. Atualiza o link com parâmetros no carregamento
             try {
               const url = new URL(link.href);
-              url.searchParams.set('src', `ab_${variant}`);
-              url.searchParams.set('utm_content', variant);
+              Object.entries(params).forEach(([key, val]) => {
+                url.searchParams.set(key, val);
+              });
               link.href = url.toString();
             } catch (e) {
-              if (link.href.indexOf('?') !== -1) {
-                link.href += `&src=ab_${variant}&utm_content=${variant}`;
-              } else {
-                link.href += `?src=ab_${variant}&utm_content=${variant}`;
-              }
+              const delimiter = href.indexOf('?') !== -1 ? '&' : '?';
+              const query = Object.entries(params).map(([key, val]) => `${key}=${encodeURIComponent(val)}`).join('&');
+              link.href = href + delimiter + query;
             }
+
+            // 2. Intercepta o clique para gerar o event_id e disparar InitiateCheckout (Deduplicação)
+            link.addEventListener('click', (e) => {
+              const eventId = 'mofozero_ic_' + Date.now() + '_' + Math.floor(Math.random() * 1000000);
+              
+              // Injeta o event_id em param3 para mandar para o webhook da Hotmart
+              try {
+                const url = new URL(link.href);
+                url.searchParams.set('param3', eventId);
+                link.href = url.toString();
+              } catch (err) {
+                link.href += (link.href.indexOf('?') !== -1 ? '&' : '?') + 'param3=' + eventId;
+              }
+
+              // Dispara InitiateCheckout no Meta Pixel (Browser)
+              if (typeof fbq !== 'undefined') {
+                fbq('track', 'InitiateCheckout', {
+                  value: 37.00,
+                  currency: 'BRL',
+                  content_name: 'Guia Mofo Zero',
+                  content_category: 'Ebook',
+                  content_ids: ['mofo_zero_ebook'],
+                  content_type: 'product'
+                }, { eventID: eventId });
+              }
+
+              // Dispara begin_checkout no Google Tag Manager / GA4
+              if (typeof gtag !== 'undefined') {
+                gtag('event', 'begin_checkout', {
+                  value: 37.00,
+                  currency: 'BRL',
+                  items: [{
+                    item_id: 'mofo_zero_ebook',
+                    item_name: 'Guia Mofo Zero',
+                    price: 37.00,
+                    quantity: 1
+                  }],
+                  transaction_id: eventId
+                });
+              }
+            });
           }
         });
       };
-      propagateVariant();
-      document.addEventListener('DOMContentLoaded', propagateVariant);
+
+      // Rastreia profundidade de rolagem (Scroll Depth)
+      const trackScrollDepth = () => {
+        const scrollMarks = { 25: false, 50: false, 75: false, 90: false };
+        window.addEventListener('scroll', () => {
+          const scrollTop = window.scrollY || document.documentElement.scrollTop;
+          const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+          if (docHeight <= 0) return;
+
+          const percent = Math.round((scrollTop / docHeight) * 100);
+          Object.keys(scrollMarks).forEach(mark => {
+            const val = parseInt(mark);
+            if (percent >= val && !scrollMarks[mark]) {
+              scrollMarks[mark] = true;
+              if (typeof fbq !== 'undefined') {
+                fbq('trackCustom', 'ScrollDepth', { depth: val + '%' });
+              }
+              if (typeof gtag !== 'undefined') {
+                gtag('event', 'scroll_depth', { depth: val });
+              }
+            }
+          });
+        }, { passive: true });
+      };
+
+      // Rastreia tempo de permanência na página (Time Spent)
+      const trackTimeSpent = () => {
+        const times = [15, 30, 60];
+        times.forEach(seconds => {
+          window.setTimeout(() => {
+            if (typeof fbq !== 'undefined') {
+              fbq('trackCustom', 'TimeOnPage', { seconds: seconds });
+            }
+            if (typeof gtag !== 'undefined') {
+              gtag('event', 'time_on_page', { seconds: seconds });
+            }
+          }, seconds * 1000);
+        });
+      };
+
+      // Inicializa os scripts de rastreamento
+      setupTracking();
+      trackScrollDepth();
+      trackTimeSpent();
+      
+      document.addEventListener('DOMContentLoaded', setupTracking);
 
       const revealTargets = document.querySelectorAll('.hero, .section');
       revealTargets.forEach((target) => target.classList.add('reveal'));
