@@ -524,17 +524,19 @@
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 24px;
-      align-items: start;
     }
 
     .inside-preview-image {
       width: 100%;
+      height: 100%;
       overflow: hidden;
       border: 1px solid rgba(255, 255, 255, .14);
       border-radius: 8px;
-      background: transparent;
+      background: #0a0b0d;
       box-shadow: 0 20px 46px rgba(0, 0, 0, .3);
       transition: transform .24s ease, border-color .24s ease, box-shadow .24s ease;
+      display: flex;
+      flex-direction: column;
     }
 
     .inside-preview-image:hover {
@@ -546,8 +548,10 @@
     .inside-preview-image img {
       display: block;
       width: 100%;
-      height: auto;
+      height: 100%;
+      object-fit: contain;
       border-radius: 8px;
+      flex-grow: 1;
     }
 
     .line {
