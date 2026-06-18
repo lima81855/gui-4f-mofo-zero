@@ -1,0 +1,17 @@
+{
+  "name": "mofo-zero-tracking-server",
+  "version": "1.0.0",
+  "description": "Servidor webhook para integração de conversões Hotmart -> Meta Conversion API (CAPI)",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "axios": "^1.7.2",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

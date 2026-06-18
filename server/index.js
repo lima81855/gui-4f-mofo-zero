@@ -1,0 +1,174 @@
+const express = require('express');
+const axios = require('axios');
+const crypto = require('crypto');
+require('dotenv').config();
+
+const app = express();
+app.use(express.json());
+
+const PORT = process.env.PORT || 3000;
+const META_PIXEL_ID = process.env.META_PIXEL_ID;
+const META_ACCESS_TOKEN = process.env.META_ACCESS_TOKEN;
+const HOTMART_TOKEN = process.env.HOTMART_TOKEN;
+const LANDING_PAGE_URL = process.env.LANDING_PAGE_URL || 'http://localhost';
+
+// Helper para criar hash SHA256 exigido pela Meta CAPI
+const sha256 = (str) => {
+  if (!str) return null;
+  return crypto.createHash('sha256').update(str.trim().toLowerCase()).digest('hex');
+};
+
+// Normalização de telefone para o padrão DDI 55 + DDD + Número
+const normalizePhone = (phone) => {
+  if (!phone) return null;
+  let cleaned = phone.replace(/\D/g, '');
+  if (cleaned.length === 11 && !cleaned.startsWith('55')) {
+    cleaned = '55' + cleaned;
+  }
+  return cleaned;
+};
+
+// Rota de status do servidor
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'healthy', timestamp: new Date() });
+});
+
+// Rota receptora de Webhooks da Hotmart
+app.post('/webhook/hotmart', async (req, res) => {
+  try {
+    const headerToken = req.headers['hottok'] || req.headers['x-hotmart-token'];
+    
+    // Validação de token de segurança
+    if (HOTMART_TOKEN && headerToken !== HOTMART_TOKEN) {
+      console.warn(`[Aviso] Requisição bloqueada: Token Hotmart inválido.`);
+      return res.status(401).json({ error: 'Não autorizado' });
+    }
+
+    const payload = req.body;
+    console.log(`[Webhook Recebido] Evento: ${payload.event} | Transação: ${payload.data?.purchase?.transaction}`);
+
+    if (!payload.data) {
+      return res.status(400).json({ error: 'Payload sem dados (data)' });
+    }
+
+    const { event, data } = payload;
+    const buyer = data.buyer || {};
+    const purchase = data.purchase || {};
+    const product = data.product || {};
+    const tracking = purchase.tracking || {};
+    const extra = purchase.hotmart_extra || {};
+
+    // 1. Extração de parâmetros e cookies passados do checkout da Hotmart
+    const fbp = extra.param1 || getCookieValueFromTracking(tracking) || null;
+    const fbc = extra.param2 || getFbcValueFromTracking(tracking) || null;
+    const eventId = extra.param3 || null; // event_id gerado na LP para deduplicação
+
+    // Se o webhook não recebeu um event_id gerado no clique, usamos o código da transação para deduplicação
+    const deduplicationId = eventId || `mofozero_srv_${purchase.transaction}`;
+
+    // 2. Coleta e normalização de dados do comprador para o Meta Event Match Quality (EMQ)
+    const emailHash = sha256(buyer.email);
+    const phoneHash = sha256(normalizePhone(buyer.checkout_phone));
+    const nameParts = buyer.name ? buyer.name.trim().split(' ') : [];
+    const firstNameHash = nameParts.length > 0 ? sha256(nameParts[0]) : null;
+    const lastNameHash = nameParts.length > 1 ? sha256(nameParts[nameParts.length - 1]) : null;
+
+    const clientIp = buyer.ip || null;
+    const userAgent = req.headers['user-agent'] || null;
+
+    // 3. Mapeamento do evento da Hotmart para o Meta Pixel / Conversion API
+    let metaEventName = '';
+    let isCustomEvent = false;
+    let value = purchase.price?.value || 37.00;
+
+    switch (event) {
+      case 'PURCHASE_OUT_OF_SHOPPING_CART':
+      case 'CART_ABANDONMENT':
+        metaEventName = 'InitiateCheckout';
+        break;
+      case 'PURCHASE_BILLET_PRINTED':
+      case 'PURCHASE_DELAYED':
+        // Pix Gerado / Boleto Impresso -> Venda Gerada
+        metaEventName = 'VendaGerada';
+        isCustomEvent = true;
+        break;
+      case 'PURCHASE_APPROVED':
+        metaEventName = 'Purchase';
+        break;
+      default:
+        console.log(`[Info] Evento '${event}' ignorado pelo rastreador.`);
+        return res.status(200).json({ status: 'ignored', event });
+    }
+
+    // 4. Preparação do payload para a API de Conversão da Meta (CAPI)
+    const capiPayload = {
+      data: [
+        {
+          event_name: metaEventName,
+          event_time: Math.floor(Date.now() / 1000),
+          event_id: deduplicationId,
+          event_source_url: LANDING_PAGE_URL,
+          action_source: 'website',
+          user_data: {
+            em: emailHash ? [emailHash] : [],
+            ph: phoneHash ? [phoneHash] : [],
+            fn: firstNameHash ? [firstNameHash] : [],
+            ln: lastNameHash ? [lastNameHash] : [],
+            client_ip_address: clientIp,
+            client_user_agent: userAgent,
+            fbp: fbp,
+            fbc: fbc
+          },
+          custom_data: {
+            value: value,
+            currency: 'BRL',
+            content_name: product.name || 'Guia Mofo Zero',
+            content_ids: [String(product.id || 'mofo_zero_ebook')],
+            content_type: 'product'
+          }
+        }
+      ]
+    };
+
+    // 5. Envio à Meta Conversion API
+    if (META_PIXEL_ID && META_ACCESS_TOKEN) {
+      const capiUrl = `https://graph.facebook.com/v19.0/${META_PIXEL_ID}/events?access_token=${META_ACCESS_TOKEN}`;
+      
+      console.log(`[API Meta] Enviando evento '${metaEventName}' CAPI para o Pixel ${META_PIXEL_ID}...`);
+      const response = await axios.post(capiUrl, capiPayload);
+      console.log(`[API Meta] Sucesso:`, response.data);
+    } else {
+      console.log(`[Aviso] Meta Pixel ID ou Access Token ausente. Evento CAPI não enviado.`);
+    }
+
+    res.status(200).json({ status: 'success', event: metaEventName, deduplicationId });
+  } catch (error) {
+    console.error(`[Erro Webhook]`, error.response?.data || error.message);
+    res.status(500).json({ error: 'Erro interno do servidor' });
+  }
+});
+
+// Helpers para tentar extrair cookies de parâmetros UTM/Source se vierem concatenados
+function getCookieValueFromTracking(tracking) {
+  if (!tracking) return null;
+  // Verifica se o _fbp veio anexado no utm_content ou em outros campos de tracking
+  const searchString = tracking.utm_content || tracking.source || '';
+  const match = searchString.match(/fb\.[0-9]\.[0-9]+\.[0-9]+/);
+  return match ? match[0] : null;
+}
+
+function getFbcValueFromTracking(tracking) {
+  if (!tracking) return null;
+  // Procura por um fbclid nos campos de tracking
+  const searchString = tracking.utm_term || tracking.utm_content || '';
+  if (searchString.includes('fbclid')) {
+    const parts = searchString.split('fbclid=');
+    if (parts.length > 1) return parts[1].split('&')[0];
+  }
+  return null;
+}
+
+// Inicializa o servidor Express
+app.listen(PORT, () => {
+  console.log(`🚀 Servidor Webhook Mofo Zero rodando na porta ${PORT}`);
+});
