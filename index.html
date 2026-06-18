@@ -648,37 +648,25 @@
       color: var(--muted);
     }
 
-    .image-placeholder {
-      display: grid;
-      place-items: center;
-      min-height: 410px;
-      padding: 28px;
-      border: 2px dashed rgba(58, 27, 9, .35);
+    .benefits-visual-frame {
+      width: 100%;
       border-radius: 8px;
-      background: var(--cream);
-      color: var(--brown);
-      text-align: center;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      box-shadow: 0 20px 46px rgba(0, 0, 0, .08);
       transition: transform .24s ease, border-color .24s ease, box-shadow .24s ease;
     }
 
-    .image-placeholder:hover {
+    .benefits-visual-frame:hover {
       border-color: rgba(57, 181, 116, .58);
-      box-shadow: 0 18px 40px rgba(57, 181, 116, .14);
+      box-shadow: 0 24px 50px rgba(57, 181, 116, .16);
       transform: translateY(-4px);
     }
 
-    .image-placeholder strong {
+    .benefits-visual-img {
       display: block;
-      margin-bottom: 10px;
-      font-size: 22px;
-      font-weight: 950;
-    }
-
-    .image-placeholder p {
-      max-width: 330px;
-      margin: 0;
-      color: var(--muted);
-      font-weight: 800;
+      width: 100%;
+      height: auto;
     }
 
     .feature p,
@@ -1268,11 +1256,8 @@
           </div>
         </div>
 
-        <div class="image-placeholder" aria-label="Imagem de apoio dos benefícios do guia">
-          <div>
-            <strong>Foco + fonte + frequência</strong>
-            <p>Use o guia antes de limpar para proteger peças, ambientes e dinheiro.</p>
-          </div>
+        <div class="benefits-visual-frame" aria-label="Imagem de apoio dos benefícios do guia: Foco + fonte + frequência">
+          <img src="mofo-zero-beneficios.jpg" alt="Foco + fonte + frequência: Use o guia antes de limpar para proteger peças, ambientes e dinheiro" class="benefits-visual-img">
         </div>
       </div>
     </section>
