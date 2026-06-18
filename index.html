@@ -327,6 +327,7 @@
       border-radius: 8px;
       background: var(--cream);
       color: var(--brown);
+      grid-column: 1 / -1;
     }
 
     .case-result strong {
@@ -1090,19 +1091,40 @@
 
     @media (max-width: 520px) {
       .topbar { font-size: 14px; }
-      h1 { font-size: 38px; }
-      .hero-sub { font-size: 20px; }
-      .cover-title { font-size: 44px; }
-      .product-cover { min-height: 460px; padding: 22px; }
-      .offer-card { padding: 24px; }
-      .btn { width: 100%; padding: 0 18px; }
-      .decision-game { padding: 14px; }
-      .case-picker { grid-template-columns: 1fr; }
+      h1 {
+        font-size: clamp(26px, 7.5vw, 34px);
+        line-height: 1.1;
+        letter-spacing: -0.5px;
+      }
+      .hero-sub { font-size: 18px; line-height: 1.3; }
+      .cover-title { font-size: 38px; }
+      .product-cover { min-height: 400px; padding: 18px; }
+      .offer-card { padding: 20px; }
+      .btn { width: 100%; padding: 0 18px; font-size: 15px; }
+      .decision-game { padding: 12px; }
+      .case-picker { grid-template-columns: 1fr; gap: 8px; }
       .purchase-toast {
         left: 12px;
         right: 12px;
         bottom: 12px;
         width: auto;
+        padding: 10px 14px;
+        font-size: 13px;
+        gap: 10px;
+        grid-template-columns: 32px 1fr;
+      }
+      .purchase-icon {
+        width: 32px;
+        height: 32px;
+        font-size: 14px;
+      }
+      .purchase-toast strong {
+        font-size: 13px;
+        line-height: 1.2;
+      }
+      .purchase-toast span {
+        font-size: 12px;
+        line-height: 1.2;
       }
     }
 
@@ -1182,6 +1204,12 @@
         <!-- VARIACAO B (VARIANTE) -->
         <p class="hero-sub variant-b">Como eliminar o mofo pela raiz, acabar com o cheiro de guardado e blindar seus cômodos em 7 dias (sem usar misturas tóxicas ou receitas caseiras perigosas).</p>
         <p class="hero-copy variant-b">Se você ou seus filhos sofrem com crises de rinite, garganta inflamada ou tosse constante, o problema pode estar escondido nas roupas e armários. Acesse o guia completo por apenas R$37 hoje e tenha sua casa saudável de volta.</p>
+
+        <div class="hero-actions">
+          <a class="btn" href="#oferta">Quero o Guia MOFO ZERO</a>
+          <span class="access-note">Garantia de 7 dias • Acesso imediato</span>
+        </div>
+
         <div class="decision-game" aria-label="Teste rápido por tipo de mofo">
           <div class="decision-game-head">
             <span>Qual foco de mofo parece com o seu?</span>
@@ -1199,10 +1227,6 @@
             <div class="case-meter" aria-hidden="true"><span data-case-meter></span></div>
             <span class="case-note" data-case-note>Alerta crítico: receitas ácidas sem teste de fibra desbotam ou desgastam roupas caras na hora.</span>
           </div>
-        </div>
-        <div class="hero-actions">
-          <a class="btn" href="#oferta">Quero o Guia MOFO ZERO</a>
-          <span class="access-note">Oferta e garantia abaixo • Acesso imediato</span>
         </div>
       </div>
     </section>
@@ -1411,6 +1435,10 @@
       const note = document.querySelector('[data-case-note]');
       const meter = document.querySelector('[data-case-meter]');
       const score = document.querySelector('[data-decision-score]');
+      
+      const picker = document.querySelector('.case-picker');
+      const resultBox = document.querySelector('.case-result');
+      const gameContainer = document.querySelector('.decision-game');
 
       const selectCase = (selectedChip) => {
         chips.forEach((chip) => {
@@ -1424,11 +1452,41 @@
         if (note) note.textContent = selectedChip.dataset.note || '';
         if (meter) meter.style.width = `${selectedChip.dataset.meter || 50}%`;
         if (score) score.textContent = `${selectedChip.textContent.trim()} selecionado`;
+        
+        // Reposiciona o card de resultado no mobile/tablet
+        if (window.innerWidth <= 900) {
+          selectedChip.insertAdjacentElement('afterend', resultBox);
+        } else {
+          gameContainer.appendChild(resultBox);
+        }
       };
 
       chips.forEach((chip) => {
         chip.addEventListener('click', () => selectCase(chip));
       });
+
+      // Reposiciona no redimensionamento da janela
+      window.addEventListener('resize', () => {
+        const activeChip = document.querySelector('.case-chip.is-active');
+        if (activeChip && resultBox && gameContainer) {
+          if (window.innerWidth <= 900) {
+            activeChip.insertAdjacentElement('afterend', resultBox);
+          } else {
+            gameContainer.appendChild(resultBox);
+          }
+        }
+      });
+
+      // Posiciona inicialmente no load
+      const initDecisionGame = () => {
+        const activeChip = document.querySelector('.case-chip.is-active');
+        if (activeChip && resultBox) {
+          if (window.innerWidth <= 900) {
+            activeChip.insertAdjacentElement('afterend', resultBox);
+          }
+        }
+      };
+      initDecisionGame();
 
       document.querySelectorAll('.benefit-item').forEach((item) => {
         item.addEventListener('click', () => {
