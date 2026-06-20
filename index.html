@@ -9,7 +9,8 @@
   <script>
     window.TRACKING_CONFIG = {
       metaPixelId: "1987865748103477", // Insira seu ID do Pixel do Facebook aqui
-      gtmId: "YOUR_GTM_ID" // Insira seu ID do GTM aqui (ex: GTM-XXXXXXX)
+      gtmId: "YOUR_GTM_ID", // Insira seu ID do GTM aqui (ex: GTM-XXXXXXX)
+      testEventCode: "TEST83347" // Código de teste da Meta
     };
   </script>
 
@@ -37,6 +38,23 @@
       s.parentNode.insertBefore(t,s)}(window, document,'script',
       'https://connect.facebook.net/en_US/fbevents.js');
       fbq('init', window.TRACKING_CONFIG.metaPixelId);
+      
+      // Wrapper para garantir que todos os eventos do navegador enviem o test_event_code
+      const urlParams = new URLSearchParams(window.location.search);
+      const testCode = urlParams.get('test_event_code') || window.TRACKING_CONFIG.testEventCode;
+      if (testCode) {
+        const originalFbq = window.fbq;
+        window.fbq = function() {
+          const args = Array.prototype.slice.call(arguments);
+          if (args[0] === 'track' || args[0] === 'trackCustom') {
+            args[2] = args[2] || {};
+            args[3] = args[3] || {};
+            args[3].test_event_code = testCode;
+          }
+          originalFbq.apply(window, args);
+        };
+      }
+      
       fbq('track', 'PageView');
     }
   </script>
