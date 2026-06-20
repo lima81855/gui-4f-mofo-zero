@@ -7,10 +7,10 @@ const app = express();
 app.use(express.json());
 
 const PORT = process.env.PORT || 3000;
-const META_PIXEL_ID = process.env.META_PIXEL_ID;
+const META_PIXEL_ID = process.env.META_PIXEL_ID || process.env.ID_META_PIXEL;
 const META_ACCESS_TOKEN = process.env.META_ACCESS_TOKEN;
 const HOTMART_TOKEN = process.env.HOTMART_TOKEN;
-const LANDING_PAGE_URL = process.env.LANDING_PAGE_URL || 'http://localhost';
+const LANDING_PAGE_URL = process.env.LANDING_PAGE_URL || process.env.URL_DA_PAGINA_DE_DESTINO || process.env.URL_DA_PÁGINA_DE_DESTINO || 'http://localhost';
 const META_TEST_EVENT_CODE = process.env.META_TEST_EVENT_CODE || process.env.TEST_EVENT_CODE || null;
 
 // Helper para criar hash SHA256 exigido pela Meta CAPI
