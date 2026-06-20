@@ -39,23 +39,14 @@
       'https://connect.facebook.net/en_US/fbevents.js');
       fbq('init', window.TRACKING_CONFIG.metaPixelId);
       
-      // Wrapper para garantir que todos os eventos do navegador enviem o test_event_code
+      // Dispara o PageView inicial (com test_event_code se configurado)
       const urlParams = new URLSearchParams(window.location.search);
       const testCode = urlParams.get('test_event_code') || window.TRACKING_CONFIG.testEventCode;
       if (testCode) {
-        const originalFbq = window.fbq;
-        window.fbq = function() {
-          const args = Array.prototype.slice.call(arguments);
-          if (args[0] === 'track' || args[0] === 'trackCustom') {
-            args[2] = args[2] || {};
-            args[3] = args[3] || {};
-            args[3].test_event_code = testCode;
-          }
-          originalFbq.apply(window, args);
-        };
+        fbq('track', 'PageView', {}, { test_event_code: testCode });
+      } else {
+        fbq('track', 'PageView');
       }
-      
-      fbq('track', 'PageView');
     }
   </script>
   <!-- End Meta Pixel Code -->
@@ -1682,7 +1673,13 @@
             if (percent >= val && !scrollMarks[mark]) {
               scrollMarks[mark] = true;
               if (typeof fbq !== 'undefined') {
-                fbq('trackCustom', 'ScrollDepth', { depth: val + '%' });
+                const urlParams = new URLSearchParams(window.location.search);
+                const testCode = urlParams.get('test_event_code') || (window.TRACKING_CONFIG && window.TRACKING_CONFIG.testEventCode);
+                if (testCode) {
+                  fbq('trackCustom', 'ScrollDepth', { depth: val + '%' }, { test_event_code: testCode });
+                } else {
+                  fbq('trackCustom', 'ScrollDepth', { depth: val + '%' });
+                }
               }
               if (typeof gtag !== 'undefined') {
                 gtag('event', 'scroll_depth', { depth: val });
@@ -1698,7 +1695,13 @@
         times.forEach(seconds => {
           window.setTimeout(() => {
             if (typeof fbq !== 'undefined') {
-              fbq('trackCustom', 'TimeOnPage', { seconds: seconds });
+              const urlParams = new URLSearchParams(window.location.search);
+              const testCode = urlParams.get('test_event_code') || (window.TRACKING_CONFIG && window.TRACKING_CONFIG.testEventCode);
+              if (testCode) {
+                fbq('trackCustom', 'TimeOnPage', { seconds: seconds }, { test_event_code: testCode });
+              } else {
+                fbq('trackCustom', 'TimeOnPage', { seconds: seconds });
+              }
             }
             if (typeof gtag !== 'undefined') {
               gtag('event', 'time_on_page', { seconds: seconds });
