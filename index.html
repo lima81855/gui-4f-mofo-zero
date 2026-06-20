@@ -1633,7 +1633,7 @@
               link.href = href + delimiter + query;
             }
 
-            // 2. Intercepta o clique para gerar o event_id e disparar InitiateCheckout (Deduplicação)
+            // 2. Intercepta o clique para gerar o event_id em param3 (Deduplicação de eventos do servidor)
             link.addEventListener('click', (e) => {
               const eventId = 'mofozero_ic_' + Date.now() + '_' + Math.floor(Math.random() * 1000000);
               
@@ -1644,33 +1644,6 @@
                 link.href = url.toString();
               } catch (err) {
                 link.href += (link.href.indexOf('?') !== -1 ? '&' : '?') + 'param3=' + eventId;
-              }
-
-              // Dispara InitiateCheckout no Meta Pixel (Browser)
-              if (typeof fbq !== 'undefined') {
-                fbq('track', 'InitiateCheckout', {
-                  value: 37.00,
-                  currency: 'BRL',
-                  content_name: 'Guia Mofo Zero',
-                  content_category: 'Ebook',
-                  content_ids: ['mofo_zero_ebook'],
-                  content_type: 'product'
-                }, { eventID: eventId });
-              }
-
-              // Dispara begin_checkout no Google Tag Manager / GA4
-              if (typeof gtag !== 'undefined') {
-                gtag('event', 'begin_checkout', {
-                  value: 37.00,
-                  currency: 'BRL',
-                  items: [{
-                    item_id: 'mofo_zero_ebook',
-                    item_name: 'Guia Mofo Zero',
-                    price: 37.00,
-                    quantity: 1
-                  }],
-                  transaction_id: eventId
-                });
               }
             });
           }
