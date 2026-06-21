@@ -4,6 +4,7 @@ const crypto = require('crypto');
 require('dotenv').config();
 
 const app = express();
+app.set('trust proxy', true);
 app.use(express.json());
 
 // Middleware para habilitar CORS (Evita bloqueios no navegador ao enviar eventos da LP)
@@ -210,6 +211,7 @@ app.post('/api/meta/events', async (req, res) => {
 
     if (META_PIXEL_ID && META_ACCESS_TOKEN) {
       const capiUrl = `https://graph.facebook.com/v19.0/${META_PIXEL_ID}/events?access_token=${META_ACCESS_TOKEN}`;
+      console.log(`[API Meta] LP Event: Enviando '${eventName}' para o Pixel ${META_PIXEL_ID} via CAPI...`);
       await axios.post(capiUrl, capiPayload);
       console.log(`[API Meta] LP Event: Sucesso ao enviar '${eventName}'`);
     } else {

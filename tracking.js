@@ -119,10 +119,10 @@ function hasFbq() {
   return typeof window.fbq === 'function';
 }
 
-function trackStandardEvent(eventName, payload = {}) {
+function trackStandardEvent(eventName, payload = {}, overrideEventId = null) {
   if (!hasFbq()) return;
   if (wasStandardEventRecentlyTracked(eventName, payload)) return;
-  const eventId = buildEventId(eventName);
+  const eventId = overrideEventId || buildEventId(eventName);
   
   // Extrai o test_event_code da URL se presente (e.g. ?test_event_code=TESTXXXXX)
   const testCode = new URLSearchParams(window.location.search).get('test_event_code') || (window.TRACKING_CONFIG && window.TRACKING_CONFIG.testEventCode) || undefined;
@@ -313,13 +313,15 @@ function buildTrackedCheckoutUrl(baseUrl) {
   }
 
   const fbp = getFbp();
-  if (fbp && !target.searchParams.has('fbp')) {
-    target.searchParams.set('fbp', fbp);
+  if (fbp) {
+    if (!target.searchParams.has('fbp')) target.searchParams.set('fbp', fbp);
+    if (!target.searchParams.has('param1')) target.searchParams.set('param1', fbp);
   }
 
   const fbc = getFbc();
-  if (fbc && !target.searchParams.has('fbc')) {
-    target.searchParams.set('fbc', fbc);
+  if (fbc) {
+    if (!target.searchParams.has('fbc')) target.searchParams.set('fbc', fbc);
+    if (!target.searchParams.has('param2')) target.searchParams.set('param2', fbc);
   }
 
   return target.toString();
@@ -330,9 +332,17 @@ let lastCheckoutIntentAt = 0;
 function trackCheckoutIntent(source = 'checkout_cta', options = {}) {
   registerCheckoutIntent();
   const now = Date.now();
-  
-  // ATENÇÃO: Conforme solicitado pelo cliente, InitiateCheckout NÃO é disparado na LP (no clique do botão).
-  // Apenas registramos o clique personalizado para controle interno.
+  const shouldTrackStandardIntent = now - lastCheckoutIntentAt >= STANDARD_EVENT_DEDUPE_MS;
+
+  if (shouldTrackStandardIntent) {
+    lastCheckoutIntentAt = now;
+    const eventId = options.eventId || buildEventId('InitiateCheckout');
+    trackStandardEvent('InitiateCheckout', commonPayload({
+      num_items: 1,
+      source,
+    }), eventId);
+  }
+
   if (options.includeButtonClick !== false) {
     trackCheckoutButtonClick(source);
   }
@@ -351,10 +361,15 @@ function interceptCheckoutClicks() {
     if (!link) return;
 
     event.preventDefault();
-    trackCheckoutIntent(link.dataset.checkoutSource || 'checkout_cta', { includeButtonClick: true });
-
-    // Insere o eventId gerado no clique em param3 para fins de deduplicação das transações do servidor
+    
+    // Geramos um único eventId para a tag do navegador e para enviar no webhook da Hotmart via param3
     const eventId = buildEventId('InitiateCheckout');
+    
+    trackCheckoutIntent(link.dataset.checkoutSource || 'checkout_cta', { 
+      includeButtonClick: true,
+      eventId: eventId 
+    });
+
     let destination = buildTrackedCheckoutUrl(link.href);
     try {
       const url = new URL(destination);
