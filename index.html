@@ -13,6 +13,7 @@
       testEventCode: "TEST83347" // Código de teste da Meta
     };
   </script>
+  <script src="tracking.js"></script>
 
   <!-- Google Tag Manager -->
   <script>
@@ -25,30 +26,6 @@
     }
   </script>
   <!-- End Google Tag Manager -->
-
-  <!-- Meta Pixel Code -->
-  <script>
-    if (window.TRACKING_CONFIG && window.TRACKING_CONFIG.metaPixelId && window.TRACKING_CONFIG.metaPixelId !== "YOUR_META_PIXEL_ID") {
-      !function(f,b,e,v,n,t,s)
-      {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-      n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-      if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-      n.queue=[];t=b.createElement(e);t.async=!0;
-      t.src=v;s=b.getElementsByTagName(e)[0];
-      s.parentNode.insertBefore(t,s)}(window, document,'script',
-      'https://connect.facebook.net/en_US/fbevents.js');
-      fbq('init', window.TRACKING_CONFIG.metaPixelId);
-      
-      // Dispara o PageView inicial (com test_event_code se configurado)
-      const urlParams = new URLSearchParams(window.location.search);
-      const testCode = urlParams.get('test_event_code') || window.TRACKING_CONFIG.testEventCode;
-      if (testCode) {
-        fbq('track', 'PageView', {}, { test_event_code: testCode });
-      } else {
-        fbq('track', 'PageView');
-      }
-    }
-  </script>
   <!-- End Meta Pixel Code -->
   <script>
     (function() {
@@ -1592,130 +1569,7 @@
       window.setTimeout(showPurchaseToast, 3600);
       window.setInterval(showPurchaseToast, 14500);
 
-      // Captura parâmetros de rastreamento da URL
-      const getUrlParams = () => {
-        const params = {};
-        const searchParams = new URLSearchParams(window.location.search);
-        for (const [key, value] of searchParams.entries()) {
-          if (key.startsWith('utm_') || key === 'fbclid' || key === 'src') {
-            params[key] = value;
-          }
-        }
-        return params;
-      };
-
-      // Captura cookies específicos do navegador
-      const getCookie = (name) => {
-        const value = `; ${document.cookie}`;
-        const parts = value.split(`; ${name}=`);
-        if (parts.length === 2) return parts.pop().split(';').shift();
-        return null;
-      };
-
-      // Propaga parâmetros de rastreamento (UTMs, fbc, fbp) e intercepta cliques para InitiateCheckout
-      const setupTracking = () => {
-        const params = getUrlParams();
-        const fbp = getCookie('_fbp');
-        const fbc = getCookie('_fbc');
-
-        if (fbp) params['fbp'] = fbp;
-        if (fbc) params['fbc'] = fbc;
-
-        // Propaga a Variante A/B como fallback de UTMs
-        const variant = localStorage.getItem('ab_test_variant') || 'copy1';
-        params['src'] = params['src'] || `ab_${variant}`;
-        params['utm_content'] = params['utm_content'] || variant;
-
-        document.querySelectorAll('a').forEach(link => {
-          const href = link.getAttribute('href');
-          if (href && (href.includes('pay.hotmart.com') || href.includes('checkout') || href.includes('kiwify') || href.includes('hotmart.com'))) {
-            // 1. Atualiza o link com parâmetros no carregamento
-            try {
-              const url = new URL(link.href);
-              Object.entries(params).forEach(([key, val]) => {
-                url.searchParams.set(key, val);
-              });
-              link.href = url.toString();
-            } catch (e) {
-              const delimiter = href.indexOf('?') !== -1 ? '&' : '?';
-              const query = Object.entries(params).map(([key, val]) => `${key}=${encodeURIComponent(val)}`).join('&');
-              link.href = href + delimiter + query;
-            }
-
-            // 2. Intercepta o clique para gerar o event_id em param3 (Deduplicação de eventos do servidor)
-            link.addEventListener('click', (e) => {
-              const eventId = 'mofozero_ic_' + Date.now() + '_' + Math.floor(Math.random() * 1000000);
-              
-              // Injeta o event_id em param3 para mandar para o webhook da Hotmart
-              try {
-                const url = new URL(link.href);
-                url.searchParams.set('param3', eventId);
-                link.href = url.toString();
-              } catch (err) {
-                link.href += (link.href.indexOf('?') !== -1 ? '&' : '?') + 'param3=' + eventId;
-              }
-            });
-          }
-        });
-      };
-
-      // Rastreia profundidade de rolagem (Scroll Depth)
-      const trackScrollDepth = () => {
-        const scrollMarks = { 25: false, 50: false, 75: false, 90: false };
-        window.addEventListener('scroll', () => {
-          const scrollTop = window.scrollY || document.documentElement.scrollTop;
-          const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-          if (docHeight <= 0) return;
-
-          const percent = Math.round((scrollTop / docHeight) * 100);
-          Object.keys(scrollMarks).forEach(mark => {
-            const val = parseInt(mark);
-            if (percent >= val && !scrollMarks[mark]) {
-              scrollMarks[mark] = true;
-              if (typeof fbq !== 'undefined') {
-                const urlParams = new URLSearchParams(window.location.search);
-                const testCode = urlParams.get('test_event_code') || (window.TRACKING_CONFIG && window.TRACKING_CONFIG.testEventCode);
-                if (testCode) {
-                  fbq('trackCustom', 'ScrollDepth', { depth: val + '%' }, { test_event_code: testCode });
-                } else {
-                  fbq('trackCustom', 'ScrollDepth', { depth: val + '%' });
-                }
-              }
-              if (typeof gtag !== 'undefined') {
-                gtag('event', 'scroll_depth', { depth: val });
-              }
-            }
-          });
-        }, { passive: true });
-      };
-
-      // Rastreia tempo de permanência na página (Time Spent)
-      const trackTimeSpent = () => {
-        const times = [15, 30, 60];
-        times.forEach(seconds => {
-          window.setTimeout(() => {
-            if (typeof fbq !== 'undefined') {
-              const urlParams = new URLSearchParams(window.location.search);
-              const testCode = urlParams.get('test_event_code') || (window.TRACKING_CONFIG && window.TRACKING_CONFIG.testEventCode);
-              if (testCode) {
-                fbq('trackCustom', 'TimeOnPage', { seconds: seconds }, { test_event_code: testCode });
-              } else {
-                fbq('trackCustom', 'TimeOnPage', { seconds: seconds });
-              }
-            }
-            if (typeof gtag !== 'undefined') {
-              gtag('event', 'time_on_page', { seconds: seconds });
-            }
-          }, seconds * 1000);
-        });
-      };
-
-      // Inicializa os scripts de rastreamento
-      setupTracking();
-      trackScrollDepth();
-      trackTimeSpent();
-      
-      document.addEventListener('DOMContentLoaded', setupTracking);
+      // Os scripts de rastreamento (PageView, ViewContent, scroll, cliques e CAPI) agora são gerenciados de forma unificada e externa por tracking.js
 
       const revealTargets = document.querySelectorAll('.hero, .section');
       revealTargets.forEach((target) => target.classList.add('reveal'));
