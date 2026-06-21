@@ -6,6 +6,17 @@ require('dotenv').config();
 const app = express();
 app.use(express.json());
 
+// Middleware para habilitar CORS (Evita bloqueios no navegador ao enviar eventos da LP)
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, hottok, x-hotmart-token');
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(200);
+  }
+  next();
+});
+
 const PORT = process.env.PORT || 3000;
 const META_PIXEL_ID = process.env.META_PIXEL_ID || process.env.ID_META_PIXEL;
 const META_ACCESS_TOKEN = process.env.META_ACCESS_TOKEN;
@@ -150,6 +161,64 @@ app.post('/webhook/hotmart', async (req, res) => {
     res.status(200).json({ status: 'success', event: metaEventName, deduplicationId });
   } catch (error) {
     console.error(`[Erro Webhook]`, error.response?.data || error.message);
+    res.status(500).json({ error: 'Erro interno do servidor' });
+  }
+});
+
+// Rota receptora de Eventos de Servidor da Landing Page (CAPI Híbrida)
+app.post('/api/meta/events', async (req, res) => {
+  try {
+    const payload = req.body;
+    console.log(`[LP Evento Recebido] Evento: ${payload.eventName} | ID: ${payload.eventId}`);
+
+    const { eventName, eventId, eventSourceUrl, externalId, fbp, fbc, testEventCode, value, currency, contentName, contentIds } = payload;
+
+    // Se houver um test_event_code na requisição (enviado pela LP em testes), usamos ele.
+    // Caso contrário, usamos a variável de ambiente do servidor.
+    const activeTestCode = testEventCode || META_TEST_EVENT_CODE;
+
+    const capiPayload = {
+      data: [
+        {
+          event_name: eventName,
+          event_time: Math.floor(Date.now() / 1000),
+          event_id: eventId,
+          event_source_url: eventSourceUrl || LANDING_PAGE_URL,
+          action_source: 'website',
+          user_data: {
+            external_id: externalId ? [sha256(externalId) || externalId] : [], // Meta aceita external_id bruto ou hasheado
+            client_ip_address: req.ip || null,
+            client_user_agent: req.headers['user-agent'] || null,
+            fbp: fbp,
+            fbc: fbc
+          },
+          custom_data: {
+            value: value || 37.00,
+            currency: currency || 'BRL',
+            content_name: contentName || 'Guia Mofo Zero',
+            content_ids: contentIds || ['mofo_zero_ebook'],
+            content_type: 'product'
+          }
+        }
+      ]
+    };
+
+    if (activeTestCode) {
+      capiPayload.test_event_code = activeTestCode;
+      console.log(`[API Meta] LP Event: Incluindo test_event_code: ${activeTestCode}`);
+    }
+
+    if (META_PIXEL_ID && META_ACCESS_TOKEN) {
+      const capiUrl = `https://graph.facebook.com/v19.0/${META_PIXEL_ID}/events?access_token=${META_ACCESS_TOKEN}`;
+      await axios.post(capiUrl, capiPayload);
+      console.log(`[API Meta] LP Event: Sucesso ao enviar '${eventName}'`);
+    } else {
+      console.warn(`[Aviso] Meta Pixel ID ou Access Token ausente no envio do evento da LP.`);
+    }
+
+    res.status(200).json({ status: 'success', event: eventName, eventId });
+  } catch (error) {
+    console.error(`[Erro Rota LP Eventos]`, error.response?.data || error.message);
     res.status(500).json({ error: 'Erro interno do servidor' });
   }
 });
