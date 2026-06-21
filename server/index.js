@@ -35,7 +35,7 @@ const sha256 = (str) => {
 const normalizePhone = (phone) => {
   if (!phone) return null;
   let cleaned = phone.replace(/\D/g, '');
-  if (cleaned.length === 11 && !cleaned.startsWith('55')) {
+  if ((cleaned.length === 10 || cleaned.length === 11) && !cleaned.startsWith('55')) {
     cleaned = '55' + cleaned;
   }
   return cleaned;
@@ -80,13 +80,23 @@ app.post('/webhook/hotmart', async (req, res) => {
     const deduplicationId = eventId || `mofozero_srv_${purchase.transaction}`;
 
     // 2. Coleta e normalização de dados do comprador para o Meta Event Match Quality (EMQ)
-    const emailHash = sha256(buyer.email);
-    const phoneHash = sha256(normalizePhone(buyer.checkout_phone));
-    const nameParts = buyer.name ? buyer.name.trim().split(' ') : [];
+    const emailHash = buyer.email ? sha256(buyer.email) : null;
+    
+    const rawPhone = buyer.checkout_phone || buyer.phone || buyer.phone_number || null;
+    const phoneHash = rawPhone ? sha256(normalizePhone(rawPhone)) : null;
+    
+    const rawName = buyer.name || (buyer.first_name ? `${buyer.first_name} ${buyer.last_name || ''}`.trim() : null);
+    const nameParts = rawName ? rawName.trim().split(' ') : [];
     const firstNameHash = nameParts.length > 0 ? sha256(nameParts[0]) : null;
     const lastNameHash = nameParts.length > 1 ? sha256(nameParts[nameParts.length - 1]) : null;
 
-    const clientIp = buyer.ip || null;
+    // Dados de endereço se disponíveis no checkout para enriquecer o EMQ
+    const address = buyer.address || {};
+    const zipcodeHash = address.zipcode ? sha256(address.zipcode.replace(/\D/g, '').trim().toLowerCase()) : null;
+    const stateHash = address.state ? sha256(address.state.trim().toLowerCase()) : null;
+    const countryHash = address.country_iso ? sha256(address.country_iso.trim().toLowerCase()) : null;
+
+    const clientIp = buyer.ip || buyer.buyer_ip || purchase.ip || null;
     const userAgent = req.headers['user-agent'] || null;
 
     // 3. Mapeamento do evento da Hotmart para o Meta Pixel / Conversion API
@@ -127,6 +137,9 @@ app.post('/webhook/hotmart', async (req, res) => {
             ph: phoneHash ? [phoneHash] : [],
             fn: firstNameHash ? [firstNameHash] : [],
             ln: lastNameHash ? [lastNameHash] : [],
+            zp: zipcodeHash ? [zipcodeHash] : [],
+            st: stateHash ? [stateHash] : [],
+            country: countryHash ? [countryHash] : [],
             client_ip_address: clientIp,
             client_user_agent: userAgent,
             fbp: fbp,
