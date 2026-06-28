@@ -152,6 +152,7 @@ app.post('/webhook/hotmart', async (req, res) => {
             content_name: product.name || 'Guia Mofo Zero',
             content_ids: [String(product.id || 'mofo_zero_ebook')],
             content_type: 'product',
+            num_items: 1,
             ab_variant: abVariant
           }
         }
@@ -214,6 +215,7 @@ app.post('/api/meta/events', async (req, res) => {
             content_name: contentName || 'Guia Mofo Zero',
             content_ids: contentIds || ['mofo_zero_ebook'],
             content_type: 'product',
+            num_items: 1,
             ab_variant: abVariant || 'unknown'
           }
         }
