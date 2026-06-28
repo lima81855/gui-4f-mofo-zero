@@ -190,8 +190,31 @@ function getCookie(name) {
   return match ? decodeURIComponent(match[1]) : '';
 }
 
+function getOrCreateFbp() {
+  let fbp = getCookie('_fbp');
+  if (fbp) return fbp;
+
+  // Geramos o _fbp no padrão exato da Meta (fb.1.timestamp.random)
+  const creationTime = Date.now();
+  const randomNumber = Math.floor(Math.random() * 2147483647);
+  fbp = 'fb.1.' + creationTime + '.' + randomNumber;
+
+  try {
+    const host = window.location.hostname;
+    const parts = host.split('.');
+    if (parts.length > 1) {
+      const domain = parts.slice(-2).join('.');
+      document.cookie = '_fbp=' + encodeURIComponent(fbp) + '; path=/; max-age=63072000; domain=.' + domain + '; SameSite=Lax; Secure';
+    } else {
+      document.cookie = '_fbp=' + encodeURIComponent(fbp) + '; path=/; max-age=63072000; SameSite=Lax; Secure';
+    }
+  } catch (_) {}
+
+  return fbp;
+}
+
 function getFbp() {
-  return getCookie('_fbp');
+  return getOrCreateFbp();
 }
 
 function getFbc() {
