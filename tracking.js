@@ -132,6 +132,10 @@ function trackStandardEvent(eventName, payload = {}, overrideEventId = null) {
     options.test_event_code = testCode;
   }
   
+  // Anexa a variante de teste A/B ativa ao payload do Pixel
+  const activeVariant = window.localStorage.getItem('ab_test_variant') || 'unknown';
+  payload.ab_variant = activeVariant;
+  
   window.fbq('track', eventName, payload, options);
   sendServerEvent(eventName, payload, eventId);
 }
@@ -268,6 +272,7 @@ function sendServerEvent(eventName, payload, eventId) {
     currency: serverPayload.currency,
     contentName: serverPayload.contentName,
     contentIds: serverPayload.contentIds,
+    abVariant: payload.ab_variant || window.localStorage.getItem('ab_test_variant') || 'unknown',
     trafficQuality: getTrafficQualitySignal(),
   };
 
@@ -323,6 +328,10 @@ function buildTrackedCheckoutUrl(baseUrl) {
     if (!target.searchParams.has('fbc')) target.searchParams.set('fbc', fbc);
     if (!target.searchParams.has('param2')) target.searchParams.set('param2', fbc);
   }
+
+  // Passa a ab_variant ativa para a Hotmart no param4 (será retornado no webhook)
+  const variant = window.localStorage.getItem('ab_test_variant') || 'unknown';
+  target.searchParams.set('param4', variant);
 
   return target.toString();
 }

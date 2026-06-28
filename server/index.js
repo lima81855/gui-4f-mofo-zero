@@ -75,6 +75,7 @@ app.post('/webhook/hotmart', async (req, res) => {
     const fbp = extra.param1 || getCookieValueFromTracking(tracking) || null;
     const fbc = extra.param2 || getFbcValueFromTracking(tracking) || null;
     const eventId = extra.param3 || null; // event_id gerado na LP para deduplicação
+    const abVariant = extra.param4 || null; // Variante do A/B test (copy1 ou copy2)
 
     // Se o webhook não recebeu um event_id gerado no clique, usamos o código da transação para deduplicação
     const deduplicationId = eventId || `mofozero_srv_${purchase.transaction}`;
@@ -150,7 +151,8 @@ app.post('/webhook/hotmart', async (req, res) => {
             currency: 'BRL',
             content_name: product.name || 'Guia Mofo Zero',
             content_ids: [String(product.id || 'mofo_zero_ebook')],
-            content_type: 'product'
+            content_type: 'product',
+            ab_variant: abVariant
           }
         }
       ]
@@ -183,9 +185,9 @@ app.post('/webhook/hotmart', async (req, res) => {
 app.post('/api/meta/events', async (req, res) => {
   try {
     const payload = req.body;
-    console.log(`[LP Evento Recebido] Evento: ${payload.eventName} | ID: ${payload.eventId}`);
+    console.log(`[LP Evento Recebido] Evento: ${payload.eventName} | ID: ${payload.eventId} | Variant: ${payload.abVariant}`);
 
-    const { eventName, eventId, eventSourceUrl, externalId, fbp, fbc, testEventCode, value, currency, contentName, contentIds } = payload;
+    const { eventName, eventId, eventSourceUrl, externalId, fbp, fbc, testEventCode, value, currency, contentName, contentIds, abVariant } = payload;
 
     // Se houver um test_event_code na requisição (enviado pela LP em testes), usamos ele.
     // Caso contrário, usamos a variável de ambiente do servidor.
@@ -211,7 +213,8 @@ app.post('/api/meta/events', async (req, res) => {
             currency: currency || 'BRL',
             content_name: contentName || 'Guia Mofo Zero',
             content_ids: contentIds || ['mofo_zero_ebook'],
-            content_type: 'product'
+            content_type: 'product',
+            ab_variant: abVariant || 'unknown'
           }
         }
       ]
