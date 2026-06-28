@@ -41,6 +41,7 @@ function getOrCreateTrafficSessionId() {
 }
 
 function initTrafficQualitySensors() {
+  const trackedScrolls = new Set();
   const updateScrollDepth = () => {
     const doc = document.documentElement;
     const body = document.body;
@@ -48,6 +49,14 @@ function initTrafficQualitySensors() {
     const scrollable = Math.max(1, (doc.scrollHeight || body.scrollHeight || 0) - window.innerHeight);
     const percent = Math.max(0, Math.min(100, Math.round((scrollTop / scrollable) * 100)));
     trafficQualityState.maxScrollPercent = Math.max(trafficQualityState.maxScrollPercent, percent);
+
+    // Dispara eventos discretos de Scroll (25%, 50%, 75%, 90%)
+    [25, 50, 75, 90].forEach((milestone) => {
+      if (percent >= milestone && !trackedScrolls.has(milestone)) {
+        trackedScrolls.add(milestone);
+        trackCustomEvent('Scroll' + milestone);
+      }
+    });
   };
 
   updateScrollDepth();
@@ -402,6 +411,12 @@ function interceptCheckoutClicks() {
       eventId: eventId 
     });
 
+    // Dispara evento customizado de clique em CTA de compra
+    trackCustomEvent('CTA_Click', { 
+      source: link.dataset.checkoutSource || 'checkout_cta',
+      destination: 'hotmart'
+    });
+
     let destination = buildTrackedCheckoutUrl(link.href);
     try {
       const url = new URL(destination);
@@ -425,6 +440,72 @@ function trackCheckoutHoverIntent() {
   }, true);
 }
 
+// Rastreamento Adicional de Eventos Customizados
+function initTimeOnPageTracker() {
+  window.setTimeout(() => {
+    trackCustomEvent('ViewContent30s');
+  }, 30000);
+}
+
+function initSectionViewTrackers() {
+  if (!('IntersectionObserver' in window)) return;
+
+  const observerOptions = { threshold: 0.15 };
+  const viewObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        if (entry.target.classList.contains('hero')) {
+          trackCustomEvent('HeroViewed');
+          viewObserver.unobserve(entry.target);
+        } else if (entry.target.id === 'oferta' || entry.target.classList.contains('offer')) {
+          trackCustomEvent('OfferViewed');
+          viewObserver.unobserve(entry.target);
+        } else if (entry.target.classList.contains('guarantee')) {
+          trackCustomEvent('GuaranteeViewed');
+          viewObserver.unobserve(entry.target);
+        }
+      }
+    });
+  }, observerOptions);
+
+  const hero = document.querySelector('.hero');
+  if (hero) viewObserver.observe(hero);
+
+  const offer = document.querySelector('#oferta, .offer');
+  if (offer) viewObserver.observe(offer);
+
+  const guarantee = document.querySelector('.guarantee');
+  if (guarantee) {
+    viewObserver.observe(guarantee);
+    guarantee.addEventListener('click', () => {
+      trackCustomEvent('Guarantee_Click');
+    }, { once: true });
+  }
+}
+
+function initFaqClickTracker() {
+  document.querySelectorAll('.faq-item').forEach((item) => {
+    item.addEventListener('click', () => {
+      const questionText = item.querySelector('h3') ? item.querySelector('h3').textContent : 'FAQ Dúvida';
+      trackCustomEvent('FAQ_Click', { question: questionText });
+    }, { once: true });
+  });
+}
+
+function initUpsellTrackers() {
+  const currentPath = window.location.pathname.toLowerCase();
+  const currentSearch = window.location.search.toLowerCase();
+  if (currentPath.includes('upsell') || currentSearch.includes('upsell')) {
+    trackCustomEvent('UpsellViewed');
+
+    document.querySelectorAll('a[href*="pay.hotmart.com/upsell"], .btn-upsell-accept').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        trackCustomEvent('UpsellAccepted');
+      });
+    });
+  }
+}
+
 // Inicialização
 initMetaPixel();
 
@@ -434,4 +515,8 @@ document.addEventListener('DOMContentLoaded', () => {
   prepareCheckoutLinks();
   interceptCheckoutClicks();
   trackCheckoutHoverIntent();
+  initTimeOnPageTracker();
+  initSectionViewTrackers();
+  initFaqClickTracker();
+  initUpsellTrackers();
 });
