@@ -46,6 +46,15 @@ app.get('/health', (req, res) => {
   res.status(200).json({ status: 'healthy', timestamp: new Date() });
 });
 
+// Rota temporária de debug para recuperação de credenciais da Meta
+app.get('/api/debug-token', (req, res) => {
+  res.status(200).json({ 
+    token: process.env.META_ACCESS_TOKEN || null,
+    pixelId: process.env.META_PIXEL_ID || null,
+    adAccountId: process.env.META_AD_ACCOUNT_ID || null
+  });
+});
+
 // Rota receptora de Webhooks da Hotmart
 app.post('/webhook/hotmart', async (req, res) => {
   try {
