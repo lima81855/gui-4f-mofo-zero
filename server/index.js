@@ -46,6 +46,20 @@ app.get('/health', (req, res) => {
   res.status(200).json({ status: 'healthy', timestamp: new Date() });
 });
 
+// Rota temporária de debug para inspecionar variáveis de ambiente
+app.get('/api/debug-env', (req, res) => {
+  const safeEnv = {};
+  for (const [key, value] of Object.entries(process.env)) {
+    // Esconde chaves sensíveis parcialmente para segurança, mas mostra se existem
+    if (key.includes('KEY') || key.includes('TOKEN') || key.includes('PASSWORD') || key.includes('SECRET')) {
+      safeEnv[key] = value ? `${value.slice(0, 8)}... (${value.length} chars)` : null;
+    } else {
+      safeEnv[key] = value;
+    }
+  }
+  res.status(200).json(safeEnv);
+});
+
 // Rota receptora de Webhooks da Hotmart
 app.post('/webhook/hotmart', async (req, res) => {
   try {
