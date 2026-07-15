@@ -224,7 +224,7 @@ app.post('/api/meta/events', async (req, res) => {
             fbc: fbc
           },
           custom_data: {
-            value: value || 37.00,
+            value: value || 67.00,
             currency: currency || 'BRL',
             content_name: contentName || 'Guia Mofo Zero',
             content_ids: contentIds || ['mofo_zero_ebook'],
