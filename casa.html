@@ -1,0 +1,1608 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MOFO ZERO - Página MVT</title>
+
+  <!-- Rastreamento MVT - Versao 1.0.1 -->
+  <!-- CONFIGURAÇÕES DE RASTREAMENTO (Substitua pelos seus IDs) -->
+  <script>
+    window.TRACKING_CONFIG = {
+      metaPixelId: "1987865748103477", // Insira seu ID do Pixel do Facebook aqui
+      gtmId: "YOUR_GTM_ID", // Insira seu ID do GTM aqui (ex: GTM-XXXXXXX)
+      testEventCode: "TEST83347" // Código de teste da Meta
+    };
+  </script>
+  <script src="tracking.js"></script>
+
+  <!-- Utmify Pixel Code -->
+  <script>
+    window.pixelId = "6a3af418b9fc0894abcd76a5";
+    var a = document.createElement("script");
+    a.setAttribute("async", "");
+    a.setAttribute("defer", "");
+    a.setAttribute("src", "https://cdn.utmify.com.br/scripts/pixel/pixel.js");
+    document.head.appendChild(a);
+  </script>
+  <!-- End Utmify Pixel Code -->
+
+  <!-- Google Tag Manager -->
+  <script>
+    if (window.TRACKING_CONFIG && window.TRACKING_CONFIG.gtmId && window.TRACKING_CONFIG.gtmId !== "YOUR_GTM_ID") {
+      (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+      new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+      'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+      })(window,document,'script','dataLayer',window.TRACKING_CONFIG.gtmId);
+    }
+  </script>
+  <!-- End Google Tag Manager -->
+  <!-- End Meta Pixel Code -->
+  <script>
+    (function() {
+      var variant = localStorage.getItem('ab_test_variant');
+      if (!variant) {
+        variant = (Math.random() < 0.40) ? 'copy1' : 'copy2';
+        localStorage.setItem('ab_test_variant', variant);
+      }
+      document.documentElement.setAttribute('data-ab-variant', variant);
+    })();
+  </script>
+  <style>
+    /* Regras de visibilidade do Teste A/B */
+    html[data-ab-variant="copy1"] .variant-b { display: none !important; }
+    html[data-ab-variant="copy2"] .variant-a { display: none !important; }
+
+    :root {
+      --coral: #ee6352;
+      --coral-dark: #cf4f42;
+      --brown: #3a1b09;
+      --brown-2: #251106;
+      --sand: #f6dfb9;
+      --warm: #e6dccb;
+      --blush: #fdf6f7;
+      --cream: #fff8eb;
+      --white: #ffffff;
+      --ink: #1a1a1a;
+      --text: #363636;
+      --muted: #6d6259;
+      --cta: #39b574;
+      --cta-dark: #248b56;
+      --line: rgba(58, 27, 9, .15);
+      --shadow: 0 22px 48px rgba(58, 27, 9, .14);
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    .page-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 50;
+      width: 100%;
+      height: 5px;
+      background: rgba(58, 27, 9, .12);
+    }
+
+    .page-progress span {
+      display: block;
+      width: 0%;
+      height: 100%;
+      border-radius: 0 999px 999px 0;
+      background: linear-gradient(90deg, var(--cta), var(--sand), var(--coral));
+      transition: width .18s ease;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, Arial, Helvetica, sans-serif;
+      background: var(--blush);
+      color: var(--ink);
+      line-height: 1.5;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    h1, h2, h3, p { margin-top: 0; }
+
+    .topbar {
+      overflow: hidden;
+      background: var(--coral);
+      color: var(--white);
+      font-weight: 900;
+      font-size: 16px;
+      letter-spacing: 0;
+      white-space: nowrap;
+    }
+
+    .topbar-track {
+      display: flex;
+      width: max-content;
+      animation: topbarTicker 18s linear infinite;
+    }
+
+    .topbar-group {
+      display: flex;
+      align-items: center;
+      flex: 0 0 auto;
+    }
+
+    .topbar span {
+      display: inline-flex;
+      align-items: center;
+      min-height: 54px;
+      padding: 0 38px;
+    }
+
+    .topbar span::after {
+      content: "";
+      width: 7px;
+      height: 7px;
+      margin-left: 38px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .88);
+      box-shadow: 0 0 0 5px rgba(255, 255, 255, .14);
+    }
+
+    @keyframes topbarTicker {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity .7s ease, transform .7s ease;
+    }
+
+    .reveal.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .section { padding: 78px 24px; }
+    .wrap { width: min(1140px, 100%); margin: 0 auto; }
+    .center { text-align: center; }
+
+    .hero {
+      background: var(--brown);
+      color: var(--white);
+      padding: 50px 24px 62px;
+      border-bottom: 12px solid var(--sand);
+    }
+
+    .hero-mvt {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      padding: 0 12px;
+      border: 1px solid rgba(255, 255, 255, .26);
+      border-radius: 8px;
+      color: #ffe1d8;
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .eyebrow.dark {
+      color: var(--coral-dark);
+      border-color: rgba(238, 99, 82, .35);
+      background: rgba(238, 99, 82, .08);
+    }
+
+    h1 {
+      max-width: 880px;
+      margin: 22px auto 20px;
+      font-size: clamp(38px, 5.4vw, 68px);
+      line-height: 1;
+      font-weight: 950;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      margin-bottom: 16px;
+      font-size: clamp(30px, 4vw, 50px);
+      line-height: 1.04;
+      font-weight: 950;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin-bottom: 10px;
+      font-size: 21px;
+      line-height: 1.18;
+      font-weight: 900;
+      letter-spacing: 0;
+    }
+
+    .hero-sub {
+      max-width: 720px;
+      color: #ffe8dd;
+      font-size: 24px;
+      line-height: 1.25;
+      font-weight: 800;
+      margin: 18px auto 0;
+    }
+
+    .copy {
+      max-width: 760px;
+      color: var(--text);
+      font-size: 18px;
+    }
+
+    .hero-copy {
+      max-width: 740px;
+      color: rgba(255, 255, 255, .78);
+      font-size: 18px;
+      margin: 16px auto 0;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 58px;
+      padding: 0 30px;
+      border: 0;
+      border-radius: 8px;
+      background: var(--cta);
+      color: var(--white);
+      box-shadow: 0 16px 34px rgba(57, 181, 116, .24);
+      font-size: 16px;
+      font-weight: 950;
+      text-transform: uppercase;
+      transition: transform .2s ease, background .2s ease, box-shadow .2s ease;
+    }
+
+    .btn:hover {
+      background: var(--cta-dark);
+      box-shadow: 0 20px 42px rgba(57, 181, 116, .3);
+      transform: translateY(-2px);
+    }
+
+    .btn.coral {
+      background: var(--coral);
+      box-shadow: 0 16px 34px rgba(238, 99, 82, .24);
+    }
+
+    .btn.coral:hover { background: var(--coral-dark); }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: center;
+      justify-content: center;
+      margin-top: 26px;
+    }
+
+    .decision-game {
+      width: min(720px, 100%);
+      margin: 26px auto 0;
+      padding: 18px;
+      border: 1px solid rgba(255, 255, 255, .18);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .08);
+      box-shadow: 0 20px 46px rgba(0, 0, 0, .18);
+      text-align: left;
+    }
+
+    .decision-game-head {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+      color: var(--sand);
+      font-weight: 950;
+    }
+
+    .decision-score {
+      display: inline-flex;
+      align-items: center;
+      min-height: 30px;
+      padding: 0 11px;
+      border-radius: 999px;
+      background: rgba(246, 223, 185, .14);
+      color: var(--white);
+      font-size: 12px;
+      font-weight: 950;
+      text-transform: uppercase;
+    }
+
+    .case-picker {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .case-chip {
+      min-height: 48px;
+      padding: 0 12px;
+      border: 1px solid rgba(255, 255, 255, .18);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .08);
+      color: rgba(255, 255, 255, .86);
+      font: inherit;
+      font-size: 13px;
+      font-weight: 950;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: transform .18s ease, background .18s ease, border-color .18s ease;
+    }
+
+    .case-chip:hover,
+    .case-chip.is-active {
+      border-color: rgba(57, 181, 116, .86);
+      background: rgba(57, 181, 116, .18);
+      color: var(--white);
+      transform: translateY(-2px);
+    }
+
+    .case-chip:focus-visible,
+    .benefit-item:focus-visible,
+    .btn:focus-visible {
+      outline: 3px solid rgba(246, 223, 185, .92);
+      outline-offset: 3px;
+    }
+
+    .case-result {
+      padding: 16px;
+      border-radius: 8px;
+      background: var(--cream);
+      color: var(--brown);
+      grid-column: 1 / -1;
+    }
+
+    .case-result strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 18px;
+      font-weight: 950;
+    }
+
+    .case-result p {
+      margin-bottom: 12px;
+      color: #6b4b35;
+      font-weight: 800;
+    }
+
+    .case-meter {
+      height: 10px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: rgba(58, 27, 9, .12);
+    }
+
+    .case-meter span {
+      display: block;
+      width: 52%;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--cta), var(--sand));
+      transition: width .28s ease;
+    }
+
+    .case-note {
+      display: block;
+      margin-top: 10px;
+      color: var(--muted);
+      font-weight: 900;
+    }
+
+    .access-note {
+      color: rgba(255, 255, 255, .8);
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .hero-visual {
+      position: relative;
+      width: 100%;
+      min-height: 0;
+    }
+
+    .product-cover {
+      width: min(386px, 100%);
+      min-height: 520px;
+      margin-left: auto;
+      padding: 28px;
+      border: 1px solid rgba(255, 255, 255, .48);
+      border-radius: 8px;
+      background: var(--cream);
+      box-shadow: 0 28px 70px rgba(0, 0, 0, .28);
+      color: var(--brown);
+      transform: rotate(-2deg);
+    }
+
+    .guide-image-frame {
+      width: min(640px, 100%);
+      margin: 10px auto 0;
+      padding: 0;
+      border: 1px solid rgba(255, 255, 255, .18);
+      border-radius: 8px;
+      background: transparent;
+      box-shadow: 0 28px 70px rgba(0, 0, 0, .32);
+      overflow: hidden;
+    }
+
+    .guide-image-frame img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+    }
+
+    .cover-label {
+      display: inline-flex;
+      min-height: 34px;
+      align-items: center;
+      padding: 0 11px;
+      border-radius: 8px;
+      background: var(--coral);
+      color: var(--white);
+      font-size: 12px;
+      font-weight: 950;
+      text-transform: uppercase;
+    }
+
+    .cover-title {
+      margin: 28px 0 14px;
+      font-size: 56px;
+      line-height: .9;
+      font-weight: 950;
+      letter-spacing: 0;
+    }
+
+    .cover-sub {
+      margin-bottom: 24px;
+      color: #6b4b35;
+      font-weight: 850;
+      font-size: 17px;
+    }
+
+    .path-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 26px;
+    }
+
+    .path-item {
+      display: grid;
+      grid-template-columns: 34px 1fr;
+      gap: 12px;
+      align-items: center;
+      padding: 12px;
+      border: 1px solid rgba(58, 27, 9, .16);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .74);
+      font-weight: 900;
+    }
+
+    .path-number {
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      background: var(--brown);
+      color: var(--sand);
+      font-size: 14px;
+    }
+
+    .floating-card {
+      position: absolute;
+      left: 0;
+      bottom: 34px;
+      width: min(270px, 58%);
+      padding: 18px;
+      border: 1px solid rgba(238, 99, 82, .28);
+      border-radius: 8px;
+      background: var(--white);
+      box-shadow: var(--shadow);
+      color: var(--ink);
+    }
+
+    .floating-card strong {
+      display: block;
+      margin-bottom: 7px;
+      color: var(--coral-dark);
+      font-size: 13px;
+      text-transform: uppercase;
+    }
+
+    .floating-card span {
+      color: var(--text);
+      font-size: 15px;
+      font-weight: 750;
+    }
+
+    .gallery {
+      background: var(--sand);
+    }
+
+    .section-head {
+      max-width: 810px;
+      margin: 0 auto 38px;
+      text-align: center;
+    }
+
+    .section-head .copy { margin: 0 auto; }
+
+    .inside-preview {
+      padding: 22px;
+      border-radius: 8px;
+      background: #111820;
+      box-shadow: var(--shadow);
+    }
+
+    .inside-title {
+      margin: 0 0 18px;
+      color: var(--white);
+      text-align: center;
+      font-size: 24px;
+      font-weight: 950;
+      text-transform: uppercase;
+    }
+
+    .inside-stack {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 24px;
+      align-items: start;
+    }
+
+    .inside-preview-image {
+      width: 100%;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, .14);
+      border-radius: 8px;
+      background: transparent;
+      box-shadow: 0 20px 46px rgba(0, 0, 0, .3);
+      transition: transform .24s ease, border-color .24s ease, box-shadow .24s ease;
+    }
+
+    .inside-preview-image:hover {
+      border-color: rgba(57, 181, 116, .58);
+      box-shadow: 0 20px 42px rgba(57, 181, 116, .16);
+      transform: translateY(-5px) scale(1.01);
+    }
+
+    .inside-preview-image img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+    }
+
+    .line {
+      height: 12px;
+      margin-bottom: 10px;
+      border-radius: 8px;
+      background: var(--warm);
+    }
+
+    .line.short { width: 62%; }
+    .line.coral { background: rgba(238, 99, 82, .34); }
+    .line.brown { background: rgba(58, 27, 9, .22); }
+    .line.green { background: rgba(57, 181, 116, .32); }
+
+    .check-row {
+      display: grid;
+      grid-template-columns: 24px 1fr;
+      gap: 10px;
+      align-items: center;
+      margin: 12px 0;
+      color: var(--text);
+      font-weight: 800;
+    }
+
+    .check {
+      display: grid;
+      place-items: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      background: var(--cta);
+      color: white;
+      font-weight: 950;
+    }
+
+    .benefits-mvt {
+      background: var(--white);
+    }
+
+    .benefits-layout {
+      display: grid;
+      grid-template-columns: minmax(0, .95fr) minmax(320px, .78fr);
+      gap: 34px;
+      align-items: center;
+    }
+
+    .benefit-list {
+      display: grid;
+      gap: 14px;
+      margin-top: 24px;
+    }
+
+    .benefit-item {
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      gap: 14px;
+      align-items: start;
+      padding: 17px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--blush);
+      box-shadow: 0 14px 30px rgba(58, 27, 9, .08);
+      color: inherit;
+      font: inherit;
+      text-align: left;
+      cursor: pointer;
+      transition: transform .2s ease, border-color .2s ease, background .2s ease, box-shadow .2s ease;
+    }
+
+    .benefit-item:hover,
+    .benefit-item.is-active {
+      border-color: rgba(57, 181, 116, .64);
+      background: #f3fff7;
+      box-shadow: 0 18px 40px rgba(57, 181, 116, .14);
+      transform: translateX(5px);
+    }
+
+    .benefit-number {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 999px;
+      background: var(--brown);
+      color: var(--white);
+      font-size: 18px;
+      font-weight: 950;
+    }
+
+    .benefit-item strong {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--brown);
+      font-weight: 950;
+    }
+
+    .benefit-item p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .benefits-visual-frame {
+      width: 100%;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      box-shadow: 0 20px 46px rgba(0, 0, 0, .08);
+      transition: transform .24s ease, border-color .24s ease, box-shadow .24s ease;
+    }
+
+    .benefits-visual-frame:hover {
+      border-color: rgba(57, 181, 116, .58);
+      box-shadow: 0 24px 50px rgba(57, 181, 116, .16);
+      transform: translateY(-4px);
+    }
+
+    .benefits-visual-img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .feature p,
+    .audience-card p,
+    .bonus p,
+    .faq-item p {
+      margin-bottom: 0;
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    .split {
+      background: var(--blush);
+    }
+
+    .split-grid {
+      display: grid;
+      grid-template-columns: minmax(0, .92fr) minmax(340px, .78fr);
+      gap: 44px;
+      align-items: center;
+    }
+
+    .danger-list {
+      display: grid;
+      gap: 13px;
+      margin-top: 24px;
+    }
+
+    .danger-item {
+      padding: 17px 18px;
+      border-left: 5px solid var(--coral);
+      border-radius: 8px;
+      background: var(--white);
+      box-shadow: 0 12px 26px rgba(58, 27, 9, .08);
+      font-weight: 850;
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+
+    .danger-item:hover {
+      box-shadow: 0 18px 38px rgba(58, 27, 9, .12);
+      transform: translateX(5px);
+    }
+
+    .contrast-box {
+      padding: 28px;
+      border: 1px solid rgba(58, 27, 9, .15);
+      border-radius: 8px;
+      background: var(--cream);
+      box-shadow: var(--shadow);
+    }
+
+    .contrast-row {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .contrast-row div {
+      padding: 15px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .78);
+      font-weight: 850;
+    }
+
+    .contrast-row .wrong {
+      border-left: 5px solid var(--coral);
+    }
+
+    .contrast-row .right {
+      border-left: 5px solid var(--cta);
+    }
+
+    .coral-band {
+      background: var(--coral);
+      color: var(--white);
+    }
+
+    .coral-box {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 28px;
+      align-items: center;
+    }
+
+    .coral-box p {
+      max-width: 760px;
+      color: rgba(255, 255, 255, .86);
+      font-size: 20px;
+      margin-bottom: 0;
+    }
+
+    .audience {
+      background: var(--cream);
+    }
+
+    .audience-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .audience-card {
+      min-height: 190px;
+      padding: 23px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--white);
+      transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+    }
+
+    .audience-card:hover {
+      border-color: rgba(57, 181, 116, .45);
+      box-shadow: 0 18px 40px rgba(58, 27, 9, .1);
+      transform: translateY(-5px);
+    }
+
+    .audience-card strong {
+      display: block;
+      margin-bottom: 9px;
+      color: var(--brown);
+      font-size: 19px;
+      font-weight: 950;
+    }
+
+    .stack {
+      background: var(--white);
+    }
+
+    .stack-grid {
+      display: grid;
+      grid-template-columns: minmax(320px, .72fr) minmax(0, 1fr);
+      gap: 34px;
+      align-items: start;
+    }
+
+    .stack-main {
+      padding: 28px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--brown);
+      color: var(--white);
+      box-shadow: var(--shadow);
+    }
+
+    .stack-main .product-cover {
+      width: 100%;
+      min-height: 390px;
+      margin: 0;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .bonus-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .bonus {
+      min-height: 208px;
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--cream);
+      transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+    }
+
+    .bonus:hover {
+      border-color: rgba(238, 99, 82, .35);
+      box-shadow: 0 18px 40px rgba(238, 99, 82, .12);
+      transform: translateY(-5px);
+    }
+
+    .bonus-value {
+      display: inline-flex;
+      margin-bottom: 16px;
+      padding: 7px 10px;
+      border-radius: 8px;
+      background: var(--coral);
+      color: var(--white);
+      font-size: 12px;
+      font-weight: 950;
+      text-transform: uppercase;
+    }
+
+    .offer {
+      background: var(--blush);
+    }
+
+    .offer-card {
+      width: min(760px, 100%);
+      margin: 0 auto;
+      padding: 34px;
+      border: 2px solid var(--coral);
+      border-radius: 8px;
+      background: var(--white);
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+
+    .price {
+      display: flex;
+      justify-content: center;
+      align-items: baseline;
+      gap: 8px;
+      margin: 18px 0 20px;
+      color: var(--brown);
+    }
+
+    .price span:first-child {
+      font-size: 20px;
+      font-weight: 900;
+    }
+
+    .price strong {
+      font-size: clamp(54px, 8vw, 86px);
+      line-height: .9;
+      font-weight: 950;
+    }
+
+    .offer-bullets {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin: 26px 0;
+      text-align: left;
+    }
+
+    .offer-bullets div {
+      padding: 13px 14px;
+      border-radius: 8px;
+      background: var(--cream);
+      font-weight: 850;
+    }
+
+    .guarantee {
+      background: var(--sand);
+    }
+
+    .guarantee-grid {
+      display: grid;
+      grid-template-columns: minmax(0, .8fr) minmax(0, 1fr);
+      gap: 36px;
+      align-items: center;
+    }
+
+    .seal {
+      display: grid;
+      place-items: center;
+      min-height: 260px;
+      border: 2px solid var(--brown);
+      border-radius: 8px;
+      background: var(--white);
+      color: var(--brown);
+      text-align: center;
+      font-weight: 950;
+      font-size: 42px;
+      line-height: 1;
+    }
+
+    .faq {
+      background: var(--white);
+    }
+
+    .faq-list {
+      display: grid;
+      gap: 14px;
+      width: min(870px, 100%);
+      margin: 34px auto 0;
+    }
+
+    .faq-item {
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--cream);
+      transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+    }
+
+    .faq-item:hover {
+      border-color: rgba(57, 181, 116, .38);
+      box-shadow: 0 14px 32px rgba(58, 27, 9, .08);
+      transform: translateY(-3px);
+    }
+
+    .steps {
+      background: var(--brown);
+      color: var(--white);
+    }
+
+    .step-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 32px;
+    }
+
+    .step {
+      min-height: 170px;
+      padding: 22px;
+      border: 1px solid rgba(255, 255, 255, .2);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .07);
+      transition: transform .2s ease, border-color .2s ease, background .2s ease;
+    }
+
+    .step:hover {
+      border-color: rgba(246, 223, 185, .55);
+      background: rgba(255, 255, 255, .11);
+      transform: translateY(-5px);
+    }
+
+    .step strong {
+      display: block;
+      margin-bottom: 10px;
+      color: var(--sand);
+      font-size: 28px;
+      font-weight: 950;
+    }
+
+    .step p { color: rgba(255, 255, 255, .8); margin-bottom: 0; }
+
+    .footer {
+      padding: 34px 24px;
+      background: #0f0f0f;
+      color: rgba(255, 255, 255, .72);
+      font-size: 13px;
+      text-align: center;
+    }
+
+    .purchase-toast {
+      position: fixed;
+      left: 18px;
+      bottom: 18px;
+      z-index: 60;
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      gap: 12px;
+      align-items: center;
+      width: min(360px, calc(100vw - 36px));
+      padding: 14px;
+      border: 1px solid rgba(57, 181, 116, .35);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .96);
+      box-shadow: 0 22px 54px rgba(58, 27, 9, .22);
+      color: var(--ink);
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(18px) scale(.98);
+      transition: opacity .28s ease, transform .28s ease;
+    }
+
+    .purchase-toast.is-visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .purchase-icon {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 999px;
+      background: var(--cta);
+      color: var(--white);
+      font-weight: 950;
+      box-shadow: 0 10px 24px rgba(57, 181, 116, .24);
+    }
+
+    .purchase-toast strong {
+      display: block;
+      margin-bottom: 2px;
+      color: var(--brown);
+      font-size: 14px;
+      font-weight: 950;
+    }
+
+    .purchase-toast span {
+      display: block;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .purchase-toast b {
+      color: var(--cta-dark);
+      font-weight: 950;
+    }
+
+    @media (max-width: 900px) {
+      .section { padding: 58px 18px; }
+      .hero { padding: 42px 18px 52px; }
+      .split-grid,
+      .stack-grid,
+      .guarantee-grid,
+      .coral-box {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-visual { min-height: auto; }
+      .product-cover { margin: 28px auto 0; transform: none; }
+      .guide-image-frame { margin: 6px auto 0; padding: 8px; }
+      .floating-card { position: static; width: 100%; margin-top: 16px; }
+      .mockup-row,
+      .benefits-layout,
+      .audience-grid,
+      .bonus-grid,
+      .offer-bullets,
+      .step-grid,
+      .inside-stack {
+        grid-template-columns: 1fr;
+      }
+
+      .coral-box .btn { width: 100%; }
+      .hero-actions .btn { width: 100%; }
+      .access-note { width: 100%; text-align: center; }
+      .case-picker { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 520px) {
+      .topbar { font-size: 14px; }
+      h1 {
+        font-size: clamp(26px, 7.5vw, 34px);
+        line-height: 1.1;
+        letter-spacing: -0.5px;
+      }
+      .hero-sub { font-size: 18px; line-height: 1.3; }
+      .cover-title { font-size: 38px; }
+      .product-cover { min-height: 400px; padding: 18px; }
+      .offer-card { padding: 20px; }
+      .btn { width: 100%; padding: 0 18px; font-size: 15px; }
+      .decision-game { padding: 12px; }
+      .case-picker { grid-template-columns: 1fr; gap: 8px; }
+      .purchase-toast {
+        left: 12px;
+        right: 12px;
+        bottom: 12px;
+        width: auto;
+        padding: 10px 14px;
+        font-size: 13px;
+        gap: 10px;
+        grid-template-columns: 32px 1fr;
+      }
+      .purchase-icon {
+        width: 32px;
+        height: 32px;
+        font-size: 14px;
+      }
+      .purchase-toast strong {
+        font-size: 13px;
+        line-height: 1.2;
+      }
+      .purchase-toast span {
+        font-size: 12px;
+        line-height: 1.2;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        transition-duration: .01ms !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+      }
+
+      .reveal {
+        opacity: 1;
+        transform: none;
+      }
+
+      .topbar-track {
+        animation: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=YOUR_GTM_ID"
+  height="0" width="0" style="display:none;visibility:hidden" id="gtm-noscript"></iframe></noscript>
+  <script>
+    if (window.TRACKING_CONFIG && window.TRACKING_CONFIG.gtmId && window.TRACKING_CONFIG.gtmId !== "YOUR_GTM_ID") {
+      document.getElementById('gtm-noscript').src = "https://www.googletagmanager.com/ns.html?id=" + window.TRACKING_CONFIG.gtmId;
+    }
+  </script>
+  <!-- End Google Tag Manager (noscript) -->
+
+  <!-- Meta Pixel Code (noscript) -->
+  <noscript>
+    <img height="1" width="1" style="display:none" id="meta-pixel-noscript"
+         src="https://www.facebook.com/tr?id=1987865748103477&ev=PageView&noscript=1"/>
+  </noscript>
+  <script>
+    if (window.TRACKING_CONFIG && window.TRACKING_CONFIG.metaPixelId && window.TRACKING_CONFIG.metaPixelId !== "YOUR_META_PIXEL_ID") {
+      document.getElementById('meta-pixel-noscript').src = "https://www.facebook.com/tr?id=" + window.TRACKING_CONFIG.metaPixelId + "&ev=PageView&noscript=1";
+    }
+  </script>
+  <!-- End Meta Pixel Code (noscript) -->
+
+  <div class="page-progress" aria-hidden="true"><span data-page-progress></span></div>
+  <div class="topbar" aria-label="Oferta especial disponível apenas hoje">
+    <!-- VARIACAO A (CONTROLE) -->
+    <div class="topbar-track variant-a" aria-hidden="true">
+      <div class="topbar-group">
+        <span>ATENÇÃO: LIMPAR O MOFO DO BANHEIRO OU PAREDE COM CLORO NÃO CRIA BARREIRA E O BOLOR VOLTA EM 3 DIAS</span>
+        <span>ACESSO AO KIT POR CÔMODO</span>
+        <span>BLINDAGEM CONTRA UMIDADE HOJE</span>
+      </div>
+      <div class="topbar-group">
+        <span>ATENÇÃO: LIMPAR O MOFO DO BANHEIRO OU PAREDE COM CLORO NÃO CRIA BARREIRA E O BOLOR VOLTA EM 3 DIAS</span>
+        <span>ACESSO AO KIT POR CÔMODO</span>
+        <span>BLINDAGEM CONTRA UMIDADE HOJE</span>
+      </div>
+    </div>
+    <!-- VARIACAO B (VARIANTE) -->
+    <div class="topbar-track variant-b" aria-hidden="true">
+      <div class="topbar-group">
+        <span>ATENÇÃO: ESPOROS DE MOFO NO QUARTO SÃO GATILHOS DIÁRIOS PARA CRISES DE RINITE DO SEU FILHO</span>
+        <span>ACESSO IMEDIATO AO KIT</span>
+        <span>SONO TRANQUILO HOJE</span>
+      </div>
+      <div class="topbar-group">
+        <span>ATENÇÃO: ESPOROS DE MOFO NO QUARTO SÃO GATILHOS DIÁRIOS PARA CRISES DE RINITE DO SEU FILHO</span>
+        <span>ACESSO IMEDIATO AO KIT</span>
+        <span>SONO TRANQUILO HOJE</span>
+      </div>
+    </div>
+  </div>
+
+  <main>
+    <section class="hero">
+      <div class="wrap hero-mvt">
+        <!-- VARIACAO A (CONTROLE) -->
+        <span class="eyebrow variant-a">🧰 KIT ANTI-MOFO 3F</span>
+        <h1 class="variant-a">Mofo no banheiro, cozinha ou paredes do quarto? Não adianta só esfregar com cloro.</h1>
+        
+        <!-- VARIACAO B (VARIANTE) -->
+        <span class="eyebrow variant-b">🧰 KIT QUARTO SEM MOFO</span>
+        <h1 class="variant-b">Seu filho acorda tossindo à noite? O verdadeiro culpado pode estar no guarda-roupa dele.</h1>
+
+        <div class="hero-visual" aria-label="Mockup visual do produto MOFO ZERO">
+          <div class="guide-image-frame">
+            <img src="mofo-zero-hero-mvt.png" alt="Mockup do 🧰 Kit Anti-Mofo 3F: ferramentas, checklists, tabela e plano de 7 dias exibidos em vários dispositivos">
+          </div>
+        </div>
+
+        <!-- VARIACAO A (CONTROLE) -->
+        <p class="hero-sub variant-a">O método prático para identificar e eliminar a fonte de umidade oculta em cada cômodo da sua casa e blindar suas paredes contra os fungos em 7 dias.</p>
+        <p class="hero-copy variant-a">Chega de passar o final de semana limpando rejunte de banheiro ou teto preto. Descubra a rotina de 5 minutos por cômodo com misturas caseiras de R$3 para eliminar o bolor de vez.</p>
+
+        <!-- VARIACAO B (VARIANTE) -->
+        <p class="hero-sub variant-b">O kit prático de desinfecção atóxica para eliminar os esporos invisíveis de mofo, limpar berços/cômodas e devolver o sono saudável à sua família em 24 horas.</p>
+        <p class="hero-copy variant-b">Chega de encher o quarto das crianças com produtos químicos fortes que agridem o pulmão ou de borrifar vinagre que alimenta o fungo. Descubra o método caseiro e seguro para esterilizar o quarto por apenas R$ 67.</p>
+
+        <div class="hero-actions">
+          <a class="btn variant-a" href="https://pay.hotmart.com/B106421355U?checkoutMode=10">Blindar os Cômodos da Minha Casa</a>
+          <a class="btn variant-b" href="https://pay.hotmart.com/B106421355U?checkoutMode=10">Proteger o Quarto do Meu Filho</a>
+          <span class="access-note">Garantia de 7 dias • Acesso imediato</span>
+        </div>
+
+        <div class="decision-game" aria-label="Teste rápido por tipo de mofo">
+          <div class="decision-game-head">
+            <span>Qual foco de mofo parece com o seu?</span>
+            <span class="decision-score" data-decision-score>1 caminho selecionado</span>
+          </div>
+          <div class="case-picker" aria-label="Tipos de problema com mofo">
+            <button class="case-chip is-active" type="button" aria-pressed="true" data-case="roupa" data-title="Roupas Manchadas & Odor Forte" data-copy="A mancha preta ou esverdeada é o sinal final de contaminação. Se você lavar ou esfregar do jeito errado, a mancha fixa permanentemente no tecido." data-note="Alerta crítico: receitas ácidas sem teste de fibra desbotam ou desgastam roupas caras na hora." data-meter="54">Roupas</button>
+            <button class="case-chip" type="button" aria-pressed="false" data-case="sapato" data-title="Sapatos e Bolsas de Couro Mofados" data-copy="O couro é matéria orgânica: o mofo literalmente se alimenta dele. Um calçado ou bolsa de R$300 pode virar lixo em poucos dias se você não agir." data-note="Alerta crítico: o fungo corrói as camadas internas do couro; mascarar com pomada não resolve." data-meter="68">Couro/Sapatos</button>
+            <button class="case-chip" type="button" aria-pressed="false" data-case="armario" data-title="Guarda-Roupa com Cheiro de Guardado" data-copy="A umidade presa nas gavetas espalha bilhões de esporos invisíveis toda vez que você abre a porta, contaminando roupas limpas." data-note="Alerta crítico: cheiro persistente indica que os fungos já estão nos painéis traseiros." data-meter="62">Guarda-Roupa</button>
+            <button class="case-chip" type="button" aria-pressed="false" data-case="parede" data-title="Banheiro e Paredes Pretas de Bolor" data-copy="O bolor preto atrás da cama ou no teto espalha toxinas no ar 24h por dia. Usar apenas cloro clareia a mancha temporariamente, mas não destrói a raiz." data-note="Alerta crítico: se houver infiltração ativa, a limpeza superficial dura no máximo 3 dias." data-meter="82">Paredes/Banheiro</button>
+          </div>
+          <div class="case-result" aria-live="polite">
+            <strong data-case-title>Roupas Manchadas & Odor Forte</strong>
+            <p data-case-copy>A mancha preta ou esverdeada é o sinal final de contaminação. Se você lavar ou esfregar do jeito errado, a mancha fixa permanentemente no tecido.</p>
+            <div class="case-meter" aria-hidden="true"><span data-case-meter></span></div>
+            <span class="case-note" data-case-note>Alerta crítico: receitas ácidas sem teste de fibra desbotam ou desgastam roupas caras na hora.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section gallery">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="eyebrow dark">Veja por dentro</span>
+          <h2>MOFO ZERO por dentro</h2>
+          <p class="copy">Veja o kit, as ferramentas de consulta e os materiais de apoio para entender exatamente como identificar o seu caso e agir antes de aplicar qualquer produto.</p>
+        </div>
+
+        <div class="inside-preview">
+          <div class="inside-title">Veja alguns materiais que você recebe na prática</div>
+
+          <div class="inside-stack">
+            <div class="inside-preview-image">
+              <img src="mofo-zero-diagnostico-preview.jpg" alt="Prévia interna do teste rápido de 2 minutos do MOFO ZERO">
+            </div>
+            <div class="inside-preview-image">
+              <img src="mofo-zero-guia-4-caminhos-preview.jpg" alt="Prévia interna da tabela prática de aplicação por superfície do 🧰 Kit Anti-Mofo 3F">
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section benefits-mvt">
+      <div class="wrap benefits-layout">
+        <div>
+          <span class="eyebrow dark">Benefícios na prática</span>
+          <h2>O que muda quando você para de agir no improviso</h2>
+          <p class="copy">Em vez de testar misturas arriscadas, o MOFO ZERO blinda seus pertences e protege sua casa com um passo a passo rápido de aplicação segura.</p>
+
+          <div class="benefit-list">
+            <button class="benefit-item is-active" type="button">
+              <span class="benefit-number">1</span>
+              <div><strong>Ação Cirúrgica (Sem Achismo)</strong><p>Você saberá exatamente o que fazer no segundo em que avistar o mofo, eliminando o erro comum de misturar produtos que estragam seus bens.</p></div>
+            </button>
+            <button class="benefit-item" type="button">
+              <span class="benefit-number">2</span>
+              <div><strong>Eliminação da Raiz (Não apenas a Mancha)</strong><p>Aprenda a mapear e cortar a fonte de umidade que alimenta o fungo, quebrando o ciclo de ter que limpar o mesmo armário todo final de semana.</p></div>
+            </button>
+            <button class="benefit-item" type="button">
+              <span class="benefit-number">3</span>
+              <div><strong>Blindagem de Tecidos e Couro</strong><p>Saiba como proteger e recuperar peças caras de couro, camurça e algodão para que nunca mais fiquem manchadas ou inutilizáveis.</p></div>
+            </button>
+            <button class="benefit-item" type="button">
+              <span class="benefit-number">4</span>
+              <div><strong>Rotina Prática de 5 Minutos</strong><p>Um plano simples e rápido de manutenção preventiva que impede os esporos de se fixarem novamente nos cômodos limpos.</p></div>
+            </button>
+          </div>
+        </div>
+
+        <div class="benefits-visual-frame" aria-label="Imagem de apoio dos benefícios do kit: Foco + fonte + frequência">
+          <img src="mofo-zero-beneficios.jpg" alt="Foco + fonte + frequência: Use o kit antes de limpar para proteger peças, ambientes e dinheiro" class="benefits-visual-img">
+        </div>
+      </div>
+    </section>
+
+    <section class="section coral-band">
+      <div class="wrap coral-box">
+        <div>
+          <h2>Mofo que volta toda semana não é só sujeira. É sinal sem o tratamento certo.</h2>
+          <p>Antes de comprar mais produto ou repetir a mesma mistura, entenda o que está alimentando o problema.</p>
+        </div>
+        <a class="btn" href="https://pay.hotmart.com/B106421355U?checkoutMode=10">Acessar o MOFO ZERO</a>
+      </div>
+    </section>
+
+    <section class="section audience">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="eyebrow dark">Ideal para quem</span>
+          <h2>Quer parar de improvisar contra o mofo</h2>
+        </div>
+
+        <div class="audience-grid">
+          <div class="audience-card"><strong>Já perdeu peças caras</strong><p>Para quem odeia o sentimento de jogar roupas, casacos ou calçados no lixo por causa do bolor.</p></div>
+          <div class="audience-card"><strong>Sofre com o cheiro de guardado</strong><p>Para quem quer abrir o guarda-roupa e sentir cheiro de limpeza, não de mofo e umidade.</p></div>
+          <div class="audience-card"><strong>Quer salvar sapatos ou bolsas</strong><p>Materiais sensíveis (couro, camurça, sintéticos) que exigem cuidados especiais sem risco de manchas.</p></div>
+          <div class="audience-card"><strong>Preocupado com crises alérgicas</strong><p>Ideal para mães e pais cansados de ver os filhos tossindo ou com rinite ativa por causa de fungos ocultos.</p></div>
+          <div class="audience-card"><strong>Tem medo de misturas tóxicas</strong><p>Quem deseja saber exatamente o que funciona, sem inalar vapores de cloro, vinagre e bicarbonato misturados.</p></div>
+          <div class="audience-card"><strong>Quer acabar com a volta do mofo</strong><p>Para quem já limpou várias vezes e precisa de uma barreira preventiva simples para que o fungo não retorne.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section stack">
+      <div class="wrap stack-grid">
+        <div class="stack-main" style="padding: 0; background: transparent; border: 0; box-shadow: none; display: grid; place-items: center;">
+          <img src="mofo-zero-capa-3d.png" alt="Capa 3D do Livro MOFO ZERO" style="width: min(340px, 100%); height: auto; display: block; margin: 0 auto; filter: drop-shadow(0 20px 46px rgba(0,0,0,0.38));">
+        </div>
+
+        <div>
+          <span class="eyebrow dark">Tudo o que você recebe</span>
+          <h2>O 🧰 Kit Anti-Mofo 3F completo para blindar sua casa imediatamente</h2>
+          <p class="copy">Você não recebe teorias. Recebe um conjunto de ferramentas práticas de ação rápida para abrir, consultar em 2 minutos e agir com segurança.</p>
+
+          <div class="bonus-grid">
+            <div class="bonus">
+              <img src="mofo-zero-bonus-comodo.jpg" alt="Bônus 1: O 🧰 Kit Anti-Mofo 3F por Cômodo" style="width: 100%; height: auto; border-radius: 6px; box-shadow: 0 8px 20px rgba(0,0,0,0.08);">
+            </div>
+            <div class="bonus">
+              <img src="mofo-zero-bonus-tabela.jpg" alt="Bônus 2: A Tabela Produto vs Superfície" style="width: 100%; height: auto; border-radius: 6px; box-shadow: 0 8px 20px rgba(0,0,0,0.08);">
+            </div>
+            <div class="bonus">
+              <img src="mofo-zero-bonus-plano.jpg" alt="Bônus 3: O Plano de Choque de 7 Dias" style="width: 100%; height: auto; border-radius: 6px; box-shadow: 0 8px 20px rgba(0,0,0,0.08);">
+            </div>
+            <div class="bonus">
+              <img src="mofo-zero-bonus-compras.jpg" alt="Bônus 4: A Lista Inteligente de Compras" style="width: 100%; height: auto; border-radius: 6px; box-shadow: 0 8px 20px rgba(0,0,0,0.08);">
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section offer" id="oferta">
+      <div class="wrap">
+        <div class="offer-card">
+          <span class="eyebrow dark">Oferta por tempo limitado</span>
+          <h2>Adquira o 🧰 Kit Anti-Mofo 3F completo</h2>
+          <p class="copy" style="margin-left:auto;margin-right:auto;">Receba o Diagnóstico de 2 minutos, o Guia por superfície, o Plano de recuperação de 7 dias, o Checklist Pode/Não Pode e a Lista de compras inteligente.</p>
+          <div class="price"><span>apenas</span><strong>R$ 67</strong></div>
+          <div class="offer-bullets">
+            <div>Acesso imediato ao material</div>
+            <div>Área de membros segura</div>
+            <div>Garantia incondicional de 7 dias</div>
+            <div>Ferramenta prática anti-fungos</div>
+          </div>
+          <a class="btn coral" href="https://pay.hotmart.com/B106421355U?checkoutMode=10">Garantir Meu Acesso ao Mofo Zero</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section guarantee">
+      <div class="wrap guarantee-grid">
+        <div style="text-align: center;">
+          <img src="mofo-zero-garantia-selo.png" alt="Selo de Garantia Incondicional de 7 Dias" style="width: min(280px, 100%); height: auto; display: block; margin: 0 auto;">
+        </div>
+        <div>
+          <span class="eyebrow dark">Risco Zero: Garantia Incondicional</span>
+          <h2>Teste o 🧰 Kit Anti-Mofo 3F por 7 dias inteiros</h2>
+          <p class="copy">Abra o kit, aplique as ferramentas por material e veja os resultados práticos na sua casa. Se no período de uma semana você achar que o kit não te ajudou a salvar seus bens ou a desinfectar seus cômodos, basta enviar um e-mail para receber 100% de reembolso. Risco zero para você.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section steps">
+      <div class="wrap">
+        <span class="eyebrow">Como funciona</span>
+        <h2>Da compra à primeira solução em poucos minutos</h2>
+        <div class="step-grid">
+          <div class="step"><strong>01</strong><p>Você confirma o acesso no checkout seguro.</p></div>
+          <div class="step"><strong>02</strong><p>Recebe o material digital na hora.</p></div>
+          <div class="step"><strong>03</strong><p>Identifica foco, fonte e frequência.</p></div>
+          <div class="step"><strong>04</strong><p>Segue a primeira ação com mais segurança.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section faq">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="eyebrow dark">Dúvidas frequentes</span>
+          <h2>Antes de acessar</h2>
+        </div>
+        <div class="faq-list">
+          <div class="faq-item"><h3>Isso remove qualquer mofo?</h3><p>Não. O kit ajuda a identificar o tipo de situação e escolher a primeira ação. Casos severos, recurrentes ou com infiltração podem exigir ajuda profissional.</p></div>
+          <div class="faq-item"><h3>Serve para roupa colorida?</h3><p>Sim, como orientação de cuidado. O material mostra por que a decisão muda conforme tecido, cor e intensidade da mancha.</p></div>
+          <div class="faq-item"><h3>É curso em vídeo?</h3><p>Não. É um material digital de consulta rápida, feito para abrir quando o problema aparece.</p></div>
+          <div class="faq-item"><h3>Como recebo o acesso?</h3><p>Após a compra aprovada, o acesso é enviado para o e-mail usado no checkout.</p></div>
+          <div class="faq-item"><h3>Tem garantia?</h3><p>Sim. A compra tem garantia de 7 dias.</p></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    MOFO ZERO é um material educativo de apoio doméstico. Não substitui avaliação técnica em casos severos, infiltração, risco estrutural, alergias fortes ou contaminação extensa.
+  </footer>
+  <div class="purchase-toast" data-purchase-toast aria-live="polite" aria-atomic="true">
+    <div class="purchase-icon">✓</div>
+    <div>
+      <strong data-purchase-person>Camila de Curitiba/PR</strong>
+      <span>acabou de comprar <b>MOFO ZERO</b></span>
+    </div>
+  </div>
+  <script>
+    (() => {
+      const progressBar = document.querySelector('[data-page-progress]');
+      const updateProgress = () => {
+        const scrollTop = window.scrollY || document.documentElement.scrollTop;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = docHeight > 0 ? Math.min(100, Math.max(0, (scrollTop / docHeight) * 100)) : 0;
+        if (progressBar) progressBar.style.width = `${progress}%`;
+      };
+
+      updateProgress();
+      window.addEventListener('scroll', updateProgress, { passive: true });
+      window.addEventListener('resize', updateProgress);
+
+      const chips = [...document.querySelectorAll('[data-case]')];
+      const title = document.querySelector('[data-case-title]');
+      const copy = document.querySelector('[data-case-copy]');
+      const note = document.querySelector('[data-case-note]');
+      const meter = document.querySelector('[data-case-meter]');
+      const score = document.querySelector('[data-decision-score]');
+      
+      const picker = document.querySelector('.case-picker');
+      const resultBox = document.querySelector('.case-result');
+      const gameContainer = document.querySelector('.decision-game');
+
+      const selectCase = (selectedChip) => {
+        chips.forEach((chip) => {
+          const isSelected = chip === selectedChip;
+          chip.classList.toggle('is-active', isSelected);
+          chip.setAttribute('aria-pressed', String(isSelected));
+        });
+
+        if (title) title.textContent = selectedChip.dataset.title || '';
+        if (copy) copy.textContent = selectedChip.dataset.copy || '';
+        if (note) note.textContent = selectedChip.dataset.note || '';
+        if (meter) meter.style.width = `${selectedChip.dataset.meter || 50}%`;
+        if (score) score.textContent = `${selectedChip.textContent.trim()} selecionado`;
+        
+        // Reposiciona o card de resultado no mobile/tablet
+        if (window.innerWidth <= 900) {
+          selectedChip.insertAdjacentElement('afterend', resultBox);
+        } else {
+          gameContainer.appendChild(resultBox);
+        }
+      };
+
+      chips.forEach((chip) => {
+        chip.addEventListener('click', () => selectCase(chip));
+      });
+
+      // Reposiciona no redimensionamento da janela
+      window.addEventListener('resize', () => {
+        const activeChip = document.querySelector('.case-chip.is-active');
+        if (activeChip && resultBox && gameContainer) {
+          if (window.innerWidth <= 900) {
+            activeChip.insertAdjacentElement('afterend', resultBox);
+          } else {
+            gameContainer.appendChild(resultBox);
+          }
+        }
+      });
+
+      // Posiciona inicialmente no load
+      const initDecisionGame = () => {
+        const activeChip = document.querySelector('.case-chip.is-active');
+        if (activeChip && resultBox) {
+          if (window.innerWidth <= 900) {
+            activeChip.insertAdjacentElement('afterend', resultBox);
+          }
+        }
+      };
+      initDecisionGame();
+
+      document.querySelectorAll('.benefit-item').forEach((item) => {
+        item.addEventListener('click', () => {
+          document.querySelectorAll('.benefit-item').forEach((card) => card.classList.remove('is-active'));
+          item.classList.add('is-active');
+        });
+      });
+
+      const purchaseToast = document.querySelector('[data-purchase-toast]');
+      const purchasePerson = document.querySelector('[data-purchase-person]');
+      const purchaseEvents = [
+        'Camila de Curitiba/PR',
+        'Juliana de São Paulo/SP',
+        'Marina de Belo Horizonte/MG',
+        'Renata de Recife/PE',
+        'Patrícia de Goiânia/GO',
+        'Fernanda de Florianópolis/SC',
+        'Aline de Salvador/BA',
+        'Luciana de Campinas/SP'
+      ];
+      let purchaseIndex = 0;
+      let purchaseTimer;
+
+      const showPurchaseToast = () => {
+        if (!purchaseToast || !purchasePerson) return;
+        purchasePerson.textContent = purchaseEvents[purchaseIndex % purchaseEvents.length];
+        purchaseIndex += 1;
+        purchaseToast.classList.add('is-visible');
+        window.clearTimeout(purchaseTimer);
+        purchaseTimer = window.setTimeout(() => {
+          purchaseToast.classList.remove('is-visible');
+        }, 5200);
+      };
+
+      window.setTimeout(showPurchaseToast, 3600);
+      window.setInterval(showPurchaseToast, 14500);
+
+      // Os scripts de rastreamento (PageView, ViewContent, scroll, cliques e CAPI) agora são gerenciados de forma unificada e externa por tracking.js
+
+      const revealTargets = document.querySelectorAll('.hero, .section');
+      revealTargets.forEach((target) => target.classList.add('reveal'));
+
+      if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('is-visible');
+              observer.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.12 });
+
+        revealTargets.forEach((target) => observer.observe(target));
+      } else {
+        revealTargets.forEach((target) => target.classList.add('is-visible'));
+      }
+    })();
+  </script>
+</body>
+</html>
+<!-- redeploy stable model -->
