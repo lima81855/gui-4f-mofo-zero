@@ -40,14 +40,7 @@
   <!-- End Google Tag Manager -->
   <!-- End Meta Pixel Code -->
   <script>
-    (function() {
-      var variant = localStorage.getItem('ab_test_variant');
-      if (!variant) {
-        variant = (Math.random() < 0.40) ? 'copy1' : 'copy2';
-        localStorage.setItem('ab_test_variant', variant);
-      }
-      document.documentElement.setAttribute('data-ab-variant', variant);
-    })();
+    document.documentElement.setAttribute('data-ab-variant', 'copy2');
   </script>
   <style>
     /* Regras de visibilidade do Teste A/B */
