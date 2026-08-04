@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Kit SOS Anti-Mofo 3F | Elimine a Umidade sem Cloro</title>
-  <meta name="description" content="Descubra a receita caseira dessecante de R$ 3 para eliminar o mofo das paredes, armários e roupas sem usar vinagre ou água sanitária.">
+  <title>Kit Anti-Mofo 3F | O Guia Definitivo Anti-Umidade</title>
+  <meta name="description" content="Descubra o Método 3F e a receita caseira dessecante de R$ 3 para eliminar o mofo das paredes, roupas e guarda-roupas sem usar vinagre ou cloro.">
 
   <!-- RASTREAMENTO E PIXELS -->
   <script>
@@ -29,30 +29,32 @@
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   
   <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <style>
     :root {
-      --bg-page: #F8F9FA;
-      --bg-card: #FFFFFF;
-      --bg-dark: #0F172A;
-      --bg-alert: #FFFBEB;
-      --text-main: #1E293B;
-      --text-muted: #64748B;
-      --brand-green: #059669;
-      --brand-green-dark: #047857;
-      --brand-orange: #D97706;
-      --brand-coral: #E11D48;
-      --border-color: #E2E8F0;
+      --bg-dark: #121110;
+      --bg-card: #1E1C1A;
+      --bg-card-hover: #262320;
+      --bg-light: #FAF6F0;
+      --text-light: #F4EBE1;
+      --text-muted: #A49B94;
+      --text-dark: #2B2523;
+      --brand-gold: #D4AF37;
+      --brand-gold-dark: #C5A059;
+      --brand-cta: #06D6A0;
+      --brand-cta-hover: #05B386;
+      --brand-cta-text: #05382B;
+      --border-color: rgba(197, 160, 89, 0.2);
       --radius-sm: 8px;
       --radius-md: 16px;
       --radius-lg: 24px;
       --radius-pill: 50px;
-      --shadow-soft: 0 10px 30px rgba(15, 23, 42, 0.06);
-      --shadow-hover: 0 20px 40px rgba(5, 150, 105, 0.15);
+      --shadow-deep: 0 20px 50px rgba(0, 0, 0, 0.5);
+      --shadow-gold: 0 10px 30px rgba(212, 175, 55, 0.15);
       --transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
@@ -68,14 +70,14 @@
 
     body {
       font-family: 'Plus Jakarta Sans', sans-serif;
-      background-color: var(--bg-page);
-      color: var(--text-main);
+      background-color: var(--bg-dark);
+      color: var(--text-light);
       line-height: 1.6;
       overflow-x: hidden;
     }
 
-    h1, h2, h3, .font-heading {
-      font-family: 'Outfit', sans-serif;
+    h1, h2, h3, .font-serif {
+      font-family: 'Playfair Display', serif;
     }
 
     .container {
@@ -91,31 +93,26 @@
       left: 0;
       width: 100%;
       height: 4px;
-      background: #E2E8F0;
+      background: rgba(255, 255, 255, 0.1);
       z-index: 2000;
     }
 
     .reading-progress-bar {
       height: 100%;
       width: 0%;
-      background: linear-gradient(90deg, var(--brand-orange), var(--brand-green));
+      background: linear-gradient(90deg, var(--brand-gold), var(--brand-cta));
       transition: width 0.1s ease;
     }
 
-    /* BANNER DE AVISO SUPERIOR */
-    .top-alert {
-      background: linear-gradient(90deg, #1E293B 0%, #0F172A 100%);
-      color: #F8FAFC;
+    /* BANNER ALERTA TOPO */
+    .top-alert-banner {
+      background: linear-gradient(90deg, #991B1B 0%, #7F1D1D 100%);
+      color: #FFFFFF;
       text-align: center;
       padding: 10px 16px;
       font-size: 13px;
-      font-weight: 600;
-      border-bottom: 2px solid var(--brand-orange);
-    }
-
-    .top-alert span {
-      color: #FBBF24;
       font-weight: 700;
+      letter-spacing: 0.5px;
     }
 
     /* HEADER */
@@ -123,57 +120,50 @@
       position: sticky;
       top: 0;
       z-index: 1000;
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(12px);
+      background: rgba(18, 17, 16, 0.92);
+      backdrop-filter: blur(16px);
       border-bottom: 1px solid var(--border-color);
-      padding: 14px 0;
+      padding: 16px 0;
     }
 
-    .header-flex {
+    .header-wrapper {
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
 
-    .brand-logo {
+    .logo-box {
       display: flex;
       align-items: center;
-      gap: 10px;
-      text-decoration: none;
+      gap: 12px;
     }
 
-    .brand-icon {
-      width: 40px;
-      height: 40px;
-      background: var(--brand-green);
-      color: #FFF;
+    .logo-badge {
+      width: 38px;
+      height: 38px;
+      background: linear-gradient(135deg, var(--brand-gold), var(--brand-gold-dark));
       border-radius: 10px;
       display: flex;
       align-items: center;
       justify-content: center;
+      color: #121110;
       font-weight: 800;
+      font-size: 16px;
+    }
+
+    .logo-text {
       font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      color: #FFFFFF;
     }
 
-    .brand-title {
-      font-family: 'Outfit', sans-serif;
-      font-size: 20px;
-      font-weight: 800;
-      color: var(--bg-dark);
-      line-height: 1;
-    }
-
-    .brand-title span {
-      color: var(--brand-green);
-    }
-
-    .brand-sub {
-      font-size: 11px;
-      color: var(--text-muted);
+    .logo-sub {
       display: block;
-      font-weight: 600;
+      font-size: 10px;
+      color: var(--brand-gold);
       text-transform: uppercase;
-      letter-spacing: 1px;
+      letter-spacing: 1.5px;
     }
 
     /* BOTÕES */
@@ -185,244 +175,221 @@
       padding: 16px 32px;
       border-radius: var(--radius-pill);
       font-weight: 700;
-      font-size: 16px;
+      font-size: 15px;
       text-decoration: none;
       transition: var(--transition);
       cursor: pointer;
       border: none;
     }
 
-    .btn-green {
-      background: linear-gradient(135deg, var(--brand-green) 0%, var(--brand-green-dark) 100%);
-      color: #FFFFFF;
-      box-shadow: 0 10px 25px rgba(5, 150, 105, 0.3);
+    .btn-cta {
+      background: linear-gradient(135deg, var(--brand-cta) 0%, var(--brand-cta-hover) 100%);
+      color: var(--brand-cta-text);
+      box-shadow: 0 10px 30px rgba(6, 214, 160, 0.35);
     }
 
-    .btn-green:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 14px 35px rgba(5, 150, 105, 0.45);
+    .btn-cta:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 14px 40px rgba(6, 214, 160, 0.5);
     }
 
-    /* HERO SECTION DIRECT RESPONSE */
-    .hero-section {
-      padding: 60px 0 70px;
-      background: #FFFFFF;
-      border-bottom: 1px solid var(--border-color);
+    .btn-gold {
+      background: linear-gradient(135deg, var(--brand-gold) 0%, var(--brand-gold-dark) 100%);
+      color: #121110;
+      box-shadow: var(--shadow-gold);
+    }
+
+    .btn-gold:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 14px 40px rgba(212, 175, 55, 0.35);
+    }
+
+    /* HERO SECTION */
+    .hero {
+      padding: 80px 0 90px;
+      position: relative;
+      background: radial-gradient(circle at 50% 0%, rgba(212, 175, 55, 0.08) 0%, transparent 70%);
     }
 
     .hero-grid {
       display: grid;
       grid-template-columns: 1.1fr 0.9fr;
-      gap: 40px;
+      gap: 50px;
       align-items: center;
     }
 
-    .hero-badge-tag {
+    .hero-tag {
       display: inline-flex;
       align-items: center;
       gap: 8px;
       padding: 6px 16px;
-      background: #FEF3C7;
-      border: 1px solid #FCD34D;
-      color: #92400E;
+      background: rgba(212, 175, 55, 0.12);
+      border: 1px solid var(--border-color);
       border-radius: 50px;
       font-size: 12px;
       font-weight: 700;
+      color: var(--brand-gold);
+      margin-bottom: 24px;
+    }
+
+    .hero h1 {
+      font-size: 44px;
+      line-height: 1.15;
+      font-weight: 800;
+      color: #FFFFFF;
       margin-bottom: 20px;
     }
 
-    .hero-section h1 {
-      font-size: 42px;
-      line-height: 1.15;
-      font-weight: 800;
-      color: var(--bg-dark);
-      margin-bottom: 18px;
+    .hero h1 span {
+      background: linear-gradient(135deg, var(--brand-gold), #FFF);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
 
-    .hero-section h1 span {
-      color: var(--brand-coral);
-      background: #FFE4E6;
-      padding: 2px 8px;
-      border-radius: 6px;
-    }
-
-    .hero-section p {
+    .hero p {
       font-size: 17px;
       color: var(--text-muted);
-      margin-bottom: 28px;
-    }
-
-    .hero-checklist {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
       margin-bottom: 32px;
     }
 
-    .check-item {
+    .hero-bullets {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 36px;
+    }
+
+    .bullet-item {
       display: flex;
       align-items: center;
-      gap: 10px;
-      font-size: 15px;
+      gap: 12px;
+      font-size: 14px;
       font-weight: 600;
-      color: var(--text-main);
     }
 
-    .check-item i {
-      color: var(--brand-green);
-      font-size: 18px;
+    .bullet-item i {
+      color: var(--brand-cta);
+      font-size: 16px;
     }
 
-    /* MOCKUP DO KIT HERO */
-    .hero-mockup-card {
-      background: #F1F5F9;
-      border-radius: var(--radius-lg);
-      padding: 24px;
-      border: 1px solid var(--border-color);
-      box-shadow: var(--shadow-soft);
+    .hero-card-img {
       position: relative;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-deep);
     }
 
-    .hero-mockup-card img {
+    .hero-card-img img {
       width: 100%;
-      border-radius: var(--radius-md);
+      height: 480px;
+      object-fit: cover;
       display: block;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
     }
 
-    .mockup-badge-float {
+    .hero-card-float {
       position: absolute;
-      top: 40px;
-      right: 40px;
-      background: var(--brand-green);
-      color: #FFF;
-      padding: 12px 18px;
+      bottom: 24px;
+      left: 24px;
+      right: 24px;
+      background: rgba(18, 17, 16, 0.88);
+      backdrop-filter: blur(12px);
+      padding: 16px 20px;
       border-radius: var(--radius-md);
-      font-weight: 800;
-      font-size: 13px;
-      box-shadow: 0 10px 20px rgba(5, 150, 105, 0.3);
-      text-align: center;
+      border: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      gap: 14px;
     }
 
-    /* SEÇÃO DE DORES / IDENTIFICAÇÃO */
-    .pains-section {
-      padding: 80px 0;
-      background: var(--bg-page);
+    .hero-card-float i {
+      font-size: 24px;
+      color: var(--brand-gold);
     }
 
-    .section-title-center {
+    .hero-card-float h4 {
+      font-size: 14px;
+      color: #FFF;
+      font-weight: 700;
+    }
+
+    .hero-card-float p {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin: 0;
+    }
+
+    /* SECTION TITLES */
+    .section-header {
       text-align: center;
-      max-width: 680px;
+      max-width: 700px;
       margin: 0 auto 50px;
     }
 
-    .section-title-center h2 {
-      font-size: 34px;
-      font-weight: 800;
-      color: var(--bg-dark);
-      margin-bottom: 12px;
-    }
-
-    .section-title-center p {
-      font-size: 16px;
-      color: var(--text-muted);
-    }
-
-    .pains-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 24px;
-    }
-
-    .pain-box {
-      background: #FFFFFF;
-      padding: 28px;
-      border-radius: var(--radius-md);
-      border: 1px solid var(--border-color);
-      box-shadow: var(--shadow-soft);
-      transition: var(--transition);
-    }
-
-    .pain-box:hover {
-      transform: translateY(-4px);
-      box-shadow: var(--shadow-hover);
-      border-color: var(--brand-green);
-    }
-
-    .pain-icon-badge {
-      width: 48px;
-      height: 48px;
-      background: #FFE4E6;
-      color: var(--brand-coral);
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 20px;
-      margin-bottom: 18px;
-    }
-
-    .pain-box h3 {
-      font-size: 18px;
+    .section-subtitle {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--brand-gold);
       font-weight: 700;
-      color: var(--bg-dark);
       margin-bottom: 10px;
+      display: block;
     }
 
-    .pain-box p {
-      font-size: 14px;
-      color: var(--text-muted);
+    .section-title {
+      font-size: 36px;
+      font-weight: 700;
+      color: #FFFFFF;
+      line-height: 1.25;
     }
 
-    /* BLOCOR POR QUE VINAGRE/CLORO ESTRAGAM A CASA */
-    .science-section {
-      padding: 80px 0;
-      background: #FFFFFF;
+    /* COMPARATIVO DE CAUSA */
+    .comparison-section {
+      padding: 90px 0;
+      background: var(--bg-card);
       border-top: 1px solid var(--border-color);
       border-bottom: 1px solid var(--border-color);
     }
 
-    .science-grid {
+    .comparison-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 32px;
     }
 
-    .science-card {
-      padding: 32px;
+    .comp-box {
+      padding: 36px;
       border-radius: var(--radius-lg);
       border: 1px solid var(--border-color);
+      background: #161513;
     }
 
-    .science-card.bad {
-      background: #FEF2F2;
-      border-color: #FCA5A5;
+    .comp-box.bad {
+      border-color: rgba(239, 68, 68, 0.3);
     }
 
-    .science-card.good {
-      background: #ECFDF5;
-      border-color: #6EE7B7;
+    .comp-box.good {
+      border-color: rgba(6, 214, 160, 0.4);
+      background: linear-gradient(180deg, #161513 0%, rgba(6, 214, 160, 0.04) 100%);
     }
 
-    .science-card h3 {
+    .comp-box h3 {
       font-size: 22px;
-      font-weight: 800;
+      margin-bottom: 16px;
+    }
+
+    .comp-box.bad h3 { color: #FCA5A5; }
+    .comp-box.good h3 { color: #6EE7B7; }
+
+    .comp-box p {
+      font-size: 14px;
+      color: var(--text-muted);
       margin-bottom: 14px;
     }
 
-    .science-card.bad h3 { color: #991B1B; }
-    .science-card.good h3 { color: #065F46; }
-
-    .science-card p {
-      font-size: 14px;
-      color: var(--text-main);
-      margin-bottom: 12px;
-    }
-
-    /* ANTES E DEPOIS FOTOREALISTA */
+    /* PROVAS SOCIAIS E FOTOREALISMO */
     .proof-section {
-      padding: 80px 0;
-      background: var(--bg-page);
+      padding: 90px 0;
     }
 
     .proof-grid {
@@ -432,50 +399,94 @@
     }
 
     .proof-card {
-      background: #FFFFFF;
+      background: var(--bg-card);
       border-radius: var(--radius-md);
       overflow: hidden;
       border: 1px solid var(--border-color);
-      box-shadow: var(--shadow-soft);
+      transition: var(--transition);
+    }
+
+    .proof-card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-deep);
+      border-color: var(--brand-gold);
     }
 
     .proof-card img {
       width: 100%;
-      height: 220px;
+      height: 240px;
       object-fit: cover;
     }
 
-    .proof-content {
-      padding: 20px;
+    .proof-body {
+      padding: 24px;
     }
 
-    .proof-content h4 {
-      font-size: 17px;
-      font-weight: 700;
-      color: var(--bg-dark);
-      margin-bottom: 6px;
+    .proof-body h4 {
+      font-size: 18px;
+      color: #FFF;
+      margin-bottom: 8px;
     }
 
-    .proof-content p {
+    .proof-body p {
       font-size: 13px;
       color: var(--text-muted);
     }
 
-    /* VITRINE DOS BÔNUS & KITS */
-    .bonus-section {
-      padding: 80px 0;
-      background: #FFFFFF;
+    /* MÉTODO 3F REVELADO */
+    .method-section {
+      padding: 90px 0;
+      background: var(--bg-card);
+    }
+
+    .method-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 28px;
+    }
+
+    .method-card {
+      background: #121110;
+      padding: 36px 28px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+      position: relative;
+    }
+
+    .method-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 46px;
+      font-weight: 800;
+      color: var(--brand-gold);
+      margin-bottom: 12px;
+      line-height: 1;
+    }
+
+    .method-card h3 {
+      font-size: 20px;
+      color: #FFF;
+      margin-bottom: 12px;
+    }
+
+    .method-card p {
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    /* VITRINE DO PRODUTO & BÔNUS */
+    .offer-section {
+      padding: 90px 0;
     }
 
     .bonus-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 24px;
       margin-bottom: 50px;
     }
 
-    .bonus-box {
-      background: #F8FAFC;
+    .bonus-card {
+      background: var(--bg-card);
       padding: 24px;
       border-radius: var(--radius-md);
       border: 1px solid var(--border-color);
@@ -483,148 +494,150 @@
 
     .bonus-tag {
       font-size: 11px;
-      font-weight: 800;
-      color: var(--brand-green);
+      font-weight: 700;
+      color: var(--brand-gold);
       text-transform: uppercase;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
       display: block;
     }
 
-    .bonus-box h4 {
+    .bonus-card h4 {
       font-size: 16px;
-      font-weight: 700;
-      color: var(--bg-dark);
-      margin-bottom: 6px;
+      color: #FFF;
+      margin-bottom: 8px;
     }
 
-    .bonus-box p {
-      font-size: 13px;
+    .bonus-card p {
+      font-size: 12px;
       color: var(--text-muted);
     }
 
-    /* BOX DE OFERTA R$ 67 */
-    .offer-box {
-      background: linear-gradient(180deg, #0F172A 0%, #1E293B 100%);
-      color: #FFFFFF;
+    /* BOX DE OFERTA ANCORADA (R$ 67) */
+    .pricing-box {
+      background: linear-gradient(180deg, #1E1C1A 0%, #161513 100%);
+      border: 2px solid var(--brand-gold);
       border-radius: var(--radius-lg);
       padding: 48px 32px;
       text-align: center;
-      max-width: 650px;
+      max-width: 680px;
       margin: 0 auto;
-      box-shadow: 0 25px 50px rgba(15, 23, 42, 0.3);
+      box-shadow: var(--shadow-deep);
       position: relative;
     }
 
-    .offer-badge {
+    .pricing-badge {
       position: absolute;
       top: -16px;
       left: 50%;
       transform: translateX(-50%);
-      background: var(--brand-orange);
-      color: #FFFFFF;
-      padding: 6px 20px;
+      background: linear-gradient(135deg, var(--brand-gold), var(--brand-gold-dark));
+      color: #121110;
+      padding: 6px 24px;
       border-radius: 50px;
       font-size: 12px;
       font-weight: 800;
-      letter-spacing: 1px;
       text-transform: uppercase;
+      letter-spacing: 1px;
     }
 
     .old-price {
       font-size: 18px;
-      color: #94A3B8;
+      color: var(--text-muted);
       text-decoration: line-through;
-      margin-bottom: 4px;
+      margin-bottom: 6px;
     }
 
-    .price-tag {
-      font-size: 52px;
+    .current-price {
+      font-size: 54px;
       font-weight: 800;
       color: #FFFFFF;
       line-height: 1;
-      margin-bottom: 8px;
+      margin-bottom: 12px;
     }
 
-    .price-tag span {
+    .current-price span {
       font-size: 20px;
-      color: #FBBF24;
+      font-weight: 500;
+      color: var(--brand-gold);
     }
 
-    .price-sub {
+    .price-installments {
       font-size: 14px;
-      color: #CBD5E1;
+      color: var(--brand-gold);
       margin-bottom: 28px;
     }
 
     /* FAQ ACCORDION */
     .faq-section {
-      padding: 80px 0;
-      background: var(--bg-page);
+      padding: 90px 0;
+      background: var(--bg-card);
     }
 
-    .faq-container {
-      max-width: 720px;
+    .faq-wrapper {
+      max-width: 760px;
       margin: 0 auto;
     }
 
-    .faq-card {
-      background: #FFFFFF;
+    .faq-item {
+      background: #121110;
       border-radius: var(--radius-md);
       border: 1px solid var(--border-color);
-      margin-bottom: 12px;
+      margin-bottom: 14px;
       overflow: hidden;
     }
 
-    .faq-q {
-      padding: 18px 24px;
+    .faq-question {
+      padding: 20px 24px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       cursor: pointer;
       font-weight: 700;
       font-size: 15px;
-      color: var(--bg-dark);
+      color: #FFF;
     }
 
-    .faq-q i {
-      color: var(--brand-green);
+    .faq-question i {
+      color: var(--brand-gold);
       transition: var(--transition);
     }
 
-    .faq-a {
-      padding: 0 24px 18px;
+    .faq-answer {
+      padding: 0 24px 20px;
       display: none;
       color: var(--text-muted);
       font-size: 14px;
-      border-top: 1px solid #F1F5F9;
-      padding-top: 14px;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      padding-top: 16px;
     }
 
-    .faq-card.active .faq-a {
+    .faq-item.active .faq-answer {
       display: block;
     }
 
-    .faq-card.active .faq-q i {
+    .faq-item.active .faq-question i {
       transform: rotate(180deg);
     }
 
     /* FOOTER */
     footer {
-      background: #0F172A;
-      color: #94A3B8;
-      padding: 36px 0;
+      background: #0A0A09;
+      color: var(--text-muted);
+      padding: 40px 0;
       text-align: center;
       font-size: 12px;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
     }
 
+    /* RESPONSIVO */
     @media (max-width: 992px) {
-      .hero-grid, .science-grid {
+      .hero-grid, .comparison-grid {
         grid-template-columns: 1fr;
       }
-      .hero-section h1 {
-        font-size: 32px;
+      .hero h1 {
+        font-size: 34px;
       }
-      .price-tag {
+      .current-price {
         font-size: 42px;
       }
     }
@@ -637,205 +650,205 @@
     <div class="reading-progress-bar" id="progressBar"></div>
   </div>
 
-  <!-- AVISO SUPERIOR -->
-  <div class="top-alert">
-    ⚠️ <span>ATENÇÃO DE INVERNO:</span> Receita seca de R$ 3 que elimina mofo e esporos do ar por R$ 67.
+  <!-- BANNER ALERTA TOPO -->
+  <div class="top-alert-banner">
+    ⚠️ CONDIÇÃO DE INVERNO: Kit SOS Anti-Mofo Completo por R$ 67 (Disponível até o fim do estoque de licenças)
   </div>
 
   <!-- HEADER -->
   <header>
     <div class="container">
-      <div class="header-flex">
-        <a href="#" class="brand-logo">
-          <div class="brand-icon"><i class="fa-solid fa-shield-virus"></i></div>
+      <div class="header-wrapper">
+        <div class="logo-box">
+          <div class="logo-badge">3F</div>
           <div>
-            <div class="brand-title">MOFO<span>ZERO</span></div>
-            <span class="brand-sub">Kit SOS Anti-Mofo 3F</span>
+            <span class="logo-text">Guia 3F Anti-Mofo</span>
+            <span class="logo-sub">Método Anti-Umidade</span>
           </div>
-        </a>
+        </div>
 
-        <a href="#oferta" class="btn btn-green" style="padding: 10px 20px; font-size: 13px;">
-          Garantir Kit por R$ 67
+        <a href="#oferta" class="btn btn-cta" style="padding: 10px 22px; font-size: 13px;">
+          Garantir Meu Kit por R$ 67
         </a>
       </div>
     </div>
   </header>
 
-  <!-- HERO SECTION DIRECT RESPONSE -->
-  <section class="hero-section">
+  <!-- HERO SECTION -->
+  <section class="hero">
     <div class="container">
       <div class="hero-grid">
-        <div class="hero-text">
-          <div class="hero-badge-tag">
-            <i class="fa-solid fa-triangle-exclamation"></i> Alerta para Paredes e Guarda-Roupas
+        <div class="hero-content">
+          <div class="hero-tag">
+            <i class="fa-solid fa-flask"></i> Solução Caseira Atóxica de R$ 3 do Mercado
           </div>
-          <h1>O mofo invisível que estraga suas roupas e ataca sua saúde <span>não sai com vinagre</span>.</h1>
-          <p>Descubra o método caseiro atóxico que desidrata os fungos na raiz, elimina o cheiro azedo de guardado e cria um escudo seco por até 6 meses.</p>
+          <h1>O mofo que estraga suas roupas e ataca sua saúde <span>não sai com vinagre ou cloro</span>.</h1>
+          <p>Aprenda a receita dessecante caseira que desidrata a raiz dos fungos, elimina o cheiro azedo de guardado e blinda suas paredes e armários por até 6 meses.</p>
 
-          <div class="hero-checklist">
-            <div class="check-item"><i class="fa-solid fa-circle-check"></i> Sem cloro e sem vapores tóxicos irritantes</div>
-            <div class="check-item"><i class="fa-solid fa-circle-check"></i> Salva jaquetas de couro, calçados e cobertores de frio</div>
-            <div class="check-item"><i class="fa-solid fa-circle-check"></i> Protege a respiração de crianças e alérgicos no quarto</div>
+          <div class="hero-bullets">
+            <div class="bullet-item"><i class="fa-solid fa-circle-check"></i> Sem usar produtos químicos fortes ou cheiro de cloro</div>
+            <div class="bullet-item"><i class="fa-solid fa-circle-check"></i> Salva jaquetas de couro, calçados e cobertores mofados</div>
+            <div class="bullet-item"><i class="fa-solid fa-circle-check"></i> Protege a respiração de bebês e alérgicos no quarto</div>
           </div>
 
-          <a href="#oferta" class="btn btn-green" style="padding: 18px 36px; font-size: 17px; width: 100%; max-width: 440px;">
+          <a href="#oferta" class="btn btn-cta" style="padding: 20px 40px; font-size: 17px; width: 100%; max-width: 420px;">
             <i class="fa-solid fa-download"></i> Baixar Kit Completo por R$ 67
           </a>
         </div>
 
-        <div class="hero-mockup-card">
-          <img src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=800&q=80" alt="Demonstração do Kit Anti-Mofo 3F">
-          <div class="mockup-badge-float">
-            PROTETOR SECO<br>DE R$ 3
+        <div class="hero-card-img">
+          <img src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=800&q=80" alt="Ambiente limpo e protegido do mofo">
+          <div class="hero-card-float">
+            <i class="fa-solid fa-shield-halved"></i>
+            <div>
+              <h4>Escudo de Proteção Seca</h4>
+              <p>Elimina o esporo invisível na raiz</p>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- SEÇÃO DE PROBLEMAS / DORES -->
-  <section class="pains-section">
+  <!-- COMPARATIVO DE CAUSA -->
+  <section class="comparison-section">
     <div class="container">
-      <div class="section-title-center">
-        <h2>Você se identifica com alguma dessas situações na sua casa?</h2>
-        <p>Se o frio chegou e a umidade começou a aparecer, seu lar está sob ataque silencioso dos fungos.</p>
+      <div class="section-header">
+        <span class="section-subtitle">A Ciência da Umidade</span>
+        <h2 class="section-title">Por que as soluções tradicionais continuam estragando sua casa?</h2>
       </div>
 
-      <div class="pains-grid">
-        <div class="pain-box">
-          <div class="pain-icon-badge"><i class="fa-solid fa-shirt"></i></div>
-          <h3>Cheiro Azedo nas Roupas</h3>
-          <p>Você vai pegar o moletom ou cobertor limpo no guarda-roupa e ele está com aquele cheiro insuportável de guardado.</p>
+      <div class="comparison-grid">
+        <div class="comp-box bad">
+          <h3><i class="fa-solid fa-circle-xmark me-2"></i> Vinagre & Água Sanitária</h3>
+          <p>O vinagre comum é composto por <strong>96% de água</strong>. Ao borrifar na parede, a água infiltra nos poros do concreto e serve de alimento para os fungos voltarem 3 vezes mais fortes em poucos dias.</p>
+          <p>Já a água sanitária libera gases tóxicos que atacam o pulmão da família e desbotam tecidos finos.</p>
         </div>
 
-        <div class="pain-box">
-          <div class="pain-icon-badge"><i class="fa-solid fa-shoe-prints"></i></div>
-          <h3>Sapatos e Couro Mofados</h3>
-          <p>Aquela bota de camurça ou jaqueta de couro cara guardada no armário apareceu cheia de manchas brancas e aveludadas.</p>
-        </div>
-
-        <div class="pain-box">
-          <div class="pain-icon-badge"><i class="fa-solid fa-virus"></i></div>
-          <h3>Rinite Alérgica Noturna</h3>
-          <p>Tosse seca e nariz entupido à noite causados pelos esporos invisíveis acumulados na parede atrás da cabeceira.</p>
-        </div>
-
-        <div class="pain-box">
-          <div class="pain-icon-badge"><i class="fa-solid fa-house-chimney-crack"></i></div>
-          <h3>Muralha Preta na Parede</h3>
-          <p>Manchas escuras que estufam a tinta e estragam o móvel de MDF colado na parede fria da casa.</p>
+        <div class="comp-box good">
+          <h3><i class="fa-solid fa-circle-check me-2"></i> Método 3F Anti-Mofo</h3>
+          <p>Utiliza uma barreira dessecante seca preparada com ingredientes simples de <strong>R$ 3 do supermercado</strong>.</p>
+          <p>Ela puxa toda a umidade retida no ar, elimina o ambiente favorável aos esporos e esteriliza tecidos, couro e madeira de MDF sem cheiro forte.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- CIÊNCIA DO ERRO DO VINAGRE E CLORO -->
-  <section class="science-section">
-    <div class="container">
-      <div class="section-title-center">
-        <h2>Por que as receitas da internet estão estragando sua parede?</h2>
-      </div>
-
-      <div class="science-grid">
-        <div class="science-card bad">
-          <h3>❌ Borrifar Vinagre & Água Sanitária</h3>
-          <p>O vinagre de cozinha comum contém <strong>96% de água pura</strong>. Ao borrifar na parede, a água entra no concreto e serve de banquete para os fungos voltarem 3 vezes mais fortes.</p>
-          <p>A água sanitária apenas descolore a superfície temporariamente e libera gases cloro que atacam os pulmões.</p>
-        </div>
-
-        <div class="science-card good">
-          <h3>✅ Método 3F Barreira Seca de R$ 3</h3>
-          <p>O Kit 3F ensina a preparar uma misturinha seca dessecante com itens de <strong>R$ 3 do supermercado</strong>.</p>
-          <p>Ela puxa toda a umidade do ar ambiente, desidrata a colônia de esporos na raiz e cria uma película invisível que impede o retorno do mofo por até 6 meses.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- PROVA SOCIAL DE ANTES E DEPOIS -->
+  <!-- PROVAS SOCIAIS REALISTAS (ANTI-AI SLOP) -->
   <section class="proof-section">
     <div class="container">
-      <div class="section-title-center">
-        <h2>Resultados Reais sem Gastar Fortunas</h2>
-        <p>Veja como o Método 3F salvou roupas, sapatos e quartos pelo Brasil.</p>
+      <div class="section-header">
+        <span class="section-subtitle">Resultados Reais</span>
+        <h2 class="section-title">Proteção Comprovada em Qualquer Superfície</h2>
       </div>
 
       <div class="proof-grid">
         <div class="proof-card">
-          <img src="https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&w=600&q=80" alt="Jaqueta de couro limpa">
-          <div class="proof-content">
-            <h4>Jaqueta de R$ 400 Salva</h4>
-            <p>"Minha jaqueta de couro mofou toda no closet. Fiz o protocolo seco do capítulo 2 e ela ficou nova sem manchar!" — <em>Camila M.</em></p>
+          <img src="https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&w=600&q=80" alt="Jaqueta de couro limpa e protegida">
+          <div class="proof-body">
+            <h4>Couro & Calçados Salvos</h4>
+            <p>"Minha jaqueta de couro favorita estava cheia de pontos brancos. Apliquei o protocolo do capítulo 2 e ela voltou ao brilho original sem desbotar."</p>
           </div>
         </div>
 
         <div class="proof-card">
-          <img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=600&q=80" alt="Quarto infantil seguro">
-          <div class="proof-content">
-            <h4>Fim da Tosse Noturna</h4>
-            <p>"Afastei a cama 5cm da parede e coloquei os sachês caseiros. Meu filho parou de espirrar à noite na primeira semana." — <em>Luciana R.</em></p>
+          <img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=600&q=80" alt="Quarto livre de mofo e esporos">
+          <div class="proof-body">
+            <h4>Fim da Rinite no Quarto</h4>
+            <p>"Meu filho dormia tossindo por causa da parede fria atrás da cama. Afastei 5cm e fiz o sachê caseiro. Nunca mais teve crise!"</p>
           </div>
         </div>
 
         <div class="proof-card">
-          <img src="https://images.unsplash.com/photo-1595428774223-ef52624120d2?auto=format&fit=crop&w=600&q=80" alt="Armário limpo">
-          <div class="proof-content">
-            <h4>Sem Cheiro de Guardado</h4>
-            <p>"Peguei os edredons pesados e eles saíram cheirosos. Não precisei mandar lavar 3 vezes na lavanderia." — <em>Márcia S.</em></p>
+          <img src="https://images.unsplash.com/photo-1595428774223-ef52624120d2?auto=format&fit=crop&w=600&q=80" alt="Guarda-roupa limpo e cheiroso">
+          <div class="proof-body">
+            <h4>Guarda-Roupa Sem Cheiro Azedo</h4>
+            <p>"Os cobertores pesados de inverno saíram do armário super cheirosos, sem aquele odor azedo de guardado que obriga a lavar 3 vezes."</p>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- O QUE VEM NO KIT & BÔNUS -->
-  <section class="bonus-section" id="oferta">
+  <!-- MÉTODO 3F -->
+  <section class="method-section">
     <div class="container">
-      <div class="section-title-center">
-        <h2>O Que Você Vai Receber no Kit Completo</h2>
+      <div class="section-header">
+        <span class="section-subtitle">O Método Exclusivo</span>
+        <h2 class="section-title">Os 3 Pilares da Blindagem Anti-Umidade</h2>
+      </div>
+
+      <div class="method-grid">
+        <div class="method-card">
+          <div class="method-number">F1</div>
+          <h3>Mapeamento de Foco</h3>
+          <p>Como identificar a diferença entre mofo superficial de condensação e esporos pretos críticos ricos em micotoxinas.</p>
+        </div>
+
+        <div class="method-card">
+          <div class="method-number">F2</div>
+          <h3>Eliminação da Fonte</h3>
+          <p>A técnica para cortar o ponto frio da parede e impedir que a umidade do ar se transforme em água líquida nos móveis.</p>
+        </div>
+
+        <div class="method-card">
+          <div class="method-number">F3</div>
+          <h3>Frequência de Manutenção</h3>
+          <p>O protocolo simples de 5 minutos por semana que mantém seus armários secos o ano inteiro sem gastar fortunas.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VITRINE DO PRODUTO & BÔNUS -->
+  <section class="offer-section" id="oferta">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-subtitle">O Que Você Vai Receber</span>
+        <h2 class="section-title">Tudo o Que Precisa no Kit Anti-Mofo 3F</h2>
       </div>
 
       <div class="bonus-grid">
-        <div class="bonus-box">
+        <div class="bonus-card">
           <span class="bonus-tag">Guia Principal</span>
           <h4>E-book Guia 3F Anti-Mofo</h4>
-          <p>Manual prático em PDF com o método de eliminação e receitas por superfície.</p>
+          <p>Manual prático de 31 páginas com receitas e receitas para cada tipo de superfície.</p>
         </div>
 
-        <div class="bonus-box">
-          <span class="bonus-tag">Bônus 1</span>
+        <div class="bonus-card">
+          <span class="bonus-tag">Bônus #1</span>
           <h4>Guia Secreto por Cômodo</h4>
-          <p>Passo a passo para quartos, banheiros, cozinha e lavanderias.</p>
+          <p>Passo a passo específico para banheiros, quartos, cozinhas e lavanderias.</p>
         </div>
 
-        <div class="bonus-box">
-          <span class="bonus-tag">Bônus 2</span>
+        <div class="bonus-card">
+          <span class="bonus-tag">Bônus #2</span>
           <h4>Tabela Produto vs Superfície</h4>
-          <p>Tabela para saber o que pode e o que estraga tecidos, couro e madeira.</p>
+          <p>Mapeamento de compatibilidade para nunca manchar tecidos delicados ou couro.</p>
         </div>
 
-        <div class="bonus-box">
-          <span class="bonus-tag">Bônus 3</span>
+        <div class="bonus-card">
+          <span class="bonus-tag">Bônus #3</span>
           <h4>Plano de Choque de 7 Dias</h4>
-          <p>Cronograma rápido de 30 min/dia para blindar a casa inteira.</p>
+          <p>Cronograma rápido de 30 min/dia para blindar a casa inteira antes do frio.</p>
         </div>
       </div>
 
-      <!-- BOX DE OFERTA ANCORADA (R$ 67) -->
-      <div class="offer-box">
-        <div class="offer-badge">OFERTA ESPECIAL DE INVERNO</div>
-        <div class="old-price">De R$ 147,00 por apenas</div>
-        <div class="price-tag">R$ 67<span>,00</span></div>
-        <div class="price-sub">ou 7x de R$ 10,55 no cartão / PIX à vista</div>
+      <!-- BOX DE PREÇO ANCORADO -->
+      <div class="pricing-box">
+        <div class="pricing-badge">OFERTA DE INVERNO — ACESSO IMEDIATO</div>
+        <div class="old-price">De R$ 147,00</div>
+        <div class="current-price">R$ 67<span>,00</span></div>
+        <div class="price-installments">ou 7x de R$ 10,55 no cartão / PIX à vista</div>
 
-        <a href="https://pay.hotmart.com/YOUR_PRODUCT_ID?checkoutMode=10" class="btn btn-green" style="padding: 20px 40px; font-size: 18px; width: 100%; margin-bottom: 16px;">
-          <i class="fa-solid fa-lock me-2"></i> BAIXAR O KIT AGORA POR R$ 67
+        <a href="https://pay.hotmart.com/YOUR_PRODUCT_ID?checkoutMode=10" class="btn btn-cta" style="padding: 22px 48px; font-size: 18px; width: 100%; margin-bottom: 16px;">
+          <i class="fa-solid fa-bolt"></i> COMPRAR AGORA COM DESCONTO
         </a>
 
-        <div style="font-size: 12px; color: #94A3B8; display: flex; justify-content: center; gap: 16px; flex-wrap: wrap;">
-          <span><i class="fa-solid fa-shield" style="color: #FBBF24;"></i> Compra 100% Segura</span>
-          <span><i class="fa-solid fa-rotate-left" style="color: #FBBF24;"></i> 7 Dias de Garantia</span>
-          <span><i class="fa-solid fa-bolt" style="color: #FBBF24;"></i> Acesso Imediato</span>
+        <div style="font-size: 12px; color: var(--text-muted); display: flex; justify-content: center; gap: 16px; flex-wrap: wrap;">
+          <span><i class="fa-solid fa-lock" style="color: var(--brand-gold);"></i> Compra 100% Segura</span>
+          <span><i class="fa-solid fa-rotate-left" style="color: var(--brand-gold);"></i> Garantia de 7 Dias</span>
+          <span><i class="fa-solid fa-envelope" style="color: var(--brand-gold);"></i> Entrega Imediata</span>
         </div>
       </div>
     </div>
@@ -844,48 +857,49 @@
   <!-- FAQ -->
   <section class="faq-section">
     <div class="container">
-      <div class="section-title-center">
-        <h2>Perguntas Frequentes</h2>
+      <div class="section-header">
+        <span class="section-subtitle">Dúvidas Frequentes</span>
+        <h2 class="section-title">Perguntas Respondidas</h2>
       </div>
 
-      <div class="faq-container">
-        <div class="faq-card">
-          <div class="faq-q">
-            <span>Os ingredientes da mistura são fáceis de achar?</span>
+      <div class="faq-wrapper">
+        <div class="faq-item">
+          <div class="faq-question">
+            <span>Os ingredientes da receita são difíceis de achar?</span>
             <i class="fa-solid fa-chevron-down"></i>
           </div>
-          <div class="faq-a">
-            Sim! São ingredientes extremamente simples encontrados em qualquer supermercado por menos de R$ 3.
+          <div class="faq-answer">
+            Não! Todos os ingredientes são itens extremamente comuns encontrados em qualquer supermercado ou farmácia de bairro por menos de R$ 3.
           </div>
         </div>
 
-        <div class="faq-card">
-          <div class="faq-q">
-            <span>É seguro para quem tem crianças e animais de estimação?</span>
+        <div class="faq-item">
+          <div class="faq-question">
+            <span>É seguro para quem tem bebês e animais em casa?</span>
             <i class="fa-solid fa-chevron-down"></i>
           </div>
-          <div class="faq-a">
-            Sim, o método é 100% atóxico e não solta gases nem cheiro forte de cloro no ambiente.
+          <div class="faq-answer">
+            Sim, 100% atóxico. Ao contrário do cloro e da água sanitária, o método 3F não solta vapores tóxicos irritantes no ar.
           </div>
         </div>
 
-        <div class="faq-card">
-          <div class="faq-q">
-            <span>Como recebo o acesso?</span>
+        <div class="faq-item">
+          <div class="faq-question">
+            <span>Como vou receber o material?</span>
             <i class="fa-solid fa-chevron-down"></i>
           </div>
-          <div class="faq-a">
-            Imediatamente após a confirmação do pagamento, você recebe os links de download do PDF no seu e-mail.
+          <div class="faq-answer">
+            O acesso é enviado imediatamente para o seu e-mail logo após a confirmação do pagamento. Você pode ler no celular, tablet ou computador.
           </div>
         </div>
 
-        <div class="faq-card">
-          <div class="faq-q">
-            <span>E se eu não gostar?</span>
+        <div class="faq-item">
+          <div class="faq-question">
+            <span>E se não funcionar no meu caso?</span>
             <i class="fa-solid fa-chevron-down"></i>
           </div>
-          <div class="faq-a">
-            Você tem 7 dias de garantia incondicional. Se não aprovar o guia, devolvemos 100% do seu dinheiro.
+          <div class="faq-answer">
+            Você tem 7 dias de garantia incondicional. Se não gostar do material por qualquer motivo, devolvemos 100% do seu dinheiro sem burocracia.
           </div>
         </div>
       </div>
@@ -895,12 +909,13 @@
   <!-- FOOTER -->
   <footer>
     <div class="container">
-      <p>&copy; 2026 Kit SOS Anti-Mofo 3F. Todos os direitos reservados.</p>
+      <p>&copy; 2026 Kit Anti-Mofo 3F. Todos os direitos reservados.</p>
+      <p style="margin-top: 8px; font-size: 11px;">Este site não faz parte do Facebook ou Meta Inc. Isenção de responsabilidade médica e de resultados.</p>
     </div>
   </footer>
 
   <script>
-    // Barra de progresso
+    // Barra de progresso de leitura
     window.addEventListener('scroll', () => {
       const winScroll = document.documentElement.scrollTop;
       const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
@@ -909,7 +924,7 @@
     });
 
     // FAQ Accordion
-    document.querySelectorAll('.faq-q').forEach(item => {
+    document.querySelectorAll('.faq-question').forEach(item => {
       item.addEventListener('click', () => {
         const parent = item.parentElement;
         parent.classList.toggle('active');
