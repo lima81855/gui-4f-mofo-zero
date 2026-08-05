@@ -1175,7 +1175,103 @@
         animation: none !important;
       }
     }
-  </style>
+  
+    /* ESTILOS DO BLOCO DE DEPOIMENTOS REAIS */
+    .testimonials-section {
+      background: var(--cream);
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      padding: 78px 24px;
+    }
+
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      margin-top: 40px;
+    }
+
+    .testimonial-card {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 12px 30px rgba(58, 27, 9, 0.06);
+      transition: transform 0.24s ease, box-shadow 0.24s ease, border-color 0.24s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .testimonial-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px rgba(58, 27, 9, 0.12);
+      border-color: rgba(57, 181, 116, 0.4);
+    }
+
+    .testimonial-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+
+    .testimonial-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--brown), var(--brown-2));
+      color: var(--sand);
+      display: grid;
+      place-items: center;
+      font-weight: 950;
+      font-size: 18px;
+      box-shadow: 0 6px 14px rgba(58, 27, 9, 0.2);
+    }
+
+    .testimonial-info h4 {
+      margin: 0 0 2px;
+      font-size: 16px;
+      font-weight: 950;
+      color: var(--brown);
+    }
+
+    .testimonial-info span {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--cta-dark);
+    }
+
+    .testimonial-stars {
+      color: #F59E0B;
+      font-size: 14px;
+      margin-bottom: 12px;
+    }
+
+    .testimonial-text {
+      font-size: 15px;
+      color: var(--text);
+      line-height: 1.5;
+      font-style: italic;
+      margin: 0;
+    }
+
+    .testimonial-tag {
+      display: inline-block;
+      margin-top: 14px;
+      padding: 4px 10px;
+      border-radius: 6px;
+      background: rgba(58, 27, 9, 0.06);
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+</style>
 </head>
 <body>
   <!-- Google Tag Manager (noscript) -->
@@ -1390,6 +1486,84 @@
             <div class="bonus">
               <img src="mofo-zero-bonus-compras.jpg" alt="Bônus 4: A Lista Inteligente de Compras" style="width: 100%; height: auto; border-radius: 6px; box-shadow: 0 8px 20px rgba(0,0,0,0.08);">
             </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    
+    <!-- BLOCO DE DEPOIMENTOS REAIS DA AUDIÊNCIA -->
+    <section class="section testimonials-section" id="depoimentos">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="eyebrow dark">Histórias Reais de Quem Aplicou</span>
+          <h2>O que acontece quando você para de agir no improviso</h2>
+          <p class="copy">Depoimentos reais de pessoas que cansaram de gastar dinheiro com produtos que não funcionavam e blindaram suas casas com o 🧰 Kit Anti-Mofo 3F.</p>
+        </div>
+
+        <div class="testimonials-grid">
+          <!-- CARD 1 -->
+          <div class="testimonial-card">
+            <div>
+              <div class="testimonial-header">
+                <div class="testimonial-avatar">F</div>
+                <div class="testimonial-info">
+                  <h4>Fernanda G.</h4>
+                  <span><i class="fa-solid fa-circle-check"></i> Aluna Verificada (São Paulo/SP)</span>
+                </div>
+              </div>
+              <div class="testimonial-stars">★★★★★</div>
+              <p class="testimonial-text">"A cômoda do meu filho no quarto estava infestada de mofo preto e eu não conseguia tirar de forma alguma com vinagre. O capítulo de superfícies MDF e a receita de R$ 3 salvaram o móvel e o quarto dele no mesmo dia!"</p>
+            </div>
+            <span class="testimonial-tag">Caso: Móveis de MDF e Cômodas</span>
+          </div>
+
+          <!-- CARD 2 -->
+          <div class="testimonial-card">
+            <div>
+              <div class="testimonial-header">
+                <div class="testimonial-avatar">S</div>
+                <div class="testimonial-info">
+                  <h4>Sheila N.</h4>
+                  <span><i class="fa-solid fa-circle-check"></i> Aluna Verificada (Curitiba/PR)</span>
+                </div>
+              </div>
+              <div class="testimonial-stars">★★★★★</div>
+              <p class="testimonial-text">"A parede atrás do meu guarda-roupa ficava verde de tanto mofo todo inverno. Apliquei a barreira preventiva do Guia 3F e já faz 6 meses que a parede está 100% limpa e sem cheiro nenhum!"</p>
+            </div>
+            <span class="testimonial-tag">Caso: Parede Atrás do Guarda-Roupa</span>
+          </div>
+
+          <!-- CARD 3 -->
+          <div class="testimonial-card">
+            <div>
+              <div class="testimonial-header">
+                <div class="testimonial-avatar">N</div>
+                <div class="testimonial-info">
+                  <h4>Nathalia R.</h4>
+                  <span><i class="fa-solid fa-circle-check"></i> Aluna Verificada (Joinville/SC)</span>
+                </div>
+              </div>
+              <div class="testimonial-stars">★★★★★</div>
+              <p class="testimonial-text">"Eu gastei quase R$ 200 com tintas caras e borracha líquida e em 2 dias o mofo no teto do banheiro voltou todo. O Guia 3F me ensinou o erro de misturar produtos e resolveu de vez."</p>
+            </div>
+            <span class="testimonial-tag">Caso: Teto do Banheiro & Tintas</span>
+          </div>
+
+          <!-- CARD 4 -->
+          <div class="testimonial-card">
+            <div>
+              <div class="testimonial-header">
+                <div class="testimonial-avatar">P</div>
+                <div class="testimonial-info">
+                  <h4>Patrícia L.</h4>
+                  <span><i class="fa-solid fa-circle-check"></i> Aluna Verificada (Caxias do Sul/RS)</span>
+                </div>
+              </div>
+              <div class="testimonial-stars">★★★★★</div>
+              <p class="testimonial-text">"Lavar os casacos de frio com amaciante não adiantava nada porque o cheiro azedo voltava na mesma semana. O sachê dessecante caseiro limpou o cheiro de todo o guarda-roupa!"</p>
+            </div>
+            <span class="testimonial-tag">Caso: Roupas & Cheiro de Guardado</span>
           </div>
         </div>
       </div>

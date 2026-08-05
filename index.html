@@ -641,7 +641,103 @@
         font-size: 42px;
       }
     }
-  </style>
+  
+    /* ESTILOS DO BLOCO DE DEPOIMENTOS REAIS */
+    .testimonials-section {
+      background: var(--cream);
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      padding: 78px 24px;
+    }
+
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      margin-top: 40px;
+    }
+
+    .testimonial-card {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 12px 30px rgba(58, 27, 9, 0.06);
+      transition: transform 0.24s ease, box-shadow 0.24s ease, border-color 0.24s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .testimonial-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px rgba(58, 27, 9, 0.12);
+      border-color: rgba(57, 181, 116, 0.4);
+    }
+
+    .testimonial-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+
+    .testimonial-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--brown), var(--brown-2));
+      color: var(--sand);
+      display: grid;
+      place-items: center;
+      font-weight: 950;
+      font-size: 18px;
+      box-shadow: 0 6px 14px rgba(58, 27, 9, 0.2);
+    }
+
+    .testimonial-info h4 {
+      margin: 0 0 2px;
+      font-size: 16px;
+      font-weight: 950;
+      color: var(--brown);
+    }
+
+    .testimonial-info span {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--cta-dark);
+    }
+
+    .testimonial-stars {
+      color: #F59E0B;
+      font-size: 14px;
+      margin-bottom: 12px;
+    }
+
+    .testimonial-text {
+      font-size: 15px;
+      color: var(--text);
+      line-height: 1.5;
+      font-style: italic;
+      margin: 0;
+    }
+
+    .testimonial-tag {
+      display: inline-block;
+      margin-top: 14px;
+      padding: 4px 10px;
+      border-radius: 6px;
+      background: rgba(58, 27, 9, 0.06);
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+</style>
 </head>
 <body>
 
