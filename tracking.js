@@ -1,3 +1,41 @@
+// INICIALIZAÇÃO ULTRA-RÁPIDA DE FBP, FBC E EXTERNAL_ID PARA MAXIMIZAR VIEWCONTENT EMQ
+(function preInitTrackingData() {
+  try {
+    const searchParams = new URLSearchParams(window.location.search);
+    const fbclid = searchParams.get('fbclid');
+    
+    // 1. Garantir fbc instantâneo a partir do fbclid na URL
+    if (fbclid) {
+      const fbc = 'fb.1.' + Date.now() + '.' + fbclid;
+      try {
+        const host = window.location.hostname;
+        const parts = host.split('.');
+        const domain = parts.length > 1 ? '.' + parts.slice(-2).join('.') : '';
+        document.cookie = '_fbc=' + encodeURIComponent(fbc) + '; path=/; max-age=7776000' + (domain ? '; domain=' + domain : '') + '; SameSite=Lax; Secure';
+        window.localStorage.setItem('_fbc', fbc);
+      } catch (_) {}
+    }
+
+    // 2. Garantir fbp instantâneo
+    let fbp = '';
+    const matchFbp = document.cookie.match(/(?:^|; )_fbp=([^;]*)/);
+    if (matchFbp) fbp = decodeURIComponent(matchFbp[1]);
+    if (!fbp) {
+      try { fbp = window.localStorage.getItem('_fbp') || ''; } catch (_) {}
+    }
+    if (!fbp) {
+      fbp = 'fb.1.' + Date.now() + '.' + Math.floor(Math.random() * 2147483647);
+    }
+    try {
+      const host = window.location.hostname;
+      const parts = host.split('.');
+      const domain = parts.length > 1 ? '.' + parts.slice(-2).join('.') : '';
+      document.cookie = '_fbp=' + encodeURIComponent(fbp) + '; path=/; max-age=63072000' + (domain ? '; domain=' + domain : '') + '; SameSite=Lax; Secure';
+      window.localStorage.setItem('_fbp', fbp);
+    } catch (_) {}
+  } catch (_) {}
+})();
+
 const META_PIXEL_ID = '1987865748103477';
 const TRACKING_API_URL = 'https://gui-4f-mofo-zero-production.up.railway.app/api/meta/events';
 const CHECKOUT_URL = 'https://pay.hotmart.com/B106421355U?checkoutMode=10';

@@ -205,8 +205,8 @@ app.post('/api/meta/events', async (req, res) => {
           event_source_url: eventSourceUrl || LANDING_PAGE_URL,
           action_source: 'website',
           user_data: {
-            external_id: externalId ? [sha256(externalId) || externalId] : [], // Meta aceita external_id bruto ou hasheado
-            client_ip_address: req.ip || null,
+            external_id: externalId ? [sha256(externalId)] : [], // Meta aceita external_id bruto ou hasheado
+            client_ip_address: clientIp,
             client_user_agent: req.headers['user-agent'] || null,
             fbp: fbp,
             fbc: fbc
