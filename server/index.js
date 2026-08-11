@@ -86,33 +86,15 @@ app.post('/webhook/hotmart', async (req, res) => {
     const extra = purchase.hotmart_extra || {};
 
     // 1. Extração de parâmetros e cookies passados do checkout da Hotmart
-    const fbp = extra.param1 || getCookieValueFromTracking(tracking) || null;
-    const fbc = extra.param2 || getFbcValueFromTracking(tracking) || null;
-    const eventId = extra.param3 || null; // event_id gerado na LP para deduplicação
-    const abVariant = extra.param4 || null; // Variante do A/B test (copy1 ou copy2)
+        // 1. Extração ultra-robusta de fbp e fbc enviados do checkout da Hotmart
+    let fbp = extra.param1 || extra.fbp || extra.sck || extra.src || purchase.sck || purchase.src || getCookieValueFromTracking(tracking) || null;
+    let fbc = extra.param2 || extra.fbc || getFbcValueFromTracking(tracking) || null;
 
-    // Se o webhook não recebeu um event_id gerado no clique, usamos o código da transação para deduplicação
-    const deduplicationId = eventId || `mofozero_srv_${purchase.transaction}`;
+    if (fbp && (fbp === 'null' || fbp === 'undefined' || fbp.length < 10)) fbp = null;
+    if (fbc && (fbc === 'null' || fbc === 'undefined' || fbc.length < 10)) fbc = null;
 
-    // 2. Coleta e normalização de dados do comprador para o Meta Event Match Quality (EMQ)
-    const emailHash = buyer.email ? sha256(buyer.email) : null;
-    
-    const rawPhone = buyer.checkout_phone || buyer.phone || buyer.phone_number || null;
-    const phoneHash = rawPhone ? sha256(normalizePhone(rawPhone)) : null;
-    
-    const rawName = buyer.name || (buyer.first_name ? `${buyer.first_name} ${buyer.last_name || ''}`.trim() : null);
-    const nameParts = rawName ? rawName.trim().split(' ') : [];
-    const firstNameHash = nameParts.length > 0 ? sha256(nameParts[0]) : null;
-    const lastNameHash = nameParts.length > 1 ? sha256(nameParts[nameParts.length - 1]) : null;
-
-    // Dados de endereço se disponíveis no checkout para enriquecer o EMQ
-    const address = buyer.address || {};
-    const zipcodeHash = address.zipcode ? sha256(address.zipcode.replace(/\D/g, '').trim().toLowerCase()) : null;
-    const stateHash = address.state ? sha256(address.state.trim().toLowerCase()) : null;
-    const countryHash = address.country_iso ? sha256(address.country_iso.trim().toLowerCase()) : null;
-
-    const clientIp = buyer.ip || buyer.buyer_ip || purchase.ip || null;
-    const userAgent = req.headers['user-agent'] || null;
+    const clientIp = getClientIp(req, buyer.ip || buyer.buyer_ip || purchase.ip);
+    const userAgent = req.headers['user-agent'] || buyer.user_agent || null;
 
     // 3. Mapeamento do evento da Hotmart para o Meta Pixel / Conversion API
     let metaEventName = '';
@@ -202,10 +184,16 @@ app.post('/api/meta/events', async (req, res) => {
     const payload = req.body;
     console.log(`[LP Evento Recebido] Evento: ${payload.eventName} | ID: ${payload.eventId} | Variant: ${payload.abVariant}`);
 
-    const { eventName, eventId, eventSourceUrl, externalId, fbp, fbc, testEventCode, value, currency, contentName, contentIds, abVariant } = payload;
+        const { eventName, eventId, eventSourceUrl, externalId, testEventCode, value, currency, contentName, contentIds, abVariant } = payload;
+    
+    let fbp = payload.fbp || null;
+    let fbc = payload.fbc || null;
+    if (fbp && (fbp === 'null' || fbp === 'undefined' || fbp.length < 10)) fbp = null;
+    if (fbc && (fbc === 'null' || fbc === 'undefined' || fbc.length < 10)) fbc = null;
 
-    // Se houver um test_event_code na requisição (enviado pela LP em testes), usamos ele.
-    // Caso contrário, usamos a variável de ambiente do servidor.
+    const clientIp = getClientIp(req);
+    const userAgent = req.headers['user-agent'] || null;
+
     const activeTestCode = testEventCode || META_TEST_EVENT_CODE;
 
     const capiPayload = {

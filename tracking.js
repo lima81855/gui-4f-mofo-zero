@@ -201,22 +201,22 @@ function getCookie(name) {
 
 function getOrCreateFbp() {
   let fbp = getCookie('_fbp');
-  if (fbp) return fbp;
+  if (!fbp) {
+    try { fbp = window.localStorage.getItem('_fbp') || ''; } catch (_) {}
+  }
 
-  // Geramos o _fbp no padrão exato da Meta (fb.1.timestamp.random)
-  const creationTime = Date.now();
-  const randomNumber = Math.floor(Math.random() * 2147483647);
-  fbp = 'fb.1.' + creationTime + '.' + randomNumber;
+  if (!fbp) {
+    const creationTime = Date.now();
+    const randomNumber = Math.floor(Math.random() * 2147483647);
+    fbp = 'fb.1.' + creationTime + '.' + randomNumber;
+  }
 
   try {
     const host = window.location.hostname;
     const parts = host.split('.');
-    if (parts.length > 1) {
-      const domain = parts.slice(-2).join('.');
-      document.cookie = '_fbp=' + encodeURIComponent(fbp) + '; path=/; max-age=63072000; domain=.' + domain + '; SameSite=Lax; Secure';
-    } else {
-      document.cookie = '_fbp=' + encodeURIComponent(fbp) + '; path=/; max-age=63072000; SameSite=Lax; Secure';
-    }
+    const domain = parts.length > 1 ? '.' + parts.slice(-2).join('.') : '';
+    document.cookie = '_fbp=' + encodeURIComponent(fbp) + '; path=/; max-age=63072000' + (domain ? '; domain=' + domain : '') + '; SameSite=Lax; Secure';
+    window.localStorage.setItem('_fbp', fbp);
   } catch (_) {}
 
   return fbp;
@@ -228,16 +228,28 @@ function getFbp() {
 
 function getFbc() {
   const fbclid = new URLSearchParams(window.location.search).get('fbclid');
-  const cookieValue = getCookie('_fbc');
-  if (!fbclid) return cookieValue || '';
-
-  if (cookieValue && cookieValue.endsWith('.' + fbclid)) {
-    return cookieValue;
+  let fbc = getCookie('_fbc');
+  if (!fbc) {
+    try { fbc = window.localStorage.getItem('_fbc') || ''; } catch (_) {}
   }
 
-  const fbc = 'fb.1.' + Date.now() + '.' + fbclid;
-  document.cookie = '_fbc=' + encodeURIComponent(fbc) + '; path=/; max-age=7776000; SameSite=Lax; Secure';
-  return fbc;
+  if (fbclid) {
+    if (!fbc || !fbc.endsWith('.' + fbclid)) {
+      fbc = 'fb.1.' + Date.now() + '.' + fbclid;
+    }
+  }
+
+  if (fbc) {
+    try {
+      const host = window.location.hostname;
+      const parts = host.split('.');
+      const domain = parts.length > 1 ? '.' + parts.slice(-2).join('.') : '';
+      document.cookie = '_fbc=' + encodeURIComponent(fbc) + '; path=/; max-age=7776000' + (domain ? '; domain=' + domain : '') + '; SameSite=Lax; Secure';
+      window.localStorage.setItem('_fbc', fbc);
+    } catch (_) {}
+  }
+
+  return fbc || '';
 }
 
 function buildVisitorId() {
@@ -336,36 +348,47 @@ function trackViewContent() {
 }
 
 function buildTrackedCheckoutUrl(baseUrl) {
-  const currentParams = new URLSearchParams(window.location.search);
-  const target = new URL(baseUrl);
+  if (!baseUrl) return baseUrl;
+  try {
+    const currentParams = new URLSearchParams(window.location.search);
+    const target = new URL(baseUrl, window.location.origin);
 
-  currentParams.forEach((value, key) => {
-    if (!target.searchParams.has(key)) {
-      target.searchParams.set(key, value);
+    currentParams.forEach((value, key) => {
+      if (!target.searchParams.has(key)) {
+        target.searchParams.set(key, value);
+      }
+    });
+
+    const fbp = getFbp();
+    if (fbp) {
+      target.searchParams.set('fbp', fbp);
+      if (!target.searchParams.has('param1')) target.searchParams.set('param1', fbp);
+      if (!target.searchParams.has('sck')) target.searchParams.set('sck', fbp);
+      if (!target.searchParams.has('src')) target.searchParams.set('src', fbp);
     }
-  });
 
-  if (!target.searchParams.has('external_id')) {
-    target.searchParams.set('external_id', getOrCreateExternalId());
+    const fbc = getFbc();
+    if (fbc) {
+      target.searchParams.set('fbc', fbc);
+      if (!target.searchParams.has('param2')) target.searchParams.set('param2', fbc);
+    }
+
+    const fbclid = currentParams.get('fbclid');
+    if (fbclid) {
+      target.searchParams.set('fbclid', fbclid);
+    }
+
+    if (!target.searchParams.has('external_id')) {
+      target.searchParams.set('external_id', getOrCreateExternalId());
+    }
+
+    const variant = window.localStorage.getItem('ab_test_variant') || 'unknown';
+    target.searchParams.set('param4', variant);
+
+    return target.toString();
+  } catch (e) {
+    return baseUrl;
   }
-
-  const fbp = getFbp();
-  if (fbp) {
-    if (!target.searchParams.has('fbp')) target.searchParams.set('fbp', fbp);
-    if (!target.searchParams.has('param1')) target.searchParams.set('param1', fbp);
-  }
-
-  const fbc = getFbc();
-  if (fbc) {
-    if (!target.searchParams.has('fbc')) target.searchParams.set('fbc', fbc);
-    if (!target.searchParams.has('param2')) target.searchParams.set('param2', fbc);
-  }
-
-  // Passa a ab_variant ativa para a Hotmart no param4 (será retornado no webhook)
-  const variant = window.localStorage.getItem('ab_test_variant') || 'unknown';
-  target.searchParams.set('param4', variant);
-
-  return target.toString();
 }
 
 let lastCheckoutIntentAt = 0;
@@ -520,3 +543,21 @@ document.addEventListener('DOMContentLoaded', () => {
   initFaqClickTracker();
   initUpsellTrackers();
 });
+
+// REFORÇO DE EXCELÊNCIA EM EVENT MATCH QUALITY (fbp / fbc 100% GARANTIDOS)
+function startContinuousLinkDecoration() {
+  prepareCheckoutLinks();
+  setInterval(prepareCheckoutLinks, 1000);
+  document.addEventListener('mouseover', (e) => {
+    const link = e.target.closest && e.target.closest('a[href*="pay.hotmart.com"]');
+    if (link) {
+      link.href = buildTrackedCheckoutUrl(link.href);
+    }
+  }, { passive: true });
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', startContinuousLinkDecoration);
+} else {
+  startContinuousLinkDecoration();
+}
