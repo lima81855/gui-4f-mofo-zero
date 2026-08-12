@@ -391,35 +391,44 @@ function buildTrackedCheckoutUrl(baseUrl) {
     const currentParams = new URLSearchParams(window.location.search);
     const target = new URL(baseUrl, window.location.origin);
 
+    // 1. Repassar parâmetros UTM originais sem sobrescrever src/sck com fbp
     currentParams.forEach((value, key) => {
-      if (!target.searchParams.has(key)) {
+      if (key !== 'src' && key !== 'sck' && !target.searchParams.has(key)) {
         target.searchParams.set(key, value);
       }
     });
 
+    // 2. Injetar fbp limpo em fbp e param1
     const fbp = getFbp();
-    if (fbp) {
+    if (fbp && fbp !== 'null' && fbp !== 'undefined') {
       target.searchParams.set('fbp', fbp);
-      if (!target.searchParams.has('param1')) target.searchParams.set('param1', fbp);
-      if (!target.searchParams.has('sck')) target.searchParams.set('sck', fbp);
-      if (!target.searchParams.has('src')) target.searchParams.set('src', fbp);
+      target.searchParams.set('param1', fbp);
     }
 
+    // 3. Injetar fbc limpo em fbc e param2
     const fbc = getFbc();
-    if (fbc) {
+    if (fbc && fbc !== 'null' && fbc !== 'undefined') {
       target.searchParams.set('fbc', fbc);
-      if (!target.searchParams.has('param2')) target.searchParams.set('param2', fbc);
+      target.searchParams.set('param2', fbc);
     }
 
+    // 4. Injetar fbclid puro
     const fbclid = currentParams.get('fbclid');
     if (fbclid) {
       target.searchParams.set('fbclid', fbclid);
     }
 
+    // 5. Garantir src e sck limpos (origem do tráfego, JAMAIS fbp!)
+    const utmSource = currentParams.get('utm_source') || currentParams.get('src') || 'meta_ads';
+    target.searchParams.set('src', utmSource);
+    target.searchParams.set('sck', utmSource);
+
+    // 6. External ID
     if (!target.searchParams.has('external_id')) {
       target.searchParams.set('external_id', getOrCreateExternalId());
     }
 
+    // 7. Variante A/B no param4
     const variant = window.localStorage.getItem('ab_test_variant') || 'unknown';
     target.searchParams.set('param4', variant);
 
@@ -458,39 +467,49 @@ function prepareCheckoutLinks() {
 }
 
 function interceptCheckoutClicks() {
+  // Prepara links imediatamente e em eventos de toque/mouse
+  document.addEventListener('pointerdown', (event) => {
+    const link = event.target.closest && event.target.closest('a[href*="pay.hotmart.com"], a[data-checkout-link="true"]');
+    if (!link) return;
+    
+    // Atualiza o link instantaneamente no toque do dedo antes da navegação
+    const eventId = buildEventId('InitiateCheckout');
+    link.dataset.eventId = eventId;
+    link.href = buildTrackedCheckoutUrl(link.href);
+    
+    // Anexa param3 (eventId) na URL para deduplicação CAPI
+    try {
+      const u = new URL(link.href);
+      u.searchParams.set('param3', eventId);
+      link.href = u.toString();
+    } catch (_) {}
+  }, { passive: true });
+
+  // Ao clicar, dispara o evento no Pixel/CAPI de forma assíncrona SEM travar a navegação nativa do navegador
   document.addEventListener('click', (event) => {
     const link = event.target.closest && event.target.closest('a[href*="pay.hotmart.com"], a[data-checkout-link="true"]');
     if (!link) return;
 
-    event.preventDefault();
-    
-    // Geramos um único eventId para a tag do navegador e para enviar no webhook da Hotmart via param3
-    const eventId = buildEventId('InitiateCheckout');
-    
+    // Garante URL 100% decorada
+    const eventId = link.dataset.eventId || buildEventId('InitiateCheckout');
+    link.href = buildTrackedCheckoutUrl(link.href);
+    try {
+      const u = new URL(link.href);
+      u.searchParams.set('param3', eventId);
+      link.href = u.toString();
+    } catch (_) {}
+
+    // Dispara InitiateCheckout no Pixel e CAPI (assíncrono)
     trackCheckoutIntent(link.dataset.checkoutSource || 'checkout_cta', { 
       includeButtonClick: true,
       eventId: eventId 
     });
 
-    // Dispara evento customizado de clique em CTA de compra
     trackCustomEvent('CTA_Click', { 
       source: link.dataset.checkoutSource || 'checkout_cta',
       destination: 'hotmart'
     });
-
-    let destination = buildTrackedCheckoutUrl(link.href);
-    try {
-      const url = new URL(destination);
-      url.searchParams.set('param3', eventId);
-      destination = url.toString();
-    } catch (_) {
-      destination += (destination.includes('?') ? '&' : '?') + 'param3=' + eventId;
-    }
-
-    setTimeout(() => {
-      window.location.href = destination;
-    }, 900);
-  }, true);
+  }, { passive: true });
 }
 
 function trackCheckoutHoverIntent() {

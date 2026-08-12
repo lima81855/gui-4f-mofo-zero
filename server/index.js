@@ -86,12 +86,12 @@ app.post('/webhook/hotmart', async (req, res) => {
     const extra = purchase.hotmart_extra || {};
 
     // 1. Extração de parâmetros e cookies passados do checkout da Hotmart
-        // 1. Extração ultra-robusta de fbp e fbc enviados do checkout da Hotmart
-    let fbp = extra.param1 || extra.fbp || extra.sck || extra.src || purchase.sck || purchase.src || getCookieValueFromTracking(tracking) || null;
-    let fbc = extra.param2 || extra.fbc || getFbcValueFromTracking(tracking) || null;
+            // 1. Extração ultra-rigorosa de fbp e fbc (Somente strings válidas iniciando com 'fb.')
+    const rawFbpCandidates = [extra.param1, extra.fbp, getCookieValueFromTracking(tracking)];
+    let fbp = rawFbpCandidates.find(c => c && typeof c === 'string' && c.startsWith('fb.') && c.length > 15) || null;
 
-    if (fbp && (fbp === 'null' || fbp === 'undefined' || fbp.length < 10)) fbp = null;
-    if (fbc && (fbc === 'null' || fbc === 'undefined' || fbc.length < 10)) fbc = null;
+    const rawFbcCandidates = [extra.param2, extra.fbc, getFbcValueFromTracking(tracking)];
+    let fbc = rawFbcCandidates.find(c => c && typeof c === 'string' && c.startsWith('fb.') && c.length > 15) || null;
 
     const clientIp = getClientIp(req, buyer.ip || buyer.buyer_ip || purchase.ip);
     const userAgent = req.headers['user-agent'] || buyer.user_agent || null;
@@ -184,12 +184,10 @@ app.post('/api/meta/events', async (req, res) => {
     const payload = req.body;
     console.log(`[LP Evento Recebido] Evento: ${payload.eventName} | ID: ${payload.eventId} | Variant: ${payload.abVariant}`);
 
-        const { eventName, eventId, eventSourceUrl, externalId, testEventCode, value, currency, contentName, contentIds, abVariant } = payload;
+            const { eventName, eventId, eventSourceUrl, externalId, testEventCode, value, currency, contentName, contentIds, abVariant } = payload;
     
-    let fbp = payload.fbp || null;
-    let fbc = payload.fbc || null;
-    if (fbp && (fbp === 'null' || fbp === 'undefined' || fbp.length < 10)) fbp = null;
-    if (fbc && (fbc === 'null' || fbc === 'undefined' || fbc.length < 10)) fbc = null;
+    let fbp = (payload.fbp && typeof payload.fbp === 'string' && payload.fbp.startsWith('fb.')) ? payload.fbp : null;
+    let fbc = (payload.fbc && typeof payload.fbc === 'string' && payload.fbc.startsWith('fb.')) ? payload.fbc : null;
 
     const clientIp = getClientIp(req);
     const userAgent = req.headers['user-agent'] || null;
