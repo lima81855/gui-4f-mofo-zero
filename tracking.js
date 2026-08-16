@@ -132,6 +132,49 @@ function getTrafficQualitySignal() {
   };
 }
 
+// EXTRAÇÃO DE CORRESPONDÊNCIA AVANÇADA MANUAL DA META (ADVANCED MATCHING)
+function getAdvancedMatchingData() {
+  const searchParams = new URLSearchParams(window.location.search);
+  const data = {
+    external_id: getOrCreateExternalId(),
+  };
+
+  const fbp = getFbp();
+  if (fbp) data.fbp = fbp;
+
+  const fbc = getFbc();
+  if (fbc) data.fbc = fbc;
+
+  // Extrair Email se presente na URL ou localStorage
+  let email = searchParams.get('email') || searchParams.get('em') || '';
+  try { email = email || window.localStorage.getItem('user_email') || ''; } catch (_) {}
+  if (email && email.includes('@')) {
+    data.em = email.trim().toLowerCase();
+  }
+
+  // Extrair Telefone se presente na URL ou localStorage
+  let phone = searchParams.get('phone') || searchParams.get('ph') || searchParams.get('telefone') || '';
+  try { phone = phone || window.localStorage.getItem('user_phone') || ''; } catch (_) {}
+  if (phone) {
+    let cleanedPhone = phone.replace(/\D/g, '');
+    if ((cleanedPhone.length === 10 || cleanedPhone.length === 11) && !cleanedPhone.startsWith('55')) {
+      cleanedPhone = '55' + cleanedPhone;
+    }
+    if (cleanedPhone.length >= 10) {
+      data.ph = cleanedPhone;
+    }
+  }
+
+  // Extrair Nome / Sobrenome se presente
+  let fn = searchParams.get('fn') || searchParams.get('first_name') || searchParams.get('nome') || '';
+  if (fn) data.fn = fn.trim().toLowerCase();
+
+  let ln = searchParams.get('ln') || searchParams.get('last_name') || searchParams.get('sobrenome') || '';
+  if (ln) data.ln = ln.trim().toLowerCase();
+
+  return data;
+}
+
 function initMetaPixel() {
   if (window.fbq) return;
 
