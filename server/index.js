@@ -7,7 +7,7 @@ const app = express();
 app.set('trust proxy', true);
 app.use(express.json());
 
-// Middleware para habilitar CORS (Evita bloqueios no navegador ao enviar eventos da LP)
+// CORS Middleware
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
@@ -19,38 +19,70 @@ app.use((req, res, next) => {
 });
 
 const PORT = process.env.PORT || 3000;
-const META_PIXEL_ID = process.env.META_PIXEL_ID || process.env.ID_META_PIXEL;
+const META_PIXEL_ID = process.env.META_PIXEL_ID || process.env.ID_META_PIXEL || '1987865748103477';
 const META_ACCESS_TOKEN = process.env.META_ACCESS_TOKEN;
 const HOTMART_TOKEN = process.env.HOTMART_TOKEN;
-const LANDING_PAGE_URL = process.env.LANDING_PAGE_URL || process.env.URL_DA_PAGINA_DE_DESTINO || process.env.URL_DA_PÁGINA_DE_DESTINO || 'http://localhost';
+const LANDING_PAGE_URL = process.env.LANDING_PAGE_URL || process.env.URL_DA_PAGINA_DE_DESTINO || 'https://www.mofozero.com/casa';
 const META_TEST_EVENT_CODE = process.env.META_TEST_EVENT_CODE || process.env.TEST_EVENT_CODE || null;
 
-// Helper para criar hash SHA256 exigido pela Meta CAPI
-const sha256 = (str) => {
-  if (!str) return null;
-  return crypto.createHash('sha256').update(str.trim().toLowerCase()).digest('hex');
+// Helper extração de IP
+const getClientIp = (req, fallbackIp = null) => {
+  const forwarded = req.headers['x-forwarded-for'];
+  if (forwarded) {
+    const ips = forwarded.split(',').map(ip => ip.trim());
+    if (ips.length > 0 && ips[0]) return ips[0];
+  }
+  return req.ip || req.connection?.remoteAddress || fallbackIp || null;
 };
 
-// Normalização de telefone para o padrão DDI 55 + DDD + Número
+// Helper Hashing SHA256
+const sha256 = (str) => {
+  if (!str || typeof str !== 'string') return null;
+  const cleaned = str.trim().toLowerCase();
+  if (!cleaned) return null;
+  return crypto.createHash('sha256').update(cleaned).digest('hex');
+};
+
+// Helper Normalização de Telefone
 const normalizePhone = (phone) => {
   if (!phone) return null;
-  let cleaned = phone.replace(/\D/g, '');
+  let cleaned = String(phone).replace(/\D/g, '');
   if ((cleaned.length === 10 || cleaned.length === 11) && !cleaned.startsWith('55')) {
     cleaned = '55' + cleaned;
   }
   return cleaned;
 };
 
-// Rota de status do servidor
+// Helpers para extração de cookies de tracking
+function getCookieValueFromTracking(tracking) {
+  if (!tracking) return null;
+  const searchString = tracking.utm_content || tracking.source || tracking.sck || '';
+  const match = searchString.match(/fb\.[0-9]\.[0-9]+\.[0-9]+/);
+  return match ? match[0] : null;
+}
+
+function getFbcValueFromTracking(tracking) {
+  if (!tracking) return null;
+  const searchString = tracking.utm_term || tracking.utm_content || '';
+  if (searchString.includes('fbclid')) {
+    const parts = searchString.split('fbclid=');
+    if (parts.length > 1) {
+      const fbclid = parts[1].split('&')[0];
+      return 'fb.1.' + Date.now() + '.' + fbclid;
+    }
+  }
+  return null;
+}
+
+// Health Check
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'healthy', timestamp: new Date() });
 });
 
-// Rota temporária de debug para inspecionar variáveis de ambiente
+// Debug Env
 app.get('/api/debug-env', (req, res) => {
   const safeEnv = {};
   for (const [key, value] of Object.entries(process.env)) {
-    // Esconde chaves sensíveis parcialmente para segurança, mas mostra se existem
     if (key.includes('KEY') || key.includes('TOKEN') || key.includes('PASSWORD') || key.includes('SECRET')) {
       safeEnv[key] = value ? `${value.slice(0, 8)}... (${value.length} chars)` : null;
     } else {
@@ -60,12 +92,13 @@ app.get('/api/debug-env', (req, res) => {
   res.status(200).json(safeEnv);
 });
 
-// Rota receptora de Webhooks da Hotmart
+// ---------------------------------------------------------------------------
+// ROTA WEBHOOK DA HOTMART (ENVIA PURCHASE / INITIATECHECKOUT PARA META CAPI)
+// ---------------------------------------------------------------------------
 app.post('/webhook/hotmart', async (req, res) => {
   try {
     const headerToken = req.headers['hottok'] || req.headers['x-hotmart-token'];
     
-    // Validação de token de segurança
     if (HOTMART_TOKEN && headerToken !== HOTMART_TOKEN) {
       console.warn(`[Aviso] Requisição bloqueada: Token Hotmart inválido.`);
       return res.status(401).json({ error: 'Não autorizado' });
@@ -85,18 +118,38 @@ app.post('/webhook/hotmart', async (req, res) => {
     const tracking = purchase.tracking || {};
     const extra = purchase.hotmart_extra || {};
 
-    // 1. Extração de parâmetros e cookies passados do checkout da Hotmart
-            // 1. Extração ultra-rigorosa de fbp e fbc (Somente strings válidas iniciando com 'fb.')
+    // 1. Extração robusta de fbp e fbc
     const rawFbpCandidates = [extra.param1, extra.fbp, getCookieValueFromTracking(tracking)];
     let fbp = rawFbpCandidates.find(c => c && typeof c === 'string' && c.startsWith('fb.') && c.length > 15) || null;
 
     const rawFbcCandidates = [extra.param2, extra.fbc, getFbcValueFromTracking(tracking)];
     let fbc = rawFbcCandidates.find(c => c && typeof c === 'string' && c.startsWith('fb.') && c.length > 15) || null;
 
+    const eventId = extra.param3 || null;
+    const abVariant = extra.param4 || null;
+
+    const deduplicationId = eventId || `mofozero_srv_${purchase.transaction || Date.now()}`;
+
+    // 2. Coleta e normalização de dados do comprador para Meta EMQ (SHA256)
+    const emailHash = buyer.email ? sha256(buyer.email) : null;
+    
+    const rawPhone = buyer.checkout_phone || buyer.phone || buyer.phone_number || null;
+    const phoneHash = rawPhone ? sha256(normalizePhone(rawPhone)) : null;
+    
+    const rawName = buyer.name || (buyer.first_name ? `${buyer.first_name} ${buyer.last_name || ''}`.trim() : null);
+    const nameParts = rawName ? rawName.trim().split(' ') : [];
+    const firstNameHash = nameParts.length > 0 ? sha256(nameParts[0]) : null;
+    const lastNameHash = nameParts.length > 1 ? sha256(nameParts[nameParts.length - 1]) : null;
+
+    const address = buyer.address || {};
+    const zipcodeHash = address.zipcode ? sha256(address.zipcode.replace(/\D/g, '')) : null;
+    const stateHash = address.state ? sha256(address.state) : null;
+    const countryHash = address.country_iso ? sha256(address.country_iso) : null;
+
     const clientIp = getClientIp(req, buyer.ip || buyer.buyer_ip || purchase.ip);
     const userAgent = req.headers['user-agent'] || buyer.user_agent || null;
 
-    // 3. Mapeamento do evento da Hotmart para o Meta Pixel / Conversion API
+    // 3. Mapeamento do evento para a Meta Conversion API
     let metaEventName = '';
     let isCustomEvent = false;
     let value = purchase.price?.value || 37.00;
@@ -108,11 +161,11 @@ app.post('/webhook/hotmart', async (req, res) => {
         break;
       case 'PURCHASE_BILLET_PRINTED':
       case 'PURCHASE_DELAYED':
-        // Pix Gerado / Boleto Impresso -> Venda Gerada
         metaEventName = 'VendaGerada';
         isCustomEvent = true;
         break;
       case 'PURCHASE_APPROVED':
+      case 'PURCHASE_COMPLETE':
         metaEventName = 'Purchase';
         break;
       default:
@@ -120,7 +173,7 @@ app.post('/webhook/hotmart', async (req, res) => {
         return res.status(200).json({ status: 'ignored', event });
     }
 
-    // 4. Preparação do payload para a API de Conversão da Meta (CAPI)
+    // 4. Preparação do payload para CAPI
     const capiPayload = {
       data: [
         {
@@ -149,7 +202,7 @@ app.post('/webhook/hotmart', async (req, res) => {
             content_ids: [String(product.id || 'mofo_zero_ebook')],
             content_type: 'product',
             num_items: 1,
-            ab_variant: abVariant
+            ab_variant: abVariant || 'unknown'
           }
         }
       ]
@@ -157,34 +210,35 @@ app.post('/webhook/hotmart', async (req, res) => {
 
     if (META_TEST_EVENT_CODE) {
       capiPayload.test_event_code = META_TEST_EVENT_CODE;
-      console.log(`[API Meta] Incluindo test_event_code: ${META_TEST_EVENT_CODE}`);
+      console.log(`[API Meta] Webhook: Incluindo test_event_code: ${META_TEST_EVENT_CODE}`);
     }
 
     // 5. Envio à Meta Conversion API
     if (META_PIXEL_ID && META_ACCESS_TOKEN) {
       const capiUrl = `https://graph.facebook.com/v19.0/${META_PIXEL_ID}/events?access_token=${META_ACCESS_TOKEN}`;
-      
-      console.log(`[API Meta] Enviando evento '${metaEventName}' CAPI para o Pixel ${META_PIXEL_ID}...`);
+      console.log(`[API Meta] Enviando evento '${metaEventName}' (Transaction: ${purchase.transaction}) para o Pixel ${META_PIXEL_ID}...`);
       const response = await axios.post(capiUrl, capiPayload);
-      console.log(`[API Meta] Sucesso:`, response.data);
+      console.log(`[API Meta] CAPI Sucesso:`, response.data);
     } else {
-      console.log(`[Aviso] Meta Pixel ID ou Access Token ausente. Evento CAPI não enviado.`);
+      console.warn(`[Aviso] Meta Pixel ID ou Access Token ausente. Evento CAPI não enviado.`);
     }
 
     res.status(200).json({ status: 'success', event: metaEventName, deduplicationId });
   } catch (error) {
-    console.error(`[Erro Webhook]`, error.response?.data || error.message);
-    res.status(500).json({ error: 'Erro interno do servidor' });
+    console.error(`[Erro Webhook Hotmart]`, error.response?.data || error.message);
+    res.status(500).json({ error: 'Erro interno do servidor', message: error.message });
   }
 });
 
-// Rota receptora de Eventos de Servidor da Landing Page (CAPI Híbrida)
+// ---------------------------------------------------------------------------
+// ROTA RECEPTORA DE EVENTOS DA LANDING PAGE (PAGEVIEW, VIEWCONTENT, INITIATECHECKOUT)
+// ---------------------------------------------------------------------------
 app.post('/api/meta/events', async (req, res) => {
   try {
     const payload = req.body;
-    console.log(`[LP Evento Recebido] Evento: ${payload.eventName} | ID: ${payload.eventId} | Variant: ${payload.abVariant}`);
+    console.log(`[LP Evento Recebido] Evento: ${payload.eventName} | ID: ${payload.eventId}`);
 
-            const { eventName, eventId, eventSourceUrl, externalId, testEventCode, value, currency, contentName, contentIds, abVariant } = payload;
+    const { eventName, eventId, eventSourceUrl, externalId, testEventCode, value, currency, contentName, contentIds, abVariant } = payload;
     
     let fbp = (payload.fbp && typeof payload.fbp === 'string' && payload.fbp.startsWith('fb.')) ? payload.fbp : null;
     let fbc = (payload.fbc && typeof payload.fbc === 'string' && payload.fbc.startsWith('fb.')) ? payload.fbc : null;
@@ -203,14 +257,14 @@ app.post('/api/meta/events', async (req, res) => {
           event_source_url: eventSourceUrl || LANDING_PAGE_URL,
           action_source: 'website',
           user_data: {
-            external_id: externalId ? [sha256(externalId)] : [], // Meta aceita external_id bruto ou hasheado
+            external_id: externalId ? [sha256(externalId)] : [],
             client_ip_address: clientIp,
-            client_user_agent: req.headers['user-agent'] || null,
+            client_user_agent: userAgent,
             fbp: fbp,
             fbc: fbc
           },
           custom_data: {
-            value: value || 67.00,
+            value: value || 37.00,
             currency: currency || 'BRL',
             content_name: contentName || 'Guia Mofo Zero',
             content_ids: contentIds || ['mofo_zero_ebook'],
@@ -229,41 +283,20 @@ app.post('/api/meta/events', async (req, res) => {
 
     if (META_PIXEL_ID && META_ACCESS_TOKEN) {
       const capiUrl = `https://graph.facebook.com/v19.0/${META_PIXEL_ID}/events?access_token=${META_ACCESS_TOKEN}`;
-      console.log(`[API Meta] LP Event: Enviando '${eventName}' para o Pixel ${META_PIXEL_ID} via CAPI...`);
+      console.log(`[API Meta] LP Event: Enviando '${eventName}' CAPI...`);
       await axios.post(capiUrl, capiPayload);
-      console.log(`[API Meta] LP Event: Sucesso ao enviar '${eventName}'`);
+      console.log(`[API Meta] LP Event Sucesso: '${eventName}'`);
     } else {
-      console.warn(`[Aviso] Meta Pixel ID ou Access Token ausente no envio do evento da LP.`);
+      console.warn(`[Aviso] Meta Pixel ID ou Access Token ausente no envio do envio do evento da LP.`);
     }
 
     res.status(200).json({ status: 'success', event: eventName, eventId });
   } catch (error) {
     console.error(`[Erro Rota LP Eventos]`, error.response?.data || error.message);
-    res.status(500).json({ error: 'Erro interno do servidor' });
+    res.status(500).json({ error: 'Erro interno do servidor', message: error.message });
   }
 });
 
-// Helpers para tentar extrair cookies de parâmetros UTM/Source se vierem concatenados
-function getCookieValueFromTracking(tracking) {
-  if (!tracking) return null;
-  // Verifica se o _fbp veio anexado no utm_content ou em outros campos de tracking
-  const searchString = tracking.utm_content || tracking.source || '';
-  const match = searchString.match(/fb\.[0-9]\.[0-9]+\.[0-9]+/);
-  return match ? match[0] : null;
-}
-
-function getFbcValueFromTracking(tracking) {
-  if (!tracking) return null;
-  // Procura por um fbclid nos campos de tracking
-  const searchString = tracking.utm_term || tracking.utm_content || '';
-  if (searchString.includes('fbclid')) {
-    const parts = searchString.split('fbclid=');
-    if (parts.length > 1) return parts[1].split('&')[0];
-  }
-  return null;
-}
-
-// Inicializa o servidor Express
 app.listen(PORT, () => {
-  console.log(`🚀 Servidor Webhook Mofo Zero rodando na porta ${PORT}`);
+  console.log(`Servidor CAPI rodando na porta ${PORT}`);
 });
