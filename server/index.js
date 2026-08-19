@@ -152,7 +152,7 @@ app.post('/webhook/hotmart', async (req, res) => {
     // 3. Mapeamento do evento para a Meta Conversion API
     let metaEventName = '';
     let isCustomEvent = false;
-    let value = purchase.price?.value || 37.00;
+    let value = purchase.price?.value || 67.00;
 
     switch (event) {
       case 'PURCHASE_OUT_OF_SHOPPING_CART':
@@ -264,7 +264,7 @@ app.post('/api/meta/events', async (req, res) => {
             fbc: fbc
           },
           custom_data: {
-            value: value || 37.00,
+            value: value || 67.00,
             currency: currency || 'BRL',
             content_name: contentName || 'Guia Mofo Zero',
             content_ids: contentIds || ['mofo_zero_ebook'],

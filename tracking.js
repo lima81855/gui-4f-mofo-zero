@@ -40,7 +40,7 @@ const META_PIXEL_ID = '1987865748103477';
 const TRACKING_API_URL = 'https://gui-4f-mofo-zero-production.up.railway.app/api/meta/events';
 const CHECKOUT_URL = 'https://pay.hotmart.com/B106421355U?checkoutMode=10';
 const PRODUCT_ID = 'mofo_zero_ebook';
-const PRODUCT_VALUE = 37;
+const PRODUCT_VALUE = 67;
 const CURRENCY = 'BRL';
 const STANDARD_EVENT_DEDUPE_MS = 1500;
 const EXTERNAL_ID_KEY = 'mofozero_external_id';
