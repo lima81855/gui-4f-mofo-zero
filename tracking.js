@@ -210,7 +210,6 @@ function hasFbq() {
 }
 
 function trackStandardEvent(eventName, payload = {}, overrideEventId = null) {
-  if (!hasFbq()) return;
   if (wasStandardEventRecentlyTracked(eventName, payload)) return;
   const eventId = overrideEventId || buildEventId(eventName);
   
@@ -226,7 +225,16 @@ function trackStandardEvent(eventName, payload = {}, overrideEventId = null) {
   const activeVariant = window.localStorage.getItem('ab_test_variant') || 'unknown';
   payload.ab_variant = activeVariant;
   
-  window.fbq('track', eventName, payload, options);
+  // 1. Enviar pelo Pixel do Navegador (se disponível)
+  if (hasFbq()) {
+    try {
+      window.fbq('track', eventName, payload, options);
+    } catch (e) {
+      console.warn('[Tracking Pixel Error]', e);
+    }
+  }
+  
+  // 2. Enviar SEMPRE pelo Server CAPI (Incondicional: garante 100% de cobertura de servidor mesmo com AdBlockers!)
   sendServerEvent(eventName, payload, eventId);
 }
 
