@@ -172,6 +172,32 @@ function getAdvancedMatchingData() {
   let ln = searchParams.get('ln') || searchParams.get('last_name') || searchParams.get('sobrenome') || '';
   if (ln) data.ln = ln.trim().toLowerCase();
 
+  // Extrair e Normalizar CEP (zp)
+  let zp = searchParams.get('zp') || searchParams.get('zip') || searchParams.get('cep') || searchParams.get('zipcode') || '';
+  try { zp = zp || window.localStorage.getItem('user_cep') || ''; } catch (_) {}
+  if (zp) {
+    let cleanZp = zp.replace(/\D/g, '');
+    if (cleanZp.length >= 5) data.zp = cleanZp;
+  }
+
+  // Extrair e Normalizar Estado (st)
+  let st = searchParams.get('st') || searchParams.get('state') || searchParams.get('uf') || searchParams.get('estado') || '';
+  try { st = st || window.localStorage.getItem('user_state') || ''; } catch (_) {}
+  if (st) {
+    let cleanSt = st.trim().toLowerCase().replace(/[^a-z]/g, '');
+    if (cleanSt.length === 2) data.st = cleanSt;
+  }
+
+  // Extrair e Normalizar Cidade (ct)
+  let ct = searchParams.get('ct') || searchParams.get('city') || searchParams.get('cidade') || '';
+  try { ct = ct || window.localStorage.getItem('user_city') || ''; } catch (_) {}
+  if (ct) {
+    let cleanCt = ct.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/g, '');
+    if (cleanCt) data.ct = cleanCt;
+  }
+
+  data.country = 'br';
+
   return data;
 }
 

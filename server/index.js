@@ -36,6 +36,52 @@ const getClientIp = (req, fallbackIp = null) => {
 };
 
 // Helper Hashing SHA256
+
+// ---------------------------------------------------------------------------
+// HELPERS DE NORMALIZAÇÃO RIGOROSA PARA META EVENT MATCH QUALITY (EMQ)
+// ---------------------------------------------------------------------------
+const removeAccents = (str) => {
+  if (!str || typeof str !== 'string') return '';
+  return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+};
+
+const normalizeZipcode = (zip) => {
+  if (!zip) return null;
+  const digits = String(zip).replace(/\D/g, '');
+  return digits.length >= 5 ? digits : null;
+};
+
+const normalizeState = (stateStr) => {
+  if (!stateStr) return null;
+  let cleaned = removeAccents(String(stateStr)).trim().toLowerCase();
+  if (cleaned.length === 2) return cleaned;
+  
+  const stateMap = {
+    'acre': 'ac', 'alagoas': 'al', 'amapa': 'ap', 'amazonas': 'am', 'bahia': 'ba',
+    'ceara': 'ce', 'distrito federal': 'df', 'espirito santo': 'es', 'goias': 'go',
+    'maranhao': 'ma', 'mato grosso': 'mt', 'mato grosso do sul': 'ms', 'minas gerais': 'mg',
+    'para': 'pa', 'paraiba': 'pb', 'parana': 'pr', 'pernambuco': 'pe', 'piaui': 'pi',
+    'rio de janeiro': 'rj', 'rio grande do norte': 'rn', 'rio grande do sul': 'rs',
+    'rondonia': 'ro', 'roraima': 'rr', 'santa catarina': 'sc', 'sao paulo': 'sp',
+    'sergipe': 'se', 'tocantins': 'to'
+  };
+  return stateMap[cleaned] || cleaned.slice(0, 2);
+};
+
+const normalizeCity = (cityStr) => {
+  if (!cityStr) return null;
+  let cleaned = removeAccents(String(cityStr)).trim().toLowerCase();
+  cleaned = cleaned.replace(/[^a-z0-9]/g, '');
+  return cleaned || null;
+};
+
+const normalizeCountry = (countryStr) => {
+  if (!countryStr) return 'br';
+  let cleaned = removeAccents(String(countryStr)).trim().toLowerCase();
+  if (cleaned === 'brasil' || cleaned === 'brazil' || cleaned === 'br') return 'br';
+  return cleaned.slice(0, 2);
+};
+
 const sha256 = (str) => {
   if (!str || typeof str !== 'string') return null;
   const cleaned = str.trim().toLowerCase();
@@ -141,10 +187,24 @@ app.post('/webhook/hotmart', async (req, res) => {
     const firstNameHash = nameParts.length > 0 ? sha256(nameParts[0]) : null;
     const lastNameHash = nameParts.length > 1 ? sha256(nameParts[nameParts.length - 1]) : null;
 
-    const address = buyer.address || {};
-    const zipcodeHash = address.zipcode ? sha256(address.zipcode.replace(/\D/g, '')) : null;
-    const stateHash = address.state ? sha256(address.state) : null;
-    const countryHash = address.country_iso ? sha256(address.country_iso) : null;
+    // 2b. Coleta e Normalização Rigorosa de Endereço (CEP, Cidade, Estado, País) para Meta EMQ 9.5+
+    const address = buyer.address || data.purchase?.address || {};
+    
+    const rawZip = address.zipcode || address.zip_code || address.cep || extra.zipcode || null;
+    const cleanZip = normalizeZipcode(rawZip);
+    const zipcodeHash = cleanZip ? sha256(cleanZip) : null;
+
+    const rawState = address.state || address.uf || address.state_code || extra.state || null;
+    const cleanState = normalizeState(rawState);
+    const stateHash = cleanState ? sha256(cleanState) : null;
+
+    const rawCity = address.city || address.cidade || extra.city || null;
+    const cleanCity = normalizeCity(rawCity);
+    const cityHash = cleanCity ? sha256(cleanCity) : null;
+
+    const rawCountry = address.country_iso || address.country || 'BR';
+    const cleanCountry = normalizeCountry(rawCountry);
+    const countryHash = cleanCountry ? sha256(cleanCountry) : null;
 
     const clientIp = getClientIp(req, buyer.ip || buyer.buyer_ip || purchase.ip);
     const userAgent = req.headers['user-agent'] || buyer.user_agent || null;
@@ -188,8 +248,9 @@ app.post('/webhook/hotmart', async (req, res) => {
             fn: firstNameHash ? [firstNameHash] : [],
             ln: lastNameHash ? [lastNameHash] : [],
             zp: zipcodeHash ? [zipcodeHash] : [],
+            ct: cityHash ? [cityHash] : [],
             st: stateHash ? [stateHash] : [],
-            country: countryHash ? [countryHash] : [],
+            country: countryHash ? [countryHash] : [sha256('br')],
             client_ip_address: clientIp,
             client_user_agent: userAgent,
             fbp: fbp,
@@ -258,6 +319,14 @@ app.post('/api/meta/events', async (req, res) => {
           action_source: 'website',
           user_data: {
             external_id: externalId ? [sha256(externalId)] : [],
+            em: payload.em ? [sha256(payload.em)] : [],
+            ph: payload.ph ? [sha256(normalizePhone(payload.ph))] : [],
+            fn: payload.fn ? [sha256(payload.fn)] : [],
+            ln: payload.ln ? [sha256(payload.ln)] : [],
+            zp: payload.zp ? [sha256(normalizeZipcode(payload.zp))] : [],
+            ct: payload.ct ? [sha256(normalizeCity(payload.ct))] : [],
+            st: payload.st ? [sha256(normalizeState(payload.st))] : [],
+            country: [sha256(normalizeCountry(payload.country || 'br'))],
             client_ip_address: clientIp,
             client_user_agent: userAgent,
             fbp: fbp,
