@@ -220,12 +220,16 @@ app.post('/webhook/hotmart', async (req, res) => {
         metaEventName = 'InitiateCheckout';
         break;
       case 'PURCHASE_BILLET_PRINTED':
+      case 'PURCHASE_PIX_GENERATED':
       case 'PURCHASE_DELAYED':
+      case 'PURCHASE_PROCESSED':
+        // Geração de pagamento (Boleto/PIX): Dispara evento customizado 'VendaGerada' / 'PaymentGenerated'
         metaEventName = 'VendaGerada';
         isCustomEvent = true;
         break;
       case 'PURCHASE_APPROVED':
       case 'PURCHASE_COMPLETE':
+        // Confirmação de pagamento efetuado (Pago / Aprovado): ÚNICO gatilho que dispara 'Purchase'
         metaEventName = 'Purchase';
         break;
       default:
@@ -298,6 +302,13 @@ app.post('/api/meta/events', async (req, res) => {
   try {
     const payload = req.body;
     console.log(`[LP Evento Recebido] Evento: ${payload.eventName} | ID: ${payload.eventId}`);
+
+    // GARANTIA DE EXCELÊNCIA: O evento 'Purchase' SÓ pode ser emitido pelo Webhook de Confirmação da Hotmart no backend.
+    // Se o frontend tentar enviar 'Purchase' prematuramente, converte em 'InitiateCheckout' para proteger a métrica.
+    if (payload.eventName === 'Purchase') {
+      console.warn(`[Segurança Tracking] Bloqueado disparo prematuro de Purchase via LP. Convertendo para InitiateCheckout.`);
+      payload.eventName = 'InitiateCheckout';
+    }
 
     const { eventName, eventId, eventSourceUrl, externalId, testEventCode, value, currency, contentName, contentIds, abVariant } = payload;
     
